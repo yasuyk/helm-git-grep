@@ -41,7 +41,7 @@
                         'default-directory
                         (helm-git-grep-find-git-root))))
     (default-directory . nil)
-    (candidates . helm-git-grep-process)
+    (candidates-process . helm-git-grep-process)
     (type . file-line)
     (candidate-number-limit . 300)
     (requires-pattern . 3)
@@ -53,7 +53,7 @@
     (init . (lambda () (helm-attrset
                         'default-directory
                         (helm-git-grep-find-git-submodule-root))))
-    (candidates . helm-git-submodule-grep-process)
+    (candidates-process . helm-git-submodule-grep-process)
     (default-directory . nil)
     (type . file-line)
     (candidate-number-limit . 300)
