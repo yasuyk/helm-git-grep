@@ -61,6 +61,7 @@
     (volatile)
     (delayed)))
 
+;;;###autoload
 (defun helm-git-grep ()
   "Helm git grep"
   (interactive)
@@ -68,6 +69,7 @@
                            helm-source-git-submodule-grep)
    "*helm git grep"))
 
+;;;###autoload
 (defun helm-git-grep-from-here ()
   "Helm git grep with current symbol using `helm'."
   (interactive)
