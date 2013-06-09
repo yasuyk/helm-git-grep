@@ -1,3 +1,39 @@
+;;; helm-git-grep.el --- helm for git grep
+
+;; Copyright (C) 2013 mechairoi
+
+;; Author: mechairoi
+;; Maintainer: Yasuyuki Oka <yasuyk@gmail.com>
+;; Version: 0.1
+;; URL: https://github.com/yasuyk/helm-git-grep
+;; Package-Requires: ((helm "1.0"))
+;; Keywords: helm, git
+
+;; This program is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation, either version 3 of the License, or
+;; (at your option) any later version.
+
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+
+;; You should have received a copy of the GNU General Public License
+;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+;;; Commentary:
+
+;; Add the following to your emacs init file:
+;;
+;; (require 'helm-git-grep) ;; Not necessary if using ELPA package
+;; (global-set-key (kbd "C-c g") 'helm-git-grep)
+
+;; Original version is anything-git-grep, and port to helm.
+;; https://github.com/mechairoi/anything-git-grep
+
+;;; Code:
+
 (eval-when-compile (require 'cl))
 (require 'vc-git)
 (require 'helm)
@@ -78,3 +114,5 @@
             :input (thing-at-point 'symbol)))
 
 (provide 'helm-git-grep)
+
+;;; helm-git-grep.el ends here
