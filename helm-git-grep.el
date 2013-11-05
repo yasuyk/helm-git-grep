@@ -37,6 +37,7 @@
 (eval-when-compile (require 'cl))
 (require 'vc-git)
 (require 'helm)
+(require 'helm-files)
 (require 'helm-fix-multiline-process)
 
 (defun helm-git-grep-find-git-root ()
