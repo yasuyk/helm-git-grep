@@ -289,6 +289,18 @@ You can save your results in a grep-mode buffer, see below.
   (let ((helm-help-message helm-git-grep-help-message))
     (helm-help)))
 
+;;;###autoload
+(defvar helm-git-grep-mode-line-string"\
+\\<helm-git-grep-map>\
+\\[helm-git-grep-help]:Help \
+\\<helm-map>\
+\\[helm-select-action]:Act \
+\\[helm-exit-minibuffer]/\
+\\[helm-select-2nd-action-or-end-of-line]/\
+\\[helm-select-3rd-action]:NthAct \
+\\[helm-toggle-suspend-update]:Tog.suspend"
+  "String displayed in mode-line in `helm-git-grep'.")
+
 (defvar helm-git-grep-map
   (let ((map (make-sparse-keymap)))
     (set-keymap-parent map helm-map)
@@ -316,6 +328,7 @@ You can save your results in a grep-mode buffer, see below.
     (persistent-action . helm-git-grep-persistent-action)
     (persistent-help . "Jump to line (`C-u' Record in mark ring)")
     (keymap . ,helm-git-grep-map)
+    (mode-line . helm-git-grep-mode-line-string)
     (init . helm-git-grep-init)))
 
 (defvar helm-source-git-grep
