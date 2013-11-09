@@ -35,7 +35,6 @@
 ;;; Code:
 
 (eval-when-compile (require 'cl))
-(require 'vc-git)
 (require 'helm)
 (require 'helm-elscreen) ;; helm-elscreen-find-file
 
