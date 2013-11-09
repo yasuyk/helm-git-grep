@@ -235,7 +235,7 @@ WHERE can be one of other-window, elscreen, other-frame."
 (defun helm-git-grep-1 (&optional input)
   (helm :sources '(helm-source-git-grep
                    helm-source-git-submodule-grep)
-        :buffer "*helm git grep"
+        :buffer "*helm git grep*"
         :input input
         :candidate-number-limit helm-git-grep-candidate-number-limit))
 
