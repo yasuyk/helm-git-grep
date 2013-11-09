@@ -57,6 +57,11 @@ Set it to nil if you don't want this limit."
   :group 'helm-git-grep
   :type 'integer)
 
+(defcustom helm-git-grep-use-ioccur-style-keys t
+  "Use Arrow keys to jump to occurences."
+  :group 'helm-git-grep
+  :type  'boolean)
+
 (defvar helm-git-grep-history nil)
 
 (defun helm-git-grep-git-string (&rest args)
@@ -229,6 +234,77 @@ With a prefix arg record CANDIDATE in `mark-ring'."
       (helm-git-grep-action candidate))
   (helm-match-line-color-current-line))
 
+;;;###autoload
+(defun helm-git-grep-run-persistent-action ()
+  "Run grep persistent action from `helm-git-grep'."
+  (interactive)
+  (helm-attrset 'jump-persistent 'helm-git-grep-persistent-action)
+  (helm-execute-persistent-action 'jump-persistent))
+
+;;;###autoload
+(defun helm-git-grep-run-default-action ()
+  "Run grep default action from `helm-git-grep'."
+  (interactive)
+  (helm-quit-and-execute-action 'helm-git-grep-action))
+;;;###autoload
+(defun helm-git-grep-run-other-window-action ()
+  "Run grep goto other window action from `helm-git-grep'."
+  (interactive)
+  (helm-quit-and-execute-action 'helm-git-grep-other-window))
+
+;;;###autoload
+(defun helm-git-grep-run-other-frame-action ()
+  "Run grep goto other frame action from `helm-git-grep'."
+  (interactive)
+  (helm-quit-and-execute-action 'helm-git-grep-other-frame))
+
+;;;###autoload
+(defun helm-git-grep-run-save-buffer ()
+  "Run grep save results action from `helm-git-grep'."
+  (interactive)
+  (helm-quit-and-execute-action 'helm-git-grep-save-results))
+
+(defvar helm-git-grep-help-message
+  "== Helm Git Grep Map ==\
+\nHelm Git Grep tips:
+You can save your results in a grep-mode buffer, see below.
+
+\nSpecific commands for Helm Grep:
+\\<helm-grep-map>
+\\[helm-goto-next-file]\t->Next File.
+\\[helm-goto-precedent-file]\t\t->Precedent File.
+\\[helm-yank-text-at-point]\t\t->Yank Text at point in minibuffer.
+\\[helm-git-grep-run-other-window-action]\t\t->Jump other window.
+\\[helm-git-grep-run-other-frame-action]\t\t->Jump other frame.
+\\[helm-git-grep-run-persistent-action]\t\t->Run persistent action (Same as `C-z').
+\\[helm-git-grep-run-default-action]\t\t->Run default action (Same as RET).
+\\[helm-git-grep-run-save-buffer]\t\t->Save to a `grep-mode' enabled buffer.
+\\[helm-git-grep-help]\t\t->Show this help.
+\n== Helm Map ==
+\\{helm-map}")
+
+;;;###autoload
+(defun helm-git-grep-help ()
+  (interactive)
+  (let ((helm-help-message helm-git-grep-help-message))
+    (helm-help)))
+
+(defvar helm-git-grep-map
+  (let ((map (make-sparse-keymap)))
+    (set-keymap-parent map helm-map)
+    (define-key map (kbd "M-<down>") 'helm-goto-next-file)
+    (define-key map (kbd "M-<up>")   'helm-goto-precedent-file)
+    (define-key map (kbd "C-c o")    'helm-git-grep-run-other-window-action)
+    (define-key map (kbd "C-c C-o")  'helm-git-grep-run-other-frame-action)
+    (define-key map (kbd "C-w")      'helm-yank-text-at-point)
+    (define-key map (kbd "C-x C-s")  'helm-git-grep-run-save-buffer)
+    (when helm-git-grep-use-ioccur-style-keys
+      (define-key map (kbd "<right>")  'helm-git-grep-run-persistent-action)
+      (define-key map (kbd "<left>")  'helm-git-grep-run-default-action))
+    (define-key map (kbd "C-c ?")    'helm-git-grep-help)
+    (delq nil map))
+  "Keymap used in Git Grep sources.")
+
 (define-helm-type-attribute 'git-grep
   `((default-directory . nil)
     (requires-pattern . 3)
@@ -239,6 +315,7 @@ With a prefix arg record CANDIDATE in `mark-ring'."
     (history . ,'helm-git-grep-history)
     (persistent-action . helm-git-grep-persistent-action)
     (persistent-help . "Jump to line (`C-u' Record in mark ring)")
+    (keymap . ,helm-git-grep-map)
     (init . helm-git-grep-init)))
 
 (defvar helm-source-git-grep
