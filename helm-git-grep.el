@@ -103,16 +103,16 @@
   "Helm git grep"
   (interactive)
   (helm-other-buffer '(helm-source-git-grep
-                           helm-source-git-submodule-grep)
-   "*helm git grep"))
+                       helm-source-git-submodule-grep)
+                     "*helm git grep"))
 
 ;;;###autoload
 (defun helm-git-grep-from-here ()
   "Helm git grep with current symbol using `helm'."
   (interactive)
   (helm :sources '(helm-source-git-grep
-                       helm-source-git-submodule-grep)
-            :input (thing-at-point 'symbol)))
+                   helm-source-git-submodule-grep)
+        :input (thing-at-point 'symbol)))
 
 (provide 'helm-git-grep)
 
