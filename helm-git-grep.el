@@ -186,7 +186,7 @@ WHERE can be one of other-window, elscreen, other-frame."
 
 (define-helm-type-attribute 'git-grep
   `((default-directory . nil)
-    (candidate-number-limit . 300)
+    (candidate-number-limit . 9999)
     (requires-pattern . 3)
     (volatile)
     (delayed)
