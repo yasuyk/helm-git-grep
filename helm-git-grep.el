@@ -67,7 +67,7 @@ Set it to nil if you don't want this limit."
   :group 'helm-git-grep
   :type  'boolean)
 
-(defface helm-git-grep-ignore-case-option-message
+(defface helm-git-grep-toggle-ignore-case
     '((t (:foreground "red")))
   "Face used for showing ignore case option state in `helm-git-grep'."
   :group 'helm-git-grep)
@@ -304,7 +304,7 @@ With a prefix arg record CANDIDATE in `mark-ring'."
    (propertize
     (format "helm-git-grep: ignore case option is %s."
             (if helm-git-grep-ignore-case "enabled" "disabled"))
-    'face 'helm-git-grep-ignore-case-option-message))
+    'face 'helm-git-grep-toggle-ignore-case))
   (helm-run-after-quit (lambda () (helm-git-grep-1 helm-input))))
 
 (defvar helm-git-grep-help-message
