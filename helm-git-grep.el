@@ -24,7 +24,7 @@
 
 ;;; Commentary:
 
-;; Add the following to your emacs init file:
+;; Add the following to your Emacs init file:
 ;;
 ;; (require 'helm-git-grep) ;; Not necessary if using ELPA package
 ;; (global-set-key (kbd "C-c g") 'helm-git-grep)
@@ -72,7 +72,7 @@ Set it to nil if you don't want this limit."
   "Face used for showing ignore case option state in `helm-git-grep'."
   :group 'helm-git-grep)
 
-(defvar helm-git-grep-history nil)
+(defvar helm-git-grep-history nil "The history list for `helm-git-grep'.")
 
 (defun helm-git-grep-git-string (&rest args)
   "Execute Git with ARGS, returning the first line of its output.
@@ -87,23 +87,21 @@ newline return an empty string."
        (line-beginning-position)
        (line-end-position)))))
 
-(defun helm-git-grep-get-top-dir (&optional cwd)
-  (setq cwd (expand-file-name (file-truename (or cwd default-directory))))
-  (when (file-directory-p cwd)
-    (let* ((default-directory (file-name-as-directory cwd))
-           (cdup (helm-git-grep-git-string "rev-parse" "--show-cdup")))
-      (when cdup
-        (file-name-as-directory (expand-file-name cdup cwd))))))
-
-(defun helm-git-grep-ignore-case-option (&optional string)
-  (if helm-git-grep-ignore-case "-i"
-    (when string "")))
+(defun helm-git-grep-get-top-dir ()
+  "Get the git root directory."
+  (let ((cwd (expand-file-name (file-truename default-directory))))
+    (when (file-directory-p cwd)
+      (let* ((default-directory (file-name-as-directory cwd))
+             (cdup (helm-git-grep-git-string "rev-parse" "--show-cdup")))
+        (when cdup
+          (file-name-as-directory (expand-file-name cdup cwd)))))))
 
 (defun helm-git-grep-args ()
+  "Create arguments of `helm-git-grep-process' in `helm-git-grep'."
   (delq nil
         (append
          (list "--no-pager" "grep" "--full-name" "-n" "--no-color"
-               (helm-git-grep-ignore-case-option))
+               (if helm-git-grep-ignore-case "-i" nil))
          (nbutlast
           (apply 'append
                  (mapcar
@@ -111,21 +109,24 @@ newline return an empty string."
                   (split-string helm-pattern " +" t)))))))
 
 (defun helm-git-submodule-grep-command ()
+  "Create command of `helm-git-submodule-grep-process' in `helm-git-grep'."
   (list "git" "--no-pager" "submodule" "--quiet" "foreach"
         (format "git grep --full-name -n --no-color %s %s | sed s!^!$path/!"
-                (helm-git-grep-ignore-case-option t)
+               (if helm-git-grep-ignore-case "-i" "")
                 (mapconcat (lambda (x)
                              (format "-e %s " (shell-quote-argument x)))
                            (split-string helm-pattern " +" t)
                            "--and "))))
 
 (defun helm-git-grep-process ()
+  "Retrieve candidates from result of git grep."
   (helm-aif (helm-attr 'default-directory)
       (let ((default-directory it))
         (apply 'start-process "git-grep-process" nil "git" (helm-git-grep-args)))
     '()))
 
 (defun helm-git-submodule-grep-process ()
+  "Retrieve candidates from result of git grep submodules."
   (helm-aif (helm-attr 'default-directory)
       (let ((default-directory it))
         (apply 'start-process "git-submodule-grep-process" nil
@@ -166,7 +167,8 @@ newline return an empty string."
 
 (defun helm-git-grep-action (candidate &optional where mark)
   "Define a default action for `helm-git-grep' on CANDIDATE.
-WHERE can be one of other-window, elscreen, other-frame."
+WHERE can be one of `other-window', elscreen, `other-frame'.
+if MARK is t, Set mark."
   (let* ((lineno (nth 0 candidate))
          (fname (or (with-current-buffer helm-buffer
                       (get-text-property (point-at-bol) 'help-echo))
@@ -194,23 +196,24 @@ WHERE can be one of other-window, elscreen, other-frame."
               (delete (car (last helm-git-grep-history))
                       helm-git-grep-history))))))
 
-(defun helm-git-grep-other-window (candidate)
-  "Jump to result in other window from helm git grep."
-  (helm-git-grep-action candidate 'other-window))
+(defun helm-git-grep-other-window (candidates)
+  "Jump to result in other window from helm git grep with CANDIDATES."
+  (helm-git-grep-action candidates 'other-window))
 
-(defun helm-git-grep-other-frame (candidate)
-  "Jump to result in other frame from helm git grep."
-  (helm-git-grep-action candidate 'other-frame))
+(defun helm-git-grep-other-frame (candidates)
+  "Jump to result in other frame from helm git grep with CANDIDATES."
+  (helm-git-grep-action candidates 'other-frame))
 
-(defun helm-git-grep-jump-elscreen (candidate)
-  "Jump to result in elscreen from helm git grep."
+(defun helm-git-grep-jump-elscreen (candidates)
+  "Jump to result in elscreen from helm git grep with CANDIDATES."
   (require 'elscreen)
   (if (elscreen-get-conf-list 'screen-history)
-      (helm-git-grep-action candidate 'elscreen)
-    (error "elscreen is not running")))
+      (helm-git-grep-action candidates 'elscreen)
+    (error "Elscreen is not running")))
 
-(defun helm-git-grep-save-results (candidate)
-  (helm-git-grep-action candidate 'grep))
+(defun helm-git-grep-save-results (candidates)
+  "Trigger to save helm git grep result in a `grep-mode' buffer with CANDIDATES."
+  (helm-git-grep-action candidates 'grep))
 
 (defvar helm-git-grep-actions
   (delq
@@ -221,13 +224,18 @@ WHERE can be one of other-window, elscreen, other-frame."
            '("Find file in Elscreen"
              . helm-git-grep-jump-elscreen))
      ("Save results in grep buffer" . helm-git-grep-save-results)
-     ("Find file other window" . helm-git-grep-other-window))))
+     ("Find file other window" . helm-git-grep-other-window)))
+  "Actions for `helm-git-grep'.")
 
-(defun helm-git-filtered-candidate-transformer-file-line (candidates _source)
+(defun helm-git-filtered-candidate-transformer-file-line (candidates source)
+  "Transform CANDIDATES to `grep-mode' format.
+
+Argument SOURCE is not used."
   (delq nil (mapcar 'helm-git-filtered-candidate-transformer-file-line-1
                     candidates)))
 
 (defun helm-git-filtered-candidate-transformer-file-line-1 (candidate)
+  "Transform CANDIDATE to `grep-mode' format."
   (when (string-match "^\\(.+?\\):\\([0-9]+\\):\\(.*\\)$" candidate)
     (let ((filename (match-string 1 candidate))
           (lineno (match-string 2 candidate))
@@ -245,6 +253,7 @@ WHERE can be one of other-window, elscreen, other-frame."
                              'default-directory (helm-candidate-buffer))))))))))
 
 (defun helm-git-grep-init ()
+  "Init `default-directory' attribute for `helm-git-grep' sources."
   (helm-attrset 'default-directory (helm-git-grep-get-top-dir)))
 
 (defun helm-git-grep-persistent-action (candidate)
@@ -301,6 +310,7 @@ With a prefix arg record CANDIDATE in `mark-ring'."
 (defvar helm-git-grep-help-message
   "== Helm Git Grep Map ==\
 \nHelm Git Grep tips:
+
 You can enable/disable ignore case option of git grep.
 You can save your results in a grep-mode buffer, see below.
 
@@ -321,6 +331,7 @@ You can save your results in a grep-mode buffer, see below.
 
 ;;;###autoload
 (defun helm-git-grep-help ()
+  "Help command for `helm-git-grep'."
   (interactive)
   (let ((helm-help-message helm-git-grep-help-message))
     (helm-help)))
@@ -378,27 +389,25 @@ You can save your results in a grep-mode buffer, see below.
     (candidates-process . helm-git-submodule-grep-process)
     (type . git-grep)))
 
-(defun helm-git-grep-buffer-name ()
-  (if helm-git-grep-ignore-case "*helm git grep [i]*" "*helm git grep*"))
-
-
 (defun helm-git-grep-1 (&optional input)
+  "Execute helm git grep.
+Optional argument INPUT is initial input."
   (helm :sources '(helm-source-git-grep
                    helm-source-git-submodule-grep)
-        :buffer (helm-git-grep-buffer-name)
+        :buffer (if helm-git-grep-ignore-case "*helm git grep [i]*" "*helm git grep*")
         :input input
         :keymap helm-git-grep-map
         :candidate-number-limit helm-git-grep-candidate-number-limit))
 
 ;;;###autoload
 (defun helm-git-grep ()
-  "Helm git grep"
+  "Helm git grep."
   (interactive)
   (helm-git-grep-1))
 
 ;;;###autoload
 (defun helm-git-grep-from-here ()
-  "Helm git grep with current symbol using `helm'."
+  "Helm git grep with symbol at point."
   (interactive)
   (let* ((symbol (thing-at-point 'symbol))
          (input (if symbol (concat symbol " ") nil)))
