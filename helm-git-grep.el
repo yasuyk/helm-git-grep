@@ -76,21 +76,49 @@
                                    "--and ")))))
     '()))
 
+(defun helm-git-grep-save-results-1 ()
+  "Save helm git grep result in a `grep-mode' buffer."
+  (let ((prompt "GrepBufferName: ")
+        (buf "*grep*")
+        new-buf)
+    (when (get-buffer buf)
+      (setq new-buf (read-string prompt buf))
+      (loop for b in (helm-buffer-list)
+            when (and (string= new-buf b)
+                      (not (y-or-n-p
+                            (format "Buffer `%s' already exists overwrite? "
+                                    new-buf))))
+            do (setq new-buf (read-string prompt "*grep ")))
+      (setq buf new-buf))
+    (with-current-buffer (get-buffer-create buf)
+      (setq buffer-read-only t)
+      (let ((inhibit-read-only t))
+        (erase-buffer)
+        (insert (format "-*- mode: grep; default-directory: \"%s\" -*-\n\n"
+                        default-directory)
+                (format "Git Grep Results for `%s':\n\n" helm-input))
+        (save-excursion
+          (insert (with-current-buffer helm-buffer
+                    (goto-char (point-min)) (forward-line 1)
+                    (buffer-substring (point) (point-max))))))
+      (setq default-directory (helm-attr 'default-directory))
+      (grep-mode)
+      (pop-to-buffer buf))
+    (message "Helm Git Grep Results saved in `%s' buffer" buf)))
+
+
 (defun helm-git-grep-action (candidate &optional where mark)
   "Define a default action for `helm-git-grep' on CANDIDATE.
 WHERE can be one of other-window, elscreen, other-frame."
   (let* ((lineno (nth 0 candidate))
-         (fname (or (with-current-buffer
-                        (if (eq major-mode 'helm-grep-mode)
-                            (current-buffer)
-                          helm-buffer)
+         (fname (or (with-current-buffer helm-buffer
                       (get-text-property (point-at-bol) 'help-echo))
                     (nth 2 candidate))))
     (case where
       (other-window (find-file-other-window fname))
       (elscreen     (helm-elscreen-find-file fname))
       (other-frame  (find-file-other-frame fname))
-      (grep         (helm-grep-save-results-1))
+      (grep         (helm-git-grep-save-results-1))
       (t            (find-file fname)))
     (unless (or (eq where 'grep))
       (helm-goto-line lineno))
@@ -99,8 +127,7 @@ WHERE can be one of other-window, elscreen, other-frame."
       (push-mark (point) 'nomsg))
     ;; Save history
     (unless (or helm-in-persistent-action
-                (eq major-mode 'helm-grep-mode)
-                (string= helm-pattern ""))
+                (string= helm-input ""))
       (setq helm-grep-history
             (cons helm-pattern
                   (delete helm-pattern helm-grep-history)))
@@ -125,6 +152,9 @@ WHERE can be one of other-window, elscreen, other-frame."
       (helm-git-grep-action candidate 'elscreen)
     (error "elscreen is not running")))
 
+(defun helm-git-grep-save-results (candidate)
+  (helm-git-grep-action candidate 'grep))
+
 (defvar helm-git-grep-actions
   (delq
    nil
@@ -133,8 +163,29 @@ WHERE can be one of other-window, elscreen, other-frame."
      ,(and (locate-library "elscreen")
            '("Find file in Elscreen"
              . helm-git-grep-jump-elscreen))
-     ;; ("Save results in grep buffer" . helm-git-grep-save-results) TODO
+     ("Save results in grep buffer" . helm-git-grep-save-results)
      ("Find file other window" . helm-git-grep-other-window))))
+
+(defun helm-git-filtered-candidate-transformer-file-line (candidates _source)
+  (delq nil (mapcar 'helm-git-filtered-candidate-transformer-file-line-1
+                    candidates)))
+
+(defun helm-git-filtered-candidate-transformer-file-line-1 (candidate)
+  (when (string-match "^\\(.+?\\):\\([0-9]+\\):\\(.*\\)$" candidate)
+    (let ((filename (match-string 1 candidate))
+          (lineno (match-string 2 candidate))
+          (content (match-string 3 candidate)))
+      (cons (format "%s:%s:\n %s"
+                    (propertize filename 'face compilation-info-face)
+                    (propertize lineno 'face compilation-line-face)
+                    content)
+            (list (string-to-number lineno) content
+                  (expand-file-name
+                   filename
+                   (or (helm-interpret-value (helm-attr 'default-directory))
+                       (and (helm-candidate-buffer)
+                            (buffer-local-value
+                             'default-directory (helm-candidate-buffer))))))))))
 
 (define-helm-type-attribute 'git-grep
   `((default-directory . nil)
@@ -142,7 +193,7 @@ WHERE can be one of other-window, elscreen, other-frame."
     (requires-pattern . 3)
     (volatile)
     (delayed)
-    (filtered-candidate-transformer helm-filtered-candidate-transformer-file-line)
+    (filtered-candidate-transformer helm-git-filtered-candidate-transformer-file-line)
     (multiline)
     (action . ,helm-git-grep-actions)))
 
@@ -174,6 +225,7 @@ WHERE can be one of other-window, elscreen, other-frame."
 (defun helm-git-grep-from-here ()
   "Helm git grep with current symbol using `helm'."
   (interactive)
+
   (helm :sources '(helm-source-git-grep
                    helm-source-git-submodule-grep)
         :input (thing-at-point 'symbol)))
