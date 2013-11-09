@@ -67,6 +67,11 @@ Set it to nil if you don't want this limit."
   :group 'helm-git-grep
   :type  'boolean)
 
+(defface helm-git-grep-ignore-case-option-message
+    '((t (:foreground "red")))
+  "Face used for showing ignore case option state in `helm-git-grep'."
+  :group 'helm-git-grep)
+
 (defvar helm-git-grep-history nil)
 
 (defun helm-git-grep-git-string (&rest args)
@@ -262,6 +267,7 @@ With a prefix arg record CANDIDATE in `mark-ring'."
   "Run grep default action from `helm-git-grep'."
   (interactive)
   (helm-quit-and-execute-action 'helm-git-grep-action))
+
 ;;;###autoload
 (defun helm-git-grep-run-other-window-action ()
   "Run grep goto other window action from `helm-git-grep'."
@@ -279,6 +285,18 @@ With a prefix arg record CANDIDATE in `mark-ring'."
   "Run grep save results action from `helm-git-grep'."
   (interactive)
   (helm-quit-and-execute-action 'helm-git-grep-save-results))
+
+;;;###autoload
+(defun helm-git-grep-toggle-ignore-case ()
+  "Toggle ignore case option for git grep command from `helm-git-grep'."
+  (interactive)
+  (setq helm-git-grep-ignore-case (not helm-git-grep-ignore-case))
+  (helm-show-info-in-mode-line
+   (propertize
+    (format "helm-git-grep: ignore case option is %s."
+            (if helm-git-grep-ignore-case "enabled" "disabled"))
+    'face 'helm-git-grep-ignore-case-option-message))
+  (helm-run-after-quit (lambda () (helm-git-grep-1 helm-input))))
 
 (defvar helm-git-grep-help-message
   "== Helm Git Grep Map ==\
@@ -322,6 +340,7 @@ You can save your results in a grep-mode buffer, see below.
     (set-keymap-parent map helm-map)
     (define-key map (kbd "M-<down>") 'helm-goto-next-file)
     (define-key map (kbd "M-<up>")   'helm-goto-precedent-file)
+    (define-key map (kbd "C-c i")    'helm-git-grep-toggle-ignore-case)
     (define-key map (kbd "C-c o")    'helm-git-grep-run-other-window-action)
     (define-key map (kbd "C-c C-o")  'helm-git-grep-run-other-frame-action)
     (define-key map (kbd "C-w")      'helm-yank-text-at-point)
@@ -357,10 +376,14 @@ You can save your results in a grep-mode buffer, see below.
     (candidates-process . helm-git-submodule-grep-process)
     (type . git-grep)))
 
+(defun helm-git-grep-buffer-name ()
+  (if helm-git-grep-ignore-case "*helm git grep [i]*" "*helm git grep*"))
+
+
 (defun helm-git-grep-1 (&optional input)
   (helm :sources '(helm-source-git-grep
                    helm-source-git-submodule-grep)
-        :buffer "*helm git grep*"
+        :buffer (helm-git-grep-buffer-name)
         :input input
         :keymap helm-git-grep-map
         :candidate-number-limit helm-git-grep-candidate-number-limit))
