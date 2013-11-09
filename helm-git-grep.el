@@ -37,10 +37,7 @@
 (eval-when-compile (require 'cl))
 (require 'vc-git)
 (require 'helm)
-(require 'helm-files)
-(require 'helm-grep) ;; helm-grep-history and helm-grep-max-length-history
 (require 'helm-elscreen) ;; helm-elscreen-find-file
-(require 'helm-fix-multiline-process)
 
 (declare-function elscreen-get-conf-list "ext:elscreen.el" (type))
 
@@ -175,7 +172,7 @@ WHERE can be one of other-window, elscreen, other-frame."
     (let ((filename (match-string 1 candidate))
           (lineno (match-string 2 candidate))
           (content (match-string 3 candidate)))
-      (cons (format "%s:%s:\n %s"
+      (cons (format "%s:%s: %s"
                     (propertize filename 'face compilation-info-face)
                     (propertize lineno 'face compilation-line-face)
                     content)
@@ -194,7 +191,6 @@ WHERE can be one of other-window, elscreen, other-frame."
     (volatile)
     (delayed)
     (filtered-candidate-transformer helm-git-filtered-candidate-transformer-file-line)
-    (multiline)
     (action . ,helm-git-grep-actions)))
 
 (defvar helm-source-git-grep
