@@ -221,6 +221,14 @@ WHERE can be one of other-window, elscreen, other-frame."
 (defun helm-git-grep-init ()
   (helm-attrset 'default-directory (helm-git-grep-get-top-dir)))
 
+(defun helm-git-grep-persistent-action (candidate)
+  "Persistent action for `helm-git-grep'.
+With a prefix arg record CANDIDATE in `mark-ring'."
+  (if current-prefix-arg
+      (helm-git-grep-action candidate nil 'mark)
+      (helm-git-grep-action candidate))
+  (helm-match-line-color-current-line))
+
 (define-helm-type-attribute 'git-grep
   `((default-directory . nil)
     (requires-pattern . 3)
@@ -229,6 +237,8 @@ WHERE can be one of other-window, elscreen, other-frame."
     (filtered-candidate-transformer helm-git-filtered-candidate-transformer-file-line)
     (action . ,helm-git-grep-actions)
     (history . ,'helm-git-grep-history)
+    (persistent-action . helm-git-grep-persistent-action)
+    (persistent-help . "Jump to line (`C-u' Record in mark ring)")
     (init . helm-git-grep-init)))
 
 (defvar helm-source-git-grep
