@@ -301,13 +301,15 @@ With a prefix arg record CANDIDATE in `mark-ring'."
 (defvar helm-git-grep-help-message
   "== Helm Git Grep Map ==\
 \nHelm Git Grep tips:
+You can enable/disable ignore case option of git grep.
 You can save your results in a grep-mode buffer, see below.
 
 \nSpecific commands for Helm Grep:
-\\<helm-grep-map>
+\\<helm-git-grep-map>
 \\[helm-goto-next-file]\t->Next File.
 \\[helm-goto-precedent-file]\t\t->Precedent File.
 \\[helm-yank-text-at-point]\t\t->Yank Text at point in minibuffer.
+\\[helm-git-grep-toggle-ignore-case]\t\t->Enable/Disable ignore case option.
 \\[helm-git-grep-run-other-window-action]\t\t->Jump other window.
 \\[helm-git-grep-run-other-frame-action]\t\t->Jump other frame.
 \\[helm-git-grep-run-persistent-action]\t\t->Run persistent action (Same as `C-z').
