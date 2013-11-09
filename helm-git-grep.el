@@ -44,7 +44,14 @@
 (defgroup helm-git-grep nil
   "Helm for git grep."
   :prefix "helm-git-grep-"
-  :group 'tools)
+  :group 'convenience)
+
+(defcustom helm-git-grep-candidate-number-limit 300
+  "Limit candidate number `helm-git-grep'.
+
+Set it to nil if you don't want this limit."
+  :group 'helm-git-grep
+  :type '(choice (const :tag "Disabled" nil) integer))
 
 (defun helm-git-grep-git-string (&rest args)
   "Execute Git with ARGS, returning the first line of its output.
@@ -209,7 +216,6 @@ WHERE can be one of other-window, elscreen, other-frame."
 
 (define-helm-type-attribute 'git-grep
   `((default-directory . nil)
-    (candidate-number-limit . 9999)
     (requires-pattern . 3)
     (volatile)
     (delayed)
@@ -231,9 +237,10 @@ WHERE can be one of other-window, elscreen, other-frame."
 (defun helm-git-grep ()
   "Helm git grep"
   (interactive)
-  (helm-other-buffer '(helm-source-git-grep
-                       helm-source-git-submodule-grep)
-                     "*helm git grep"))
+  (helm :sources '(helm-source-git-grep
+                   helm-source-git-submodule-grep)
+        :buffer "*helm git grep"
+        :candidate-number-limit helm-git-grep-candidate-number-limit))
 
 ;;;###autoload
 (defun helm-git-grep-from-here ()
@@ -242,7 +249,10 @@ WHERE can be one of other-window, elscreen, other-frame."
 
   (helm :sources '(helm-source-git-grep
                    helm-source-git-submodule-grep)
-        :input (thing-at-point 'symbol)))
+        :input (thing-at-point 'symbol)
+        :buffer "*helm git grep"
+        :candidate-number-limit helm-git-grep-candidate-number-limit))
+
 
 (provide 'helm-git-grep)
 
