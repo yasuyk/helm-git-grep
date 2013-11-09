@@ -42,6 +42,8 @@
 (require 'helm-elscreen) ;; helm-elscreen-find-file
 (require 'helm-fix-multiline-process)
 
+(declare-function elscreen-get-conf-list "ext:elscreen.el" (type))
+
 (defun helm-git-grep-find-git-root ()
   (vc-git-root (or (buffer-file-name) default-directory)))
 
