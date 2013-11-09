@@ -115,18 +115,19 @@ newline return an empty string."
       (setq buf new-buf))
     (with-current-buffer (get-buffer-create buf)
       (setq buffer-read-only t)
-      (let ((inhibit-read-only t))
+      (let ((default-dir (helm-attr 'default-directory))
+            (inhibit-read-only t))
         (erase-buffer)
         (insert (format "-*- mode: grep; default-directory: \"%s\" -*-\n\n"
-                        default-directory)
+                        default-dir)
                 (format "Git Grep Results for `%s':\n\n" helm-input))
         (save-excursion
           (insert (with-current-buffer helm-buffer
                     (goto-char (point-min)) (forward-line 1)
-                    (buffer-substring (point) (point-max))))))
-      (setq default-directory (helm-attr 'default-directory))
-      (grep-mode)
-      (pop-to-buffer buf))
+                    (buffer-substring (point) (point-max)))))
+        (setq default-directory default-dir)
+        (grep-mode)
+        (pop-to-buffer buf)))
     (message "Helm Git Grep Results saved in `%s' buffer" buf)))
 
 
