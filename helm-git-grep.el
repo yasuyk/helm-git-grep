@@ -38,6 +38,8 @@
 (require 'vc-git)
 (require 'helm)
 (require 'helm-files)
+(require 'helm-grep) ;; helm-grep-history and helm-grep-max-length-history
+(require 'helm-elscreen) ;; helm-elscreen-find-file
 (require 'helm-fix-multiline-process)
 
 (defun helm-git-grep-find-git-root ()
@@ -72,15 +74,75 @@
                                    "--and ")))))
     '()))
 
+(defun helm-git-grep-action (candidate &optional where mark)
+  "Define a default action for `helm-git-grep' on CANDIDATE.
+WHERE can be one of other-window, elscreen, other-frame."
+  (let* ((lineno (nth 0 candidate))
+         (fname (or (with-current-buffer
+                        (if (eq major-mode 'helm-grep-mode)
+                            (current-buffer)
+                          helm-buffer)
+                      (get-text-property (point-at-bol) 'help-echo))
+                    (nth 2 candidate))))
+    (case where
+      (other-window (find-file-other-window fname))
+      (elscreen     (helm-elscreen-find-file fname))
+      (other-frame  (find-file-other-frame fname))
+      (grep         (helm-grep-save-results-1))
+      (t            (find-file fname)))
+    (unless (or (eq where 'grep))
+      (helm-goto-line lineno))
+    (when mark
+      (set-marker (mark-marker) (point))
+      (push-mark (point) 'nomsg))
+    ;; Save history
+    (unless (or helm-in-persistent-action
+                (eq major-mode 'helm-grep-mode)
+                (string= helm-pattern ""))
+      (setq helm-grep-history
+            (cons helm-pattern
+                  (delete helm-pattern helm-grep-history)))
+      (when (> (length helm-grep-history)
+               helm-grep-max-length-history)
+        (setq helm-grep-history
+              (delete (car (last helm-grep-history))
+                      helm-grep-history))))))
+
+(defun helm-git-grep-other-window (candidate)
+  "Jump to result in other window from helm git grep."
+  (helm-git-grep-action candidate 'other-window))
+
+(defun helm-git-grep-other-frame (candidate)
+  "Jump to result in other frame from helm git grep."
+  (helm-git-grep-action candidate 'other-frame))
+
+(defun helm-git-grep-jump-elscreen (candidate)
+  "Jump to result in elscreen from helm git grep."
+  (require 'elscreen)
+  (if (elscreen-get-conf-list 'screen-history)
+      (helm-git-grep-action candidate 'elscreen)
+    (error "elscreen is not running")))
+
+(defvar helm-git-grep-actions
+  (delq
+   nil
+   `(("Find File" . helm-git-grep-action)
+     ("Find file other frame" . helm-git-grep-other-frame)
+     ,(and (locate-library "elscreen")
+           '("Find file in Elscreen"
+             . helm-git-grep-jump-elscreen))
+     ;; ("Save results in grep buffer" . helm-git-grep-save-results) TODO
+     ("Find file other window" . helm-git-grep-other-window))))
 
 (define-helm-type-attribute 'git-grep
-  (append
-   '((default-directory . nil)
-     (candidate-number-limit . 300)
-     (requires-pattern . 3)
-     (volatile)
-     (delayed))
-   (cdr (assq 'file-line helm-type-attributes))))
+  `((default-directory . nil)
+    (candidate-number-limit . 300)
+    (requires-pattern . 3)
+    (volatile)
+    (delayed)
+    (filtered-candidate-transformer helm-filtered-candidate-transformer-file-line)
+    (multiline)
+    (action . ,helm-git-grep-actions)))
 
 (defvar helm-source-git-grep
   '((name . "Git Grep")
