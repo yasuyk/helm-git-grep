@@ -58,7 +58,7 @@ Set it to nil if you don't want this limit."
   :type 'integer)
 
 (defcustom helm-git-grep-use-ioccur-style-keys t
-  "Use Arrow keys to jump to occurences."
+  "Use Arrow keys to jump to occurrences."
   :group 'helm-git-grep
   :type  'boolean)
 
