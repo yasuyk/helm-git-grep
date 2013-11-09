@@ -362,6 +362,7 @@ You can save your results in a grep-mode buffer, see below.
                    helm-source-git-submodule-grep)
         :buffer "*helm git grep*"
         :input input
+        :keymap helm-git-grep-map
         :candidate-number-limit helm-git-grep-candidate-number-limit))
 
 ;;;###autoload
