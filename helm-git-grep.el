@@ -41,11 +41,31 @@
 
 (declare-function elscreen-get-conf-list "ext:elscreen.el" (type))
 
-(defun helm-git-grep-find-git-root ()
-  (vc-git-root (or (buffer-file-name) default-directory)))
+(defgroup helm-git-grep nil
+  "Helm for git grep."
+  :prefix "helm-git-grep-"
+  :group 'tools)
 
-(defun helm-git-grep-find-git-submodule-root ()
-  (vc-git-root (or (buffer-file-name) default-directory)))
+(defun helm-git-grep-git-string (&rest args)
+  "Execute Git with ARGS, returning the first line of its output.
+If there is no output return nil.  If the output begins with a
+newline return an empty string."
+  (with-temp-buffer
+    (apply 'process-file "git" nil (list t nil) nil
+           (append '("--no-pager") args))
+    (unless (= (point-min) (point-max))
+      (goto-char (point-min))
+      (buffer-substring-no-properties
+       (line-beginning-position)
+       (line-end-position)))))
+
+(defun helm-git-grep-get-top-dir (&optional cwd)
+  (setq cwd (expand-file-name (file-truename (or cwd default-directory))))
+  (when (file-directory-p cwd)
+    (let* ((default-directory (file-name-as-directory cwd))
+           (cdup (helm-git-grep-git-string "rev-parse" "--show-cdup")))
+      (when cdup
+        (file-name-as-directory (expand-file-name cdup cwd))))))
 
 (defun helm-git-grep-process ()
   (helm-aif (helm-attr 'default-directory)
@@ -184,6 +204,9 @@ WHERE can be one of other-window, elscreen, other-frame."
                             (buffer-local-value
                              'default-directory (helm-candidate-buffer))))))))))
 
+(defun helm-git-grep-init ()
+  (helm-attrset 'default-directory (helm-git-grep-get-top-dir)))
+
 (define-helm-type-attribute 'git-grep
   `((default-directory . nil)
     (candidate-number-limit . 9999)
@@ -191,21 +214,16 @@ WHERE can be one of other-window, elscreen, other-frame."
     (volatile)
     (delayed)
     (filtered-candidate-transformer helm-git-filtered-candidate-transformer-file-line)
-    (action . ,helm-git-grep-actions)))
+    (action . ,helm-git-grep-actions)
+    (init . helm-git-grep-init)))
 
 (defvar helm-source-git-grep
   '((name . "Git Grep")
-    (init . (lambda () (helm-attrset
-                        'default-directory
-                        (helm-git-grep-find-git-root))))
     (candidates-process . helm-git-grep-process)
     (type . git-grep)))
 
 (defvar helm-source-git-submodule-grep
   '((name . "Git Submodule Grep")
-    (init . (lambda () (helm-attrset
-                        'default-directory
-                        (helm-git-grep-find-git-submodule-root))))
     (candidates-process . helm-git-submodule-grep-process)
     (type . git-grep)))
 
