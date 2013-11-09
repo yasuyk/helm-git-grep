@@ -52,6 +52,13 @@ Set it to nil if you don't want this limit."
   :group 'helm-git-grep
   :type '(choice (const :tag "Disabled" nil) integer))
 
+(defcustom helm-git-grep-max-length-history 100
+  "Max number of elements to save in `helm-git-grep-history'."
+  :group 'helm-git-grep
+  :type 'integer)
+
+(defvar helm-git-grep-history nil)
+
 (defun helm-git-grep-git-string (&rest args)
   "Execute Git with ARGS, returning the first line of its output.
 If there is no output return nil.  If the output begins with a
@@ -152,14 +159,14 @@ WHERE can be one of other-window, elscreen, other-frame."
     ;; Save history
     (unless (or helm-in-persistent-action
                 (string= helm-input ""))
-      (setq helm-grep-history
+      (setq helm-git-grep-history
             (cons helm-pattern
-                  (delete helm-pattern helm-grep-history)))
-      (when (> (length helm-grep-history)
-               helm-grep-max-length-history)
-        (setq helm-grep-history
-              (delete (car (last helm-grep-history))
-                      helm-grep-history))))))
+                  (delete helm-pattern helm-git-grep-history)))
+      (when (> (length helm-git-grep-history)
+               helm-git-grep-max-length-history)
+        (setq helm-git-grep-history
+              (delete (car (last helm-git-grep-history))
+                      helm-git-grep-history))))))
 
 (defun helm-git-grep-other-window (candidate)
   "Jump to result in other window from helm git grep."
@@ -221,6 +228,7 @@ WHERE can be one of other-window, elscreen, other-frame."
     (delayed)
     (filtered-candidate-transformer helm-git-filtered-candidate-transformer-file-line)
     (action . ,helm-git-grep-actions)
+    (history . ,'helm-git-grep-history)
     (init . helm-git-grep-init)))
 
 (defvar helm-source-git-grep
