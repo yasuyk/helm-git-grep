@@ -72,18 +72,23 @@
                                    "--and ")))))
     '()))
 
+
+(define-helm-type-attribute 'git-grep
+  (append
+   '((default-directory . nil)
+     (candidate-number-limit . 300)
+     (requires-pattern . 3)
+     (volatile)
+     (delayed))
+   (cdr (assq 'file-line helm-type-attributes))))
+
 (defvar helm-source-git-grep
   '((name . "Git Grep")
     (init . (lambda () (helm-attrset
                         'default-directory
                         (helm-git-grep-find-git-root))))
-    (default-directory . nil)
     (candidates-process . helm-git-grep-process)
-    (type . file-line)
-    (candidate-number-limit . 300)
-    (requires-pattern . 3)
-    (volatile)
-    (delayed)))
+    (type . git-grep)))
 
 (defvar helm-source-git-submodule-grep
   '((name . "Git Submodule Grep")
@@ -91,12 +96,7 @@
                         'default-directory
                         (helm-git-grep-find-git-submodule-root))))
     (candidates-process . helm-git-submodule-grep-process)
-    (default-directory . nil)
-    (type . file-line)
-    (candidate-number-limit . 300)
-    (requires-pattern . 3)
-    (volatile)
-    (delayed)))
+    (type . git-grep)))
 
 ;;;###autoload
 (defun helm-git-grep ()
