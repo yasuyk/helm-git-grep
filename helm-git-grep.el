@@ -62,6 +62,11 @@ Set it to nil if you don't want this limit."
   :group 'helm-git-grep
   :type  'boolean)
 
+(defcustom helm-git-grep-ignore-case t
+  "Ignore case when matching."
+  :group 'helm-git-grep
+  :type  'boolean)
+
 (defvar helm-git-grep-history nil)
 
 (defun helm-git-grep-git-string (&rest args)
@@ -85,30 +90,41 @@ newline return an empty string."
       (when cdup
         (file-name-as-directory (expand-file-name cdup cwd))))))
 
+(defun helm-git-grep-ignore-case-option (&optional string)
+  (if helm-git-grep-ignore-case "-i"
+    (when string "")))
+
+(defun helm-git-grep-args ()
+  (delq nil
+        (append
+         (list "--no-pager" "grep" "--full-name" "-n" "--no-color"
+               (helm-git-grep-ignore-case-option))
+         (nbutlast
+          (apply 'append
+                 (mapcar
+                  (lambda (x) (list "-e" x "--and"))
+                  (split-string helm-pattern " +" t)))))))
+
+(defun helm-git-submodule-grep-command ()
+  (list "git" "--no-pager" "submodule" "--quiet" "foreach"
+        (format "git grep --full-name -n --no-color %s %s | sed s!^!$path/!"
+                (helm-git-grep-ignore-case-option t)
+                (mapconcat (lambda (x)
+                             (format "-e %s " (shell-quote-argument x)))
+                           (split-string helm-pattern " +" t)
+                           "--and "))))
+
 (defun helm-git-grep-process ()
   (helm-aif (helm-attr 'default-directory)
       (let ((default-directory it))
-        (apply 'start-process "git-grep-process" nil
-               "git" "--no-pager" "grep" "--full-name" "-n" "--no-color"
-               (nbutlast
-                (apply 'append
-                       (mapcar
-                        (lambda (x) (list "-e" x "--and"))
-                        (split-string helm-pattern " +" t))))))
+        (apply 'start-process "git-grep-process" nil "git" (helm-git-grep-args)))
     '()))
 
 (defun helm-git-submodule-grep-process ()
   (helm-aif (helm-attr 'default-directory)
       (let ((default-directory it))
-        (apply 'start-process
-               "git-submodule-grep-process" nil
-               (list
-                "git" "--no-pager" "submodule" "--quiet" "foreach"
-                (format "git grep --full-name -n --no-color %s | sed s!^!$path/!"
-                        (mapconcat (lambda (x)
-                                     (format "-e %s " (shell-quote-argument x)))
-                                   (split-string helm-pattern " +" t)
-                                   "--and ")))))
+        (apply 'start-process "git-submodule-grep-process" nil
+               (helm-git-submodule-grep-command)))
     '()))
 
 (defun helm-git-grep-save-results-1 ()
