@@ -102,7 +102,7 @@ newline return an empty string."
 (defun helm-git-grep-save-results-1 ()
   "Save helm git grep result in a `grep-mode' buffer."
   (let ((prompt "GrepBufferName: ")
-        (buf "*grep*")
+        (buf "*hggrep*")
         new-buf)
     (when (get-buffer buf)
       (setq new-buf (read-string prompt buf))
@@ -111,7 +111,7 @@ newline return an empty string."
                       (not (y-or-n-p
                             (format "Buffer `%s' already exists overwrite? "
                                     new-buf))))
-            do (setq new-buf (read-string prompt "*grep ")))
+            do (setq new-buf (read-string prompt "*hggrep ")))
       (setq buf new-buf))
     (with-current-buffer (get-buffer-create buf)
       (setq buffer-read-only t)
