@@ -233,25 +233,26 @@ WHERE can be one of other-window, elscreen, other-frame."
     (candidates-process . helm-git-submodule-grep-process)
     (type . git-grep)))
 
+(defun helm-git-grep-1 (&optional input)
+  (helm :sources '(helm-source-git-grep
+                   helm-source-git-submodule-grep)
+        :buffer "*helm git grep"
+        :input input
+        :candidate-number-limit helm-git-grep-candidate-number-limit))
+
 ;;;###autoload
 (defun helm-git-grep ()
   "Helm git grep"
   (interactive)
-  (helm :sources '(helm-source-git-grep
-                   helm-source-git-submodule-grep)
-        :buffer "*helm git grep"
-        :candidate-number-limit helm-git-grep-candidate-number-limit))
+  (helm-git-grep-1))
 
 ;;;###autoload
 (defun helm-git-grep-from-here ()
   "Helm git grep with current symbol using `helm'."
   (interactive)
-
-  (helm :sources '(helm-source-git-grep
-                   helm-source-git-submodule-grep)
-        :input (thing-at-point 'symbol)
-        :buffer "*helm git grep"
-        :candidate-number-limit helm-git-grep-candidate-number-limit))
+  (let* ((symbol (thing-at-point 'symbol))
+         (input (if symbol (concat symbol " ") nil)))
+    (helm-git-grep-1 input)))
 
 
 (provide 'helm-git-grep)
