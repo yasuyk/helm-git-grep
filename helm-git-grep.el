@@ -39,6 +39,7 @@
 
 (eval-when-compile (require 'cl))
 (require 'helm)
+(require 'helm-files)
 (require 'helm-elscreen) ;; helm-elscreen-find-file
 
 (declare-function elscreen-get-conf-list "ext:elscreen.el" (type))
