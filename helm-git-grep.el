@@ -1,4 +1,4 @@
-;;; helm-git-grep.el --- helm for git grep
+;;; helm-git-grep.el --- helm for git grep, an incremental git grep.
 
 ;; Copyright (C) 2013 mechairoi
 
@@ -28,6 +28,9 @@
 ;;
 ;; (require 'helm-git-grep) ;; Not necessary if using ELPA package
 ;; (global-set-key (kbd "C-c g") 'helm-git-grep)
+
+;; For more information, See the following URL:
+;; https://github.com/yasuyk/helm-git-grep
 
 ;; Original version is anything-git-grep, and port to helm.
 ;; https://github.com/mechairoi/anything-git-grep
@@ -66,11 +69,6 @@ Set it to nil if you don't want this limit."
   "Ignore case when matching."
   :group 'helm-git-grep
   :type  'boolean)
-
-(defface helm-git-grep-toggle-ignore-case
-    '((t (:foreground "red")))
-  "Face used for showing ignore case option state in `helm-git-grep'."
-  :group 'helm-git-grep)
 
 (defvar helm-git-grep-history nil "The history list for `helm-git-grep'.")
 
@@ -212,7 +210,7 @@ if MARK is t, Set mark."
     (error "Elscreen is not running")))
 
 (defun helm-git-grep-save-results (candidates)
-  "Trigger to save helm git grep result in a `grep-mode' buffer with CANDIDATES."
+  "Save helm git grep result in a `grep-mode' buffer with CANDIDATES."
   (helm-git-grep-action candidates 'grep))
 
 (defvar helm-git-grep-actions
@@ -290,6 +288,12 @@ With a prefix arg record CANDIDATE in `mark-ring'."
   (helm-quit-and-execute-action 'helm-git-grep-other-frame))
 
 ;;;###autoload
+(defun helm-git-grep-run-elscreen-action ()
+  "Run grep goto elscreen action from `helm-git-grep'."
+  (interactive)
+  (helm-quit-and-execute-action 'helm-git-grep-jump-elscreen))
+
+;;;###autoload
 (defun helm-git-grep-run-save-buffer ()
   "Run grep save results action from `helm-git-grep'."
   (interactive)
@@ -300,18 +304,13 @@ With a prefix arg record CANDIDATE in `mark-ring'."
   "Toggle ignore case option for git grep command from `helm-git-grep'."
   (interactive)
   (setq helm-git-grep-ignore-case (not helm-git-grep-ignore-case))
-  (helm-show-info-in-mode-line
-   (propertize
-    (format "helm-git-grep: ignore case option is %s."
-            (if helm-git-grep-ignore-case "enabled" "disabled"))
-    'face 'helm-git-grep-toggle-ignore-case))
   (helm-run-after-quit (lambda () (helm-git-grep-1 helm-input))))
 
 (defvar helm-git-grep-help-message
   "== Helm Git Grep Map ==\
 \nHelm Git Grep tips:
 
-You can enable/disable ignore case option of git grep.
+You can toggle ignore case option of git grep.
 You can save your results in a grep-mode buffer, see below.
 
 \nSpecific commands for Helm Grep:
@@ -319,7 +318,7 @@ You can save your results in a grep-mode buffer, see below.
 \\[helm-goto-next-file]\t->Next File.
 \\[helm-goto-precedent-file]\t\t->Precedent File.
 \\[helm-yank-text-at-point]\t\t->Yank Text at point in minibuffer.
-\\[helm-git-grep-toggle-ignore-case]\t\t->Enable/Disable ignore case option.
+\\[helm-git-grep-toggle-ignore-case]\t\t->Toggle ignore case option.
 \\[helm-git-grep-run-other-window-action]\t\t->Jump other window.
 \\[helm-git-grep-run-other-frame-action]\t\t->Jump other frame.
 \\[helm-git-grep-run-persistent-action]\t\t->Run persistent action (Same as `C-z').
@@ -354,6 +353,7 @@ You can save your results in a grep-mode buffer, see below.
     (define-key map (kbd "M-<down>") 'helm-goto-next-file)
     (define-key map (kbd "M-<up>")   'helm-goto-precedent-file)
     (define-key map (kbd "C-c i")    'helm-git-grep-toggle-ignore-case)
+    (define-key map (kbd "C-c e")    'helm-git-grep-run-elscreen-action)
     (define-key map (kbd "C-c o")    'helm-git-grep-run-other-window-action)
     (define-key map (kbd "C-c C-o")  'helm-git-grep-run-other-frame-action)
     (define-key map (kbd "C-w")      'helm-yank-text-at-point)
@@ -401,18 +401,25 @@ Optional argument INPUT is initial input."
 
 ;;;###autoload
 (defun helm-git-grep ()
-  "Helm git grep."
+  "Helm git grep.
+
+if submodules exists, grep submodules too."
   (interactive)
   (helm-git-grep-1))
 
 ;;;###autoload
-(defun helm-git-grep-from-here ()
-  "Helm git grep with symbol at point."
+(defun helm-git-grep-at-point ()
+  "Helm git grep with symbol at point.
+
+if submodules exists, grep submodules too."
   (interactive)
   (let* ((symbol (thing-at-point 'symbol))
          (input (if symbol (concat symbol " ") nil)))
     (helm-git-grep-1 input)))
 
+;;;###autoload
+(defalias 'helm-git-grep-from-here 'helm-git-grep-at-point)
+(make-obsolete 'helm-git-grep-from-here 'helm-git-grep-at-point "1.0.0")
 
 (provide 'helm-git-grep)
 
