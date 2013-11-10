@@ -71,6 +71,16 @@ Set it to nil if you don't want this limit."
   :group 'helm-git-grep
   :type  'boolean)
 
+(defcustom helm-git-grep-showing-leading-and-trailing-lines nil
+  "Show leading and trailing lines."
+  :group 'helm-git-grep
+  :type  'boolean)
+
+(defcustom helm-git-grep-showing-leading-and-trailing-lines-number 1
+  "Number of showing leading and trailing lines option."
+  :group 'helm-git-grep
+  :type  'integer)
+
 (defvar helm-git-grep-history nil "The history list for `helm-git-grep'.")
 
 (defun helm-git-grep-git-string (&rest args)
@@ -95,12 +105,19 @@ newline return an empty string."
         (when cdup
           (file-name-as-directory (expand-file-name cdup cwd)))))))
 
+(defun helm-git-grep-showing-leading-and-trailing-lines-option (&optional strp)
+  "Get <num> option."
+  (if helm-git-grep-showing-leading-and-trailing-lines
+      (format "-%d" helm-git-grep-showing-leading-and-trailing-lines-number)
+    (when strp "")))
+
 (defun helm-git-grep-args ()
   "Create arguments of `helm-git-grep-process' in `helm-git-grep'."
   (delq nil
         (append
          (list "--no-pager" "grep" "--full-name" "-n" "--no-color"
-               (if helm-git-grep-ignore-case "-i" nil))
+               (if helm-git-grep-ignore-case "-i" nil)
+               (helm-git-grep-showing-leading-and-trailing-lines-option))
          (nbutlast
           (apply 'append
                  (mapcar
@@ -110,8 +127,9 @@ newline return an empty string."
 (defun helm-git-submodule-grep-command ()
   "Create command of `helm-git-submodule-grep-process' in `helm-git-grep'."
   (list "git" "--no-pager" "submodule" "--quiet" "foreach"
-        (format "git grep --full-name -n --no-color %s %s | sed s!^!$path/!"
+        (format "git grep --full-name -n --no-color %s %s %s | sed s!^!$path/!"
                (if helm-git-grep-ignore-case "-i" "")
+               (helm-git-grep-showing-leading-and-trailing-lines-option t)
                 (mapconcat (lambda (x)
                              (format "-e %s " (shell-quote-argument x)))
                            (split-string helm-pattern " +" t)
@@ -235,13 +253,16 @@ Argument SOURCE is not used."
 
 (defun helm-git-filtered-candidate-transformer-file-line-1 (candidate)
   "Transform CANDIDATE to `grep-mode' format."
-  (when (string-match "^\\(.+?\\):\\([0-9]+\\):\\(.*\\)$" candidate)
+  (when (string-match "^\\(.+?\\)\\([:\\-]\\)\\([0-9]+\\)[:\\-]\\(.*\\)$" candidate)
     (let ((filename (match-string 1 candidate))
-          (lineno (match-string 2 candidate))
-          (content (match-string 3 candidate)))
-      (cons (format "%s:%s: %s"
+          (separator (match-string 2 candidate))
+          (lineno (match-string 3 candidate))
+          (content (match-string 4 candidate)))
+      (cons (format "%s%s%s%s %s"
                     (propertize filename 'face compilation-info-face)
+                    separator
                     (propertize lineno 'face compilation-line-face)
+                    separator
                     content)
             (list (string-to-number lineno) content
                   (expand-file-name
@@ -307,6 +328,14 @@ With a prefix arg record CANDIDATE in `mark-ring'."
   (setq helm-git-grep-ignore-case (not helm-git-grep-ignore-case))
   (helm-run-after-quit (lambda () (helm-git-grep-1 helm-input))))
 
+;;;###autoload
+(defun helm-git-grep-toggle-showing-trailing-leading-line ()
+  "Toggle show leading and trailing lines option for git grep."
+  (interactive)
+  (setq helm-git-grep-showing-leading-and-trailing-lines
+        (not helm-git-grep-showing-leading-and-trailing-lines))
+  (helm-run-after-quit (lambda () (helm-git-grep-1 helm-input))))
+
 (defvar helm-git-grep-help-message
   "== Helm Git Grep Map ==\
 \nHelm Git Grep tips:
@@ -354,6 +383,7 @@ You can save your results in a grep-mode buffer, see below.
     (define-key map (kbd "M-<down>") 'helm-goto-next-file)
     (define-key map (kbd "M-<up>")   'helm-goto-precedent-file)
     (define-key map (kbd "C-c i")    'helm-git-grep-toggle-ignore-case)
+    (define-key map (kbd "C-c n")    'helm-git-grep-toggle-showing-trailing-leading-line)
     (define-key map (kbd "C-c e")    'helm-git-grep-run-elscreen-action)
     (define-key map (kbd "C-c o")    'helm-git-grep-run-other-window-action)
     (define-key map (kbd "C-c C-o")  'helm-git-grep-run-other-frame-action)
