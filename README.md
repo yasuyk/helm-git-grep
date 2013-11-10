@@ -7,7 +7,7 @@
 ## Features
 
 - Grep submodules too, if submodules exists.
-- Open with other window, other frame, or `elscreen`.
+- Open in other window, other frame, or `elscreen`.
 - Toggle ignore case option when incremental greping.
 - Save grep result in `grep-mode` buffer.
 
