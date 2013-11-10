@@ -60,7 +60,7 @@ These Actions are available.
 
 |Action|Description|
 |------|-----------|
-|Find File | Jump to result.|
+|Find file | Jump to result.|
 |Find file other frame | Jump to result in other frame.|
 |Find file in Elscreen | Jump to result in elscreen.|
 |Save results in grep buffer | Save helm git grep result in a `grep-mode` buffer.|
