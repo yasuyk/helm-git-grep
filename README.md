@@ -85,6 +85,20 @@ These commands are available when executing incremental [git grep] by `helm-git-
 |<kbd>C-c ?</kbd>|helm-git-grep-help |Help command for `helm-git-grep`.|
 |<kbd>C-z</kbd>|helm-git-grep-persistent-action |Persistent action. With a prefix arg record CANDIDATE in `mark-ring`.|
 
+#### <kbd>C-c i</kbd> helm-git-grep-toggle-ignore-case
+
+Toggle ignore case option when incremental greping.
+
+ignore case option is correspond to  `-i` option of `git grep`.
+
+buffer name is `*helm git grep [i]*`  with ignore case option.
+
+![](https://github.com/yasuyk/helm-git-grep/raw/master/image/with-ignore-case-option.png)
+
+buffer name is `*helm git grep*` without ignore case option.
+
+![](https://github.com/yasuyk/helm-git-grep/raw/master/image/without-ignore-case-option.png)
+
 ## Customization
 
 #### `helm-git-grep-candidate-number-limit`(Default: `300`)
