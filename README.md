@@ -60,11 +60,11 @@ These Actions are available.
 
 |Action|Description|
 |------|-----------|
-|Find File | Find file and go to line.|
-|Find file other frame | Find file go to line in another frame.|
-|Find file in Elscreen | Find file go to line in elscreen.|
-|Save results in grep buffer | Save helm git grep result in a `grep-mode' buffer.|
-|Find file other window | Find file go to line in another window.|
+|Find File | Jump to result.|
+|Find file other frame | Jump to result in other frame.|
+|Find file in Elscreen | Jump to result in elscreen.|
+|Save results in grep buffer | Save helm git grep result in a `grep-mode` buffer.|
+|Find file other window | Jump to result in other window.|
 
 ## Advanced usage
 
@@ -72,18 +72,20 @@ These Actions are available.
 
 These commands are available when executing incremental [git grep] by `helm-git-grep`.
 
+For more information about keymap, execute <kbd>C-c ?</kbd> `helm-git-grep-help`.
+
 |Key |Command|Description|
 |----|-------|-----------|
+|<kbd>C-z</kbd>|helm-git-grep-persistent-action |Persistent action. With a prefix arg record candidate in `mark-ring`.|
+|<kbd>C-c C-o</kbd>|helm-git-grep-run-other-frame-action|Jump to result in other frame.|
+|<kbd>C-c e</kbd>|helm-git-grep-run-elscreen-action |Jump to result in elscreen.|
+|<kbd>C-x C-s</kbd>|helm-git-grep-run-save-buffer|Save helm git grep result in a `grep-mode` buffer.
+|<kbd>C-c o</kbd>|helm-git-grep-run-other-window-action |Jump to result in other window.|
+|<kbd>C-c i</kbd>|helm-git-grep-toggle-ignore-case| Toggle ignore case option.|
+|<kbd>C-w</kbd>|helm-yank-text-at-point|Yank text at point in invocation buffer into minibuffer.|
+|<kbd>C-c ?</kbd>|helm-git-grep-help |Help command for `helm-git-grep`.|
 |<kbd>M-&lt;down&gt;</kbd> |helm-goto-next-file | Go to precedent file in helm git grep buffers. |
 |<kbd>M-&lt;up&gt;</kbd>|helm-goto-precedent-file| Go to next file in helm git grep buffers. |
-|<kbd>C-c i</kbd>|helm-git-grep-toggle-ignore-case| Toggle ignore case option.|
-|<kbd>C-c e</kbd>|helm-git-grep-run-elscreen-action |Jump to result in elscreen.|
-|<kbd>C-c o</kbd>|helm-git-grep-run-other-window-action |Jump to result in other window.|
-|<kbd>C-c C-o</kbd>|helm-git-grep-run-other-frame-action|Jump to result in other frame.|
-|<kbd>C-w</kbd>|helm-yank-text-at-point|Yank text at point in invocation buffer into minibuffer.|
-|<kbd>C-x C-s</kbd>|helm-git-grep-run-save-buffer|Save helm git grep result in a `grep-mode` buffer.
-|<kbd>C-c ?</kbd>|helm-git-grep-help |Help command for `helm-git-grep`.|
-|<kbd>C-z</kbd>|helm-git-grep-persistent-action |Persistent action. With a prefix arg record CANDIDATE in `mark-ring`.|
 
 #### <kbd>C-c i</kbd> helm-git-grep-toggle-ignore-case
 
