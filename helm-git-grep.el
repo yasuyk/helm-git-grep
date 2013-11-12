@@ -50,7 +50,7 @@
   :group 'helm)
 
 (defcustom helm-git-grep-candidate-number-limit 300
-  "Limit candidate number `helm-git-grep'.
+  "Limit candidate number of `helm-git-grep'.
 
 Set it to nil if you don't want this limit."
   :group 'helm-git-grep
