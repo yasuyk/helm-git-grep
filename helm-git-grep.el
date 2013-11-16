@@ -38,7 +38,6 @@
 ;;; Code:
 
 (eval-when-compile (require 'cl))
-(require 'etags) ;; find-tag-marker-ring
 (require 'helm)
 (require 'helm-files)
 (require 'helm-elscreen) ;; helm-elscreen-find-file
@@ -83,9 +82,6 @@ Set it to nil if you don't want this limit."
   :type  'integer)
 
 (defvar helm-git-grep-history nil "The history list for `helm-git-grep'.")
-
-(defvar helm-git-grep-point-marker nil
-  "A `point-marker' when `helm-git-grep' is invoked.")
 
 (defun helm-git-grep-git-string (&rest args)
   "Execute Git with ARGS, returning the first line of its output.
@@ -201,8 +197,7 @@ if MARK is t, Set mark."
       (grep         (helm-git-grep-save-results-1))
       (t            (find-file fname)))
     (unless (or (eq where 'grep))
-      (helm-goto-line lineno)
-      (helm-git-grep-insert-point-marker))
+      (helm-goto-line lineno))
     (when mark
       (set-marker (mark-marker) (point))
       (push-mark (point) 'nomsg))
@@ -298,17 +293,6 @@ With a prefix arg record CANDIDATE in `mark-ring'."
       (helm-git-grep-action candidate nil 'mark)
       (helm-git-grep-action candidate))
   (helm-match-line-color-current-line))
-
-(defun helm-git-grep-keep-point-marker ()
-  "Set `point-marker' when `helm-git-grep' is invoked."
-  (setq helm-git-grep-point-marker (point-marker)))
-
-
-(defun helm-git-grep-insert-point-marker ()
-  "Insert variable `helm-git-grep-point-marker' to `find-tag-marker-ring'."
-  (when (markerp helm-git-grep-point-marker)
-    (ring-insert find-tag-marker-ring helm-git-grep-point-marker)
-    (setq helm-git-grep-point-marker nil)))
 
 ;;;###autoload
 (defun helm-git-grep-run-persistent-action ()
@@ -450,7 +434,6 @@ You can save your results in a grep-mode buffer, see below.
 (defun helm-git-grep-1 (&optional input)
   "Execute helm git grep.
 Optional argument INPUT is initial input."
-  (helm-git-grep-keep-point-marker)
   (helm :sources '(helm-source-git-grep
                    helm-source-git-submodule-grep)
         :buffer (if helm-git-grep-ignore-case "*helm git grep [i]*" "*helm git grep*")
