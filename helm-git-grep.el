@@ -249,14 +249,14 @@ if MARK is t, Set mark."
      ("Find file other window" . helm-git-grep-other-window)))
   "Actions for `helm-git-grep'.")
 
-(defun helm-git-filtered-candidate-transformer-file-line (candidates source)
+(defun helm-git-grep-filtered-candidate-transformer-file-line (candidates source)
   "Transform CANDIDATES to `grep-mode' format.
 
 Argument SOURCE is not used."
-  (delq nil (mapcar 'helm-git-filtered-candidate-transformer-file-line-1
+  (delq nil (mapcar 'helm-git-grep-filtered-candidate-transformer-file-line-1
                     candidates)))
 
-(defun helm-git-filtered-candidate-transformer-file-line-1 (candidate)
+(defun helm-git-grep-filtered-candidate-transformer-file-line-1 (candidate)
   "Transform CANDIDATE to `grep-mode' format."
   (when (string-match "^\\(.+?\\)\\([:\\-]\\)\\([0-9]+\\)[:\\-]\\(.*\\)$" candidate)
     (let ((filename (match-string 1 candidate))
@@ -417,7 +417,8 @@ You can save your results in a grep-mode buffer, see below.
     (requires-pattern . 3)
     (volatile)
     (delayed)
-    (filtered-candidate-transformer helm-git-filtered-candidate-transformer-file-line)
+    (filtered-candidate-transformer
+     helm-git-grep-filtered-candidate-transformer-file-line)
     (action . ,helm-git-grep-actions)
     (history . ,'helm-git-grep-history)
     (persistent-action . helm-git-grep-persistent-action)
