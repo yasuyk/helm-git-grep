@@ -256,6 +256,20 @@ Argument SOURCE is not used."
   (delq nil (mapcar 'helm-git-grep-filtered-candidate-transformer-file-line-1
                     candidates)))
 
+(defun helm-git-grep-filtered-candidate-transformer-display
+  (filename separator lineno content)
+  (let ((colonp (string= separator ":")))
+    (format "%s%s%s%s %s"
+            (if colonp
+                (propertize filename 'face compilation-info-face)
+              filename)
+            separator
+            (if colonp
+                (propertize lineno 'face compilation-line-face)
+              lineno)
+            separator
+            content)))
+
 (defun helm-git-grep-filtered-candidate-transformer-file-line-1 (candidate)
   "Transform CANDIDATE to `grep-mode' format."
   (when (string-match "^\\(.+?\\)\\([:\\-]\\)\\([0-9]+\\)[:\\-]\\(.*\\)$" candidate)
@@ -263,12 +277,8 @@ Argument SOURCE is not used."
           (separator (match-string 2 candidate))
           (lineno (match-string 3 candidate))
           (content (match-string 4 candidate)))
-      (cons (format "%s%s%s%s %s"
-                    (propertize filename 'face compilation-info-face)
-                    separator
-                    (propertize lineno 'face compilation-line-face)
-                    separator
-                    content)
+      (cons (helm-git-grep-filtered-candidate-transformer-display
+             filename separator lineno content)
             (list (string-to-number lineno) content
                   (expand-file-name
                    filename
