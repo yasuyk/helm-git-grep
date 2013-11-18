@@ -1,6 +1,6 @@
 # helm-git-grep.el
 
-[helm] for [git grep], an incremental [git grep].
+[helm] for [git grep], an incremental [git-grep(1)].
 
 ![](https://github.com/yasuyk/helm-git-grep/raw/master/image/helm-git-grep.gif)
 
@@ -121,4 +121,4 @@ I'm poor at English. Please point out or correct errors in this document, if any
 
 [helm]:https://github.com/emacs-helm/helm
 [git]:http://git-scm.com/
-[git grep]:http://git-scm.com/docs/git-grep
+[git-grep(1)]:http://git-scm.com/docs/git-grep
