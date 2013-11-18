@@ -1,4 +1,4 @@
-;;; helm-git-grep.el --- helm for git grep, an incremental git grep.
+;;; helm-git-grep.el --- helm for git grep, an incremental git-grep(1)
 
 ;; Copyright (C) 2013 mechairoi
 
