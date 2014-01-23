@@ -83,6 +83,9 @@ Set it to nil if you don't want this limit."
 
 (defvar helm-git-grep-history nil "The history list for `helm-git-grep'.")
 
+(defvar helm-git-grep-exclude-file-p nil)
+(defvar helm-git-grep-exclude-file-history nil)
+
 (defun helm-git-grep-git-string (&rest args)
   "Execute Git with ARGS, returning the first line of its output.
 If there is no output return nil.  If the output begins with a
@@ -111,7 +114,7 @@ newline return an empty string."
       (format "-%d" helm-git-grep-showing-leading-and-trailing-lines-number)
     (when strp "")))
 
-(defun helm-git-grep-args ()
+(defun helm-git-grep-args (exclude-file-pattern)
   "Create arguments of `helm-git-grep-process' in `helm-git-grep'."
   (delq nil
         (append
@@ -122,7 +125,8 @@ newline return an empty string."
           (apply 'append
                  (mapcar
                   (lambda (x) (list "-e" x "--and"))
-                  (split-string helm-pattern " +" t)))))))
+                  (split-string helm-pattern " +" t))))
+         (when exclude-file-pattern exclude-file-pattern))))
 
 (defun helm-git-submodule-grep-command ()
   "Create command of `helm-git-submodule-grep-process' in `helm-git-grep'."
@@ -139,7 +143,8 @@ newline return an empty string."
   "Retrieve candidates from result of git grep."
   (helm-aif (helm-attr 'default-directory)
       (let ((default-directory it))
-        (apply 'start-process "git-grep-process" nil "git" (helm-git-grep-args)))
+        (apply 'start-process "git-grep-process" nil "git"
+               (helm-git-grep-args (helm-attr 'exclude-file-pattern))))
     '()))
 
 (defun helm-git-submodule-grep-process ()
@@ -282,9 +287,42 @@ Argument SOURCE is not used."
                             (buffer-local-value
                              'default-directory (helm-candidate-buffer))))))))))
 
+(defun helm-git-grep-exclude-files (exclude-file-pattern)
+  "Execute `git ls-files | grep -v EXCLUDE-FILE-PATTERN'.
+
+returning its output as a list of lines.
+Signal an error if the program returns with a non-zero exit status."
+  (with-temp-buffer
+    (let ((status (apply
+                   'call-process-shell-command
+                   (format "git ls-files | grep -v %s" exclude-file-pattern)
+                    nil (current-buffer) nil)))
+      (unless (eq status 0)
+        (error "helm-git-grep-exclude-files exited with status %s" status))
+      (goto-char (point-min))
+      (let (lines)
+        (while (not (eobp))
+          (setq lines (cons (buffer-substring-no-properties
+                             (line-beginning-position)
+                             (line-end-position))
+                            lines))
+          (forward-line 1))
+        lines))))
+
+(defun helm-git-grep-read-exclude-file-pattern ()
+  (when helm-git-grep-exclude-file-p
+    (let ((pattern (read-string "Exclude files matching the pattern (regular expression): "
+                                nil
+                                'helm-git-grep-exclude-file-history)))
+      (unless (string= pattern "")
+        (helm-attrset 'exclude-file-pattern
+                      (helm-git-grep-exclude-files pattern))))))
+
 (defun helm-git-grep-init ()
   "Init `default-directory' attribute for `helm-git-grep' sources."
-  (helm-attrset 'default-directory (helm-git-grep-get-top-dir)))
+  (let ((default-directory (helm-git-grep-get-top-dir)))
+    (helm-attrset 'default-directory default-directory)
+    (helm-git-grep-read-exclude-file-pattern)))
 
 (defun helm-git-grep-persistent-action (candidate)
   "Persistent action for `helm-git-grep'.
@@ -458,6 +496,18 @@ if submodules exists, grep submodules too."
   (let* ((symbol (thing-at-point 'symbol))
          (input (if symbol (concat symbol " ") nil)))
     (helm-git-grep-1 input)))
+
+;;;###autoload
+(defun helm-git-grep-with-exclude-file-pattern ()
+  "Helm git grep with excluding file pattern.
+
+if submodules exists, don't grep submodules."
+  (interactive)
+  (let ((helm-git-grep-exclude-file-p t))
+    (helm :sources helm-source-git-grep
+          :buffer (if helm-git-grep-ignore-case "*helm git grep [i]*" "*helm git grep*")
+          :keymap helm-git-grep-map
+          :candidate-number-limit helm-git-grep-candidate-number-limit)))
 
 ;;;###autoload
 (defalias 'helm-git-grep-from-here 'helm-git-grep-at-point)
