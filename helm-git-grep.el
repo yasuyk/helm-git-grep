@@ -6,7 +6,7 @@
 ;; Maintainer: Yasuyuki Oka <yasuyk@gmail.com>
 ;; Version: 0.5
 ;; URL: https://github.com/yasuyk/helm-git-grep
-;; Package-Requires: ((helm "1.0"))
+;; Package-Requires: ((helm "1.5.9"))
 ;; Keywords: helm, git
 
 ;; This program is free software; you can redistribute it and/or modify
