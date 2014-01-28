@@ -47,7 +47,7 @@
 (defgroup helm-git-grep nil
   "Helm for git grep."
   :prefix "helm-git-grep-"
-  :group 'helm-git-grep)
+  :group 'helm)
 
 (defcustom helm-git-grep-candidate-number-limit 300
   "Limit candidate number of `helm-git-grep'.
