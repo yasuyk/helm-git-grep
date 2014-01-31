@@ -295,7 +295,7 @@ Signal an error if the program returns with a non-zero exit status."
   (with-temp-buffer
     (let ((status (apply
                    'call-process-shell-command
-                   (format "git ls-files | grep -v %s" exclude-file-pattern)
+                   (format "git ls-files | grep -v -E '%s'" exclude-file-pattern)
                     nil (current-buffer) nil)))
       (unless (eq status 0)
         (error "helm-git-grep-exclude-files exited with status %s" status))
