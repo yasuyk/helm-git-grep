@@ -4,7 +4,7 @@
 
 ;; Author: mechairoi
 ;; Maintainer: Yasuyuki Oka <yasuyk@gmail.com>
-;; Version: 0.6
+;; Version: 0.6.1
 ;; URL: https://github.com/yasuyk/helm-git-grep
 ;; Package-Requires: ((helm "1.5.9"))
 ;; Keywords: helm, git
