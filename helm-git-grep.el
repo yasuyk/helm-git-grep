@@ -499,7 +499,9 @@ if submodules exists, grep submodules too."
 
 ;;;###autoload
 (defun helm-git-grep-with-exclude-file-pattern ()
-  "Helm git grep with excluding file pattern.
+  "Helm git grep with exclude file pattern.
+
+file pattern is iterpreted as an POSIX extended regular expression.
 
 if submodules exists, don't grep submodules."
   (interactive)
