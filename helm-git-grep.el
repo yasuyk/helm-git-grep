@@ -2,6 +2,8 @@
 
 ;; Copyright (C) 2013 mechairoi
 
+;; This is a fork of anything-git-grep.el wrote by mechairoi.
+
 ;; Author: mechairoi
 ;; Maintainer: Yasuyuki Oka <yasuyk@gmail.com>
 ;; Version: 0.6.1
