@@ -333,7 +333,7 @@ With a prefix arg record CANDIDATE in `mark-ring'."
   (if current-prefix-arg
       (helm-git-grep-action candidate nil 'mark)
       (helm-git-grep-action candidate))
-  (helm-match-line-color-current-line))
+  (helm-highlight-current-line))
 
 ;;;###autoload
 (defun helm-git-grep-run-persistent-action ()
