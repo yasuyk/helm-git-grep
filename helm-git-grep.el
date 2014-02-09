@@ -46,6 +46,7 @@
 (require 'helm-elscreen) ;; helm-elscreen-find-file
 
 (declare-function elscreen-get-conf-list "ext:elscreen.el" (type))
+(declare-function wgrep-setup-internal "ext:wgrep")
 
 (defgroup helm-git-grep nil
   "Helm for git grep."
@@ -158,8 +159,14 @@ newline return an empty string."
                (helm-git-submodule-grep-command)))
     '()))
 
+(define-compilation-mode helm-git-grep-mode "Helm Git Grep"
+  "Set up `wgrep' if exist."
+  (set (make-local-variable 'compilation-error-face) grep-hit-face)
+  (when (require 'wgrep nil t)
+    (wgrep-setup-internal)))
+
 (defun helm-git-grep-save-results-1 ()
-  "Save helm git grep result in a `grep-mode' buffer."
+  "Save helm git grep result in a `helm-git-grep-mode' buffer."
   (let ((prompt "GrepBufferName: ")
         (buf "*hggrep*")
         new-buf)
@@ -185,7 +192,7 @@ newline return an empty string."
                     (goto-char (point-min)) (forward-line 1)
                     (buffer-substring (point) (point-max)))))
         (setq default-directory default-dir)
-        (grep-mode)
+        (helm-git-grep-mode)
         (pop-to-buffer buf)))
     (message "Helm Git Grep Results saved in `%s' buffer" buf)))
 
@@ -237,7 +244,7 @@ if MARK is t, Set mark."
     (error "Elscreen is not running")))
 
 (defun helm-git-grep-save-results (candidates)
-  "Save helm git grep result in a `grep-mode' buffer with CANDIDATES."
+  "Save helm git grep result in a `helm-git-grep-mode' buffer with CANDIDATES."
   (helm-git-grep-action candidates 'grep))
 
 (defvar helm-git-grep-actions
@@ -253,7 +260,7 @@ if MARK is t, Set mark."
   "Actions for `helm-git-grep'.")
 
 (defun helm-git-grep-filtered-candidate-transformer-file-line (candidates source)
-  "Transform CANDIDATES to `grep-mode' format.
+  "Transform CANDIDATES to `helm-git-grep-mode' format.
 
 Argument SOURCE is not used."
   (delq nil (mapcar 'helm-git-grep-filtered-candidate-transformer-file-line-1
@@ -262,7 +269,7 @@ Argument SOURCE is not used."
 (defun helm-git-grep-filtered-candidate-transformer-display
   (filename separator lineno content)
   (let ((colonp (string= separator ":")))
-    (format "%s%s%s%s %s"
+    (format "%s%s%s%s%s"
             (if colonp
                 (propertize filename 'face compilation-info-face)
               filename)
@@ -274,7 +281,7 @@ Argument SOURCE is not used."
             content)))
 
 (defun helm-git-grep-filtered-candidate-transformer-file-line-1 (candidate)
-  "Transform CANDIDATE to `grep-mode' format."
+  "Transform CANDIDATE to `helm-git-grep-mode' format."
   (when (string-match "^\\(.+?\\)\\([:\\-]\\)\\([0-9]+\\)[:\\-]\\(.*\\)$" candidate)
     (let ((filename (match-string 1 candidate))
           (separator (match-string 2 candidate))
@@ -392,7 +399,7 @@ With a prefix arg record CANDIDATE in `mark-ring'."
 \nHelm Git Grep tips:
 
 You can toggle ignore case option of git grep.
-You can save your results in a grep-mode buffer, see below.
+You can save your results in a helm-git-grep-mode buffer, see below.
 
 \nSpecific commands for Helm Grep:
 \\<helm-git-grep-map>
@@ -404,7 +411,7 @@ You can save your results in a grep-mode buffer, see below.
 \\[helm-git-grep-run-other-frame-action]\t\t->Jump other frame.
 \\[helm-git-grep-run-persistent-action]\t\t->Run persistent action (Same as `C-z').
 \\[helm-git-grep-run-default-action]\t\t->Run default action (Same as RET).
-\\[helm-git-grep-run-save-buffer]\t\t->Save to a `grep-mode' enabled buffer.
+\\[helm-git-grep-run-save-buffer]\t\t->Save to a `helm-git-grep-mode' enabled buffer.
 \\[helm-git-grep-help]\t\t->Show this help.
 \n== Helm Map ==
 \\{helm-map}")
