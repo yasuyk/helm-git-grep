@@ -7,9 +7,9 @@
 ## Features
 
 - Grep submodules too, if submodules exists.
-- Open in other window, other frame, or `elscreen`.
+- Open in other window, other frame, or [`elscreen`](https://github.com/shosti/elscreen).
 - Toggle ignore case option when incremental greping.
-- Save grep result in `grep-mode` buffer.
+- Save grep result in grep buffer which is writable with [`wgrep`](https://github.com/mhayashi1120/Emacs-wgrep).
 
 ## Requirements
 
