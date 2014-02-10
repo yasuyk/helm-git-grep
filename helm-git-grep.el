@@ -161,7 +161,9 @@ newline return an empty string."
 
 (define-compilation-mode helm-git-grep-mode "Helm Git Grep"
   "Set up `wgrep' if exist."
+  (require' grep)
   (set (make-local-variable 'compilation-error-face) grep-hit-face)
+  (set (make-local-variable 'compilation-error-regexp-alist) grep-regexp-alist)
   (when (require 'wgrep nil t)
     (wgrep-setup-internal)))
 
