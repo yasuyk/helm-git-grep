@@ -522,8 +522,7 @@ if submodules exists, don't grep submodules."
           :candidate-number-limit helm-git-grep-candidate-number-limit)))
 
 ;;;###autoload
-(defalias 'helm-git-grep-from-here 'helm-git-grep-at-point)
-(make-obsolete 'helm-git-grep-from-here 'helm-git-grep-at-point "0.5")
+(define-obsolete-function-alias 'helm-git-grep-from-here 'helm-git-grep-at-point "0.5")
 
 (provide 'helm-git-grep)
 
