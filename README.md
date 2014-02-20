@@ -2,7 +2,7 @@
 
 [helm] for [git-grep(1)][git-grep], an incremental [git-grep(1)][git-grep].
 
-![](https://github.com/yasuyk/helm-git-grep/raw/master/image/helm-git-grep.jpg)
+![](https://raw.github.com/yasuyk/misc/master/helm-git-grep/image/helm-git-grep.gif)
 
 ## Features
 
@@ -95,11 +95,11 @@ The ignore case option is correspond to `-i` option of `git grep`.
 
 A buffer name is `*helm git grep [i]*` with ignore case option.
 
-![](https://github.com/yasuyk/helm-git-grep/raw/master/image/with-ignore-case-option.png)
+![](https://raw.github.com/yasuyk/misc/master/helm-git-grep/image/with-ignore-case-option.png)
 
 A buffer name is `*helm git grep*` without ignore case option.
 
-![](https://github.com/yasuyk/helm-git-grep/raw/master/image/without-ignore-case-option.png)
+![](https://raw.github.com/yasuyk/misc/master/helm-git-grep/image/without-ignore-case-option.png)
 
 ## Customization
 
