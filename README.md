@@ -18,16 +18,6 @@
 
 ## Installation
 
-### Manual
-
-Just drop `helm-git-grep.el`. somewhere in your `load-path`.
-
-```lisp
-(add-to-list 'load-path "~/somewhere")
-```
-
-### MELPA
-
 If you're an Emacs 24 user or you have a recent version of package.el
 you can install `helm-git-grep.el` from the [MELPA](http://melpa.milkbox.net/) repository.
 
@@ -35,14 +25,11 @@ you can install `helm-git-grep.el` from the [MELPA](http://melpa.milkbox.net/) r
 
 Add the following to your emacs init file.
 
-### Manual
-
-    (require 'helm-git-grep)
+    (require 'helm-git-grep) ;; Not necessary if installed by package.el
     (global-set-key (kbd "C-c g") 'helm-git-grep)
+    ;; Invoke `helm-git-grep' from isearch.
+    (define-key isearch-mode-map (kbd "C-c g") 'helm-git-grep-from-isearch)
 
-### MELPA
-
-    (global-set-key (kbd "C-c g") 'helm-git-grep)
 
 ## Basic usage
 

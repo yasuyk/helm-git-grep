@@ -29,8 +29,10 @@
 
 ;; Add the following to your Emacs init file:
 ;;
-;; (require 'helm-git-grep) ;; Not necessary if using ELPA package
+;; (require 'helm-git-grep) ;; Not necessary if installed by package.el
 ;; (global-set-key (kbd "C-c g") 'helm-git-grep)
+;; ;; Invoke `helm-git-grep' from isearch.
+;; (define-key isearch-mode-map (kbd "C-c g") 'helm-git-grep-from-isearch)
 
 ;; For more information, See the following URL:
 ;; https://github.com/yasuyk/helm-git-grep
@@ -522,6 +524,16 @@ if submodules exists, don't grep submodules."
           :buffer (if helm-git-grep-ignore-case "*helm git grep [i]*" "*helm git grep*")
           :keymap helm-git-grep-map
           :candidate-number-limit helm-git-grep-candidate-number-limit)))
+
+;;;###autoload
+(defun helm-git-grep-from-isearch ()
+  "Invoke `helm-git-grep' from isearch."
+  (interactive)
+  (let ((input (if isearch-regexp
+                   isearch-string
+                   (regexp-quote isearch-string))))
+    (isearch-exit)
+    (helm-git-grep-1 input)))
 
 ;;;###autoload
 (define-obsolete-function-alias 'helm-git-grep-from-here 'helm-git-grep-at-point "0.5")
