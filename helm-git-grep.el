@@ -33,6 +33,8 @@
 ;; (global-set-key (kbd "C-c g") 'helm-git-grep)
 ;; ;; Invoke `helm-git-grep' from isearch.
 ;; (define-key isearch-mode-map (kbd "C-c g") 'helm-git-grep-from-isearch)
+;; ;; Invoke `helm-git-grep' from other helm.
+;; (define-key helm-map (kbd "C-c g") 'helm-git-grep-from-helm)
 
 ;; For more information, See the following URL:
 ;; https://github.com/yasuyk/helm-git-grep
@@ -534,6 +536,15 @@ if submodules exists, don't grep submodules."
                    (regexp-quote isearch-string))))
     (isearch-exit)
     (helm-git-grep-1 input)))
+
+;;;###autoload
+(defun helm-git-grep-from-helm ()
+  "Invoke `helm-git-grep' from other helm."
+  (interactive)
+  (helm-quit-and-execute-action
+   '(lambda (unused)
+      (helm-git-grep-1 helm-input))))
+
 
 ;;;###autoload
 (define-obsolete-function-alias 'helm-git-grep-from-here 'helm-git-grep-at-point "0.5")
