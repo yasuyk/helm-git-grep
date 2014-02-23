@@ -34,7 +34,8 @@
 ;; ;; Invoke `helm-git-grep' from isearch.
 ;; (define-key isearch-mode-map (kbd "C-c g") 'helm-git-grep-from-isearch)
 ;; ;; Invoke `helm-git-grep' from other helm.
-;; (define-key helm-map (kbd "C-c g") 'helm-git-grep-from-helm)
+;; (eval-after-load 'helm
+;;   '(define-key helm-map (kbd "C-c g") 'helm-git-grep-from-helm))
 
 ;; For more information, See the following URL:
 ;; https://github.com/yasuyk/helm-git-grep
