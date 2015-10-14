@@ -2,7 +2,8 @@
 
 [helm] for [git-grep(1)][git-grep], an incremental [git-grep(1)][git-grep].
 
-![](https://raw.github.com/yasuyk/misc/master/helm-git-grep/image/helm-git-grep.gif)
+![helm-git-grep](https://cloud.githubusercontent.com/assets/833383/10489416/0d7e15d6-726b-11e5-9d3e-3f7fc7ee1221.gif)
+
 
 ## Features
 
