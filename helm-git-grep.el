@@ -164,6 +164,8 @@ newline return an empty string."
                (helm-git-submodule-grep-command)))
     '()))
 
+(defvar grep-hit-face)
+
 (define-compilation-mode helm-git-grep-mode "Helm Git Grep"
   "Set up `wgrep' if exist."
   (require' grep)
@@ -360,38 +362,38 @@ With a prefix arg record CANDIDATE in `mark-ring'."
 (defun helm-git-grep-run-default-action ()
   "Run grep default action from `helm-git-grep'."
   (interactive)
-  (helm-quit-and-execute-action 'helm-git-grep-action))
+  (helm-exit-and-execute-action 'helm-git-grep-action))
 
 ;;;###autoload
 (defun helm-git-grep-run-other-window-action ()
   "Run grep goto other window action from `helm-git-grep'."
   (interactive)
-  (helm-quit-and-execute-action 'helm-git-grep-other-window))
+  (helm-exit-and-execute-action 'helm-git-grep-other-window))
 
 ;;;###autoload
 (defun helm-git-grep-run-other-frame-action ()
   "Run grep goto other frame action from `helm-git-grep'."
   (interactive)
-  (helm-quit-and-execute-action 'helm-git-grep-other-frame))
+  (helm-exit-and-execute-action 'helm-git-grep-other-frame))
 
 ;;;###autoload
 (defun helm-git-grep-run-elscreen-action ()
   "Run grep goto elscreen action from `helm-git-grep'."
   (interactive)
-  (helm-quit-and-execute-action 'helm-git-grep-jump-elscreen))
+  (helm-exit-and-execute-action 'helm-git-grep-jump-elscreen))
 
 ;;;###autoload
 (defun helm-git-grep-run-save-buffer ()
   "Run grep save results action from `helm-git-grep'."
   (interactive)
-  (helm-quit-and-execute-action 'helm-git-grep-save-results))
+  (helm-exit-and-execute-action 'helm-git-grep-save-results))
 
 ;;;###autoload
 (defun helm-git-grep-toggle-ignore-case ()
   "Toggle ignore case option for git grep command from `helm-git-grep'."
   (interactive)
   (setq helm-git-grep-ignore-case (not helm-git-grep-ignore-case))
-  (helm-run-after-quit (lambda () (helm-git-grep-1 helm-input))))
+  (helm-run-after-exit (lambda () (helm-git-grep-1 helm-input))))
 
 ;;;###autoload
 (defun helm-git-grep-toggle-showing-trailing-leading-line ()
@@ -399,7 +401,7 @@ With a prefix arg record CANDIDATE in `mark-ring'."
   (interactive)
   (setq helm-git-grep-showing-leading-and-trailing-lines
         (not helm-git-grep-showing-leading-and-trailing-lines))
-  (helm-run-after-quit (lambda () (helm-git-grep-1 helm-input))))
+  (helm-run-after-exit (lambda () (helm-git-grep-1 helm-input))))
 
 (defvar helm-git-grep-help-message
   "== Helm Git Grep Map ==\
@@ -547,7 +549,7 @@ if submodules exists, don't grep submodules."
 (defun helm-git-grep-from-helm ()
   "Invoke `helm-git-grep' from other helm."
   (interactive)
-  (helm-quit-and-execute-action
+  (helm-exit-and-execute-action
    '(lambda (unused)
       (helm-git-grep-1 helm-input))))
 
