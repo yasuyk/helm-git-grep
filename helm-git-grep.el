@@ -507,16 +507,16 @@ if submodules exists, grep submodules too."
   (helm-git-grep-1))
 
 ;;;###autoload
-(defun helm-git-grep-at-point ()
+(defun helm-git-grep-at-point (beg end)
   "Helm git grep with symbol at point.
 
+Use region which defined by BEG and END as input instead of the thing at point
+if region exists.
+
 if submodules exists, grep submodules too."
-  (interactive)
-  (let* ((symbol
-          (if (not mark-active)
-              (thing-at-point 'symbol)
-            (buffer-substring (region-beginning) (region-end))
-            ))
+  (interactive "r")
+  (let* ((symbol (if (not mark-active) (thing-at-point 'symbol)
+                   (when (and beg end)(buffer-substring beg end))))
          (input (if symbol (concat symbol " ") nil)))
     (if mark-active (deactivate-mark)) ;; remove any active regions
     (helm-git-grep-1 input)))
