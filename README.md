@@ -1,4 +1,4 @@
-# helm-git-grep.el  [![travis badge][travis-badge]][travis-link] [![melpa badge][melpa-badge]][melpa-link] [![melpa stable badge][melpa-stable-badge]][melpa-stable-link]
+# helm-git-grep.el  [![licence][gplv3-badge]][gplv3-link] [![travis badge][travis-badge]][travis-link] [![melpa badge][melpa-badge]][melpa-link] [![melpa stable badge][melpa-stable-badge]][melpa-stable-link]
 
 [helm] for [git-grep(1)][git-grep], an incremental [git-grep(1)][git-grep].
 
@@ -118,3 +118,5 @@ I'm poor at English. Please point out or correct errors in this document, if any
 [melpa-stable-link]: http://stable.melpa.org/#/helm-git-grep
 [melpa-badge]: http://melpa.org/packages/helm-git-grep-badge.svg
 [melpa-stable-badge]: http://stable.melpa.org/packages/helm-git-grep-badge.svg
+[gplv3-badge]:http://img.shields.io/badge/license-GPLv3-blue.svg
+[gplv3-link]:https://www.gnu.org/copyleft/gpl.html
