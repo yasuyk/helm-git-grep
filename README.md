@@ -1,4 +1,4 @@
-# helm-git-grep.el
+# helm-git-grep.el  [![travis badge][travis-badge]][travis-link] [![melpa badge][melpa-badge]][melpa-link]
 
 [helm] for [git-grep(1)][git-grep], an incremental [git-grep(1)][git-grep].
 
@@ -111,3 +111,9 @@ I'm poor at English. Please point out or correct errors in this document, if any
 [helm]:https://github.com/emacs-helm/helm
 [git]:http://git-scm.com/
 [git-grep]:http://git-scm.com/docs/git-grep
+[travis-badge]: https://travis-ci.org/yasuyk/helm-git-grep.svg
+[travis-link]: https://travis-ci.org/yasuyk/helm-git-grep
+[melpa-link]: http://melpa.org/#/helm-git-grep
+[melpa-stable-link]: http://stable.melpa.org/#/helm-git-grep
+[melpa-badge]: http://melpa.org/packages/helm-git-grep-badge.svg
+[melpa-stable-badge]: http://stable.melpa.org/packages/helm-git-grep-badge.svg
