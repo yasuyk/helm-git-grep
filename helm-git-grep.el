@@ -1,7 +1,7 @@
 ;;; helm-git-grep.el --- helm for git grep, an incremental git-grep(1)
 
 ;; Copyright (C) 2013 mechairoi
-;;               2013-2106 Yasuyuki Oka <yasuyk@gmail.com>
+;;               2013-2016 Yasuyuki Oka <yasuyk@gmail.com>
 
 ;; This is a fork of anything-git-grep.el wrote by mechairoi.
 
