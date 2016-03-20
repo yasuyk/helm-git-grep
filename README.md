@@ -1,4 +1,4 @@
-# helm-git-grep.el  [![travis badge][travis-badge]][travis-link] [![melpa badge][melpa-badge]][melpa-link]
+# helm-git-grep.el  [![travis badge][travis-badge]][travis-link] [![melpa badge][melpa-badge]][melpa-link] [![melpa stable badge][melpa-stable-badge]][melpa-stable-link]
 
 [helm] for [git-grep(1)][git-grep], an incremental [git-grep(1)][git-grep].
 
