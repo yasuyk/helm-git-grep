@@ -91,7 +91,7 @@ Set it to nil if you don't want this limit."
   :type  'integer)
 
 (defcustom helm-git-grep-at-point-deactivate-mark nil
-  "Deactivate the mark when `helm-git-grep-at-point' is Invoked."
+  "Deactivate the mark when `helm-git-grep-at-point' is invoked."
   :group 'helm-git-grep
   :type  'boolean)
 
