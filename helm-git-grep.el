@@ -531,7 +531,7 @@ if submodules exists, grep submodules too."
 (defun helm-git-grep-with-exclude-file-pattern ()
   "Helm git grep with exclude file pattern.
 
-file pattern is iterpreted as an POSIX extended regular expression.
+file pattern is interpreted as an POSIX extended regular expression.
 
 if submodules exists, don't grep submodules."
   (interactive)
