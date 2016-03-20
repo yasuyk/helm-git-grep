@@ -90,6 +90,11 @@ Set it to nil if you don't want this limit."
   :group 'helm-git-grep
   :type  'integer)
 
+(defcustom helm-git-grep-at-point-deactivate-mark nil
+  "Deactivate the mark when `helm-git-grep-at-point' is Invoked."
+  :group 'helm-git-grep
+  :type  'boolean)
+
 (defvar helm-git-grep-history nil "The history list for `helm-git-grep'.")
 
 (defvar helm-git-grep-exclude-file-p nil)
@@ -518,7 +523,8 @@ if submodules exists, grep submodules too."
   (let* ((symbol (if (not mark-active) (thing-at-point 'symbol)
                    (when (and beg end)(buffer-substring beg end))))
          (input (if symbol (concat symbol " ") nil)))
-    (if mark-active (deactivate-mark)) ;; remove any active regions
+    (when (and helm-git-grep-at-point-deactivate-mark mark-active)
+      (deactivate-mark)) ;; remove any active regions
     (helm-git-grep-1 input)))
 
 ;;;###autoload
