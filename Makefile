@@ -1,27 +1,25 @@
-.PHONY : test
-
 EMACS ?= emacs
 CASK ?= cask
 
-LOADPATH = -L .
+test: unit-tests
 
-ELPA_DIR = \
-	.cask/$(shell $(EMACS) -Q --batch --eval '(princ emacs-version)')/elpa
+unit-tests: elpa
+	${CASK} exec ert-runner
 
-test: elpa test-compile
-	$(CASK) exec $(EMACS) -Q -batch $(LOADPATH) \
-		$(patsubst %,-l %,$(wildcard test/test-*.el)) \
-		-f ert-run-tests-batch-and-exit
+elpa:
+	mkdir -p elpa
+	${CASK} install 2> elpa/install.log
 
-test/test-%: elpa
-	$(CASK) exec $(EMACS) -Q -batch $(LOADPATH) \
-		-l $@ \
-		-f ert-run-tests-batch-and-exit
+clean-elpa:
+	rm -rf elpa
 
-test-compile:
-	$(CASK) exec $(EMACS) -batch -Q -L . -eval "(progn (setq byte-compile-error-on-warn t) (batch-byte-compile))" helm-git-grep.el
+clean-elc:
+	rm -f *.elc test/*.elc
 
-elpa: $(ELPA_DIR)
-$(ELPA_DIR): Cask
-	$(CASK) install
-	touch $@
+clean: clean-elpa clean-elc
+
+print-deps:
+	${EMACS} --version
+	@echo CASK=${CASK}
+
+travis-ci: print-deps test
