@@ -93,6 +93,8 @@ A buffer name is `*helm git grep*` without ignore case option.
 
 ## Customization
 
+### Variables
+
 #### `helm-git-grep-candidate-number-limit`(Default: `300`)
 
 Limit candidate number `helm-git-grep`.
@@ -104,6 +106,20 @@ Max number of elements to save in `helm-git-grep-history`.
 #### `helm-git-grep-use-ioccur-style-keys`(Default: `t`)
 
 Use Arrow keys to jump to occurrences.
+
+### Faces
+
+#### `helm-git-grep-match`
+
+Face used to highlight git-grep(1) matches.
+
+#### `helm-git-grep-file`
+
+Face used to highlight git-grep(1) results filenames.
+
+### helm-git-grep-line
+
+Face used to highlight git-grep(1) number lines.
 
 ## Note
 
