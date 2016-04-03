@@ -117,7 +117,7 @@ Face used to highlight git-grep(1) matches.
 
 Face used to highlight git-grep(1) results filenames.
 
-### helm-git-grep-line
+### `helm-git-grep-line`
 
 Face used to highlight git-grep(1) number lines.
 
