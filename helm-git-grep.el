@@ -53,6 +53,7 @@
 (declare-function elscreen-get-conf-list "ext:elscreen.el" (type))
 (declare-function wgrep-setup-internal "ext:wgrep")
 
+
 (defgroup helm-git-grep nil
   "Helm for git grep."
   :prefix "helm-git-grep-"
@@ -95,6 +96,30 @@ Set it to nil if you don't want this limit."
   :group 'helm-git-grep
   :type  'boolean)
 
+
+;;; Faces
+;;
+;;
+(defgroup helm-git-grep-faces nil
+  "Customize the appearance of helm-git-grep."
+  :prefix "helm-git-grep-"
+  :group 'helm-git-grep)
+
+(defface helm-git-grep-match
+  '((default (:inherit helm-match)))
+  "Face used to highlight git-grep(1) matches."
+  :group 'helm-git-grep-faces)
+
+(defface helm-git-grep-file
+  '((default (:inherit compilation-info)))
+  "Face used to highlight git-grep(1) results filenames."
+  :group 'helm-git-grep-faces)
+
+(defface helm-git-grep-line
+  '((default (:inherit compilation-line-number)))
+  "Face used to highlight git-grep(1) number lines."
+  :group 'helm-git-grep-faces)
+
 (defvar helm-git-grep-history nil "The history list for `helm-git-grep'.")
 
 (defvar helm-git-grep-exclude-file-p nil)
@@ -285,14 +310,21 @@ Argument SOURCE is not used."
   (let ((colonp (string= separator ":")))
     (format "%s%s%s%s%s"
             (if colonp
-                (propertize filename 'face compilation-info-face)
+                (propertize filename 'face 'helm-git-grep-file)
               filename)
             separator
             (if colonp
-                (propertize lineno 'face compilation-line-face)
+                (propertize lineno 'face 'helm-git-grep-line)
               lineno)
             separator
-            content)))
+            (helm-git-grep-highlight-match content))))
+
+(defun helm-git-grep-highlight-match (content)
+  "Highlight matched text with `helm-git-grep-match' face in CONTENT."
+  (if (string-match (format ".*\\(%s\\).*" helm-input) content)
+      (put-text-property (match-beginning 1) (match-end 1)
+                         'face 'helm-git-grep-match content))
+  content)
 
 (defun helm-git-grep-filtered-candidate-transformer-file-line-1 (candidate)
   "Transform CANDIDATE to `helm-git-grep-mode' format."
