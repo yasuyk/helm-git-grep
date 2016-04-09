@@ -321,9 +321,10 @@ Argument SOURCE is not used."
 
 (defun helm-git-grep-highlight-match (content)
   "Highlight matched text with `helm-git-grep-match' face in CONTENT."
-  (if (string-match (format ".*\\(%s\\).*" helm-input) content)
-      (put-text-property (match-beginning 1) (match-end 1)
-                         'face 'helm-git-grep-match content))
+  (dolist (input (delete "" (split-string helm-input)))
+    (if (string-match (format ".*\\(%s\\).*" input) content)
+        (put-text-property (match-beginning 1) (match-end 1)
+                           'face 'helm-git-grep-match content)))
   content)
 
 (defun helm-git-grep-filtered-candidate-transformer-file-line-1 (candidate)
