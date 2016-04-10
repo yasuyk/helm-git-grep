@@ -1,7 +1,7 @@
 EMACS ?= emacs
 CASK ?= cask
 
-test: unit-tests
+test: test-compile unit-tests
 
 unit-tests: elpa
 	${CASK} exec ert-runner
@@ -22,4 +22,8 @@ print-deps:
 	${EMACS} --version
 	@echo CASK=${CASK}
 
+test-compile:
+	$(CASK) exec $(EMACS) -batch -Q -L . -eval "(progn (setq byte-compile-error-on-warn t) (batch-byte-compile))" helm-git-grep.el
+
 travis-ci: print-deps test
+
