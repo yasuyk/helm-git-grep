@@ -1,3 +1,9 @@
+# 0.8.0 (Jul 13, 2016)
+
+- New features:
+    - Support latest helm
+      Use `helm-source-async` instead of `define-helm-type-attribute`
+
 # 0.7.1 (Apr 9, 2016)
 
 - Bug fixes:
