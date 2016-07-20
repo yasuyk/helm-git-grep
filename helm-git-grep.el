@@ -565,7 +565,7 @@ if submodules exists, grep submodules too."
          (input (if symbol (concat symbol " ") nil)))
     (when (and helm-git-grep-at-point-deactivate-mark mark-active)
       (deactivate-mark)) ;; remove any active regions
-    (helm-git-grep-1 input)))
+    (helm-git-grep-1 (regexp-quote input))))
 
 ;;;###autoload
 (defun helm-git-grep-with-exclude-file-pattern ()
