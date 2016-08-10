@@ -562,7 +562,7 @@ if submodules exists, grep submodules too."
   (interactive)
   (let* ((symbol (if (not mark-active) (thing-at-point 'symbol)
                    (when (use-region-p) (buffer-substring (region-beginning) (region-end)))))
-         (input (if symbol (concat symbol " ") nil)))
+         (input (if symbol (concat symbol " ") "")))
     (when (and helm-git-grep-at-point-deactivate-mark mark-active)
       (deactivate-mark)) ;; remove any active regions
     (helm-git-grep-1 input)))
