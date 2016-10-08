@@ -1,1 +1,1 @@
---no-win
+--no-win --debug --error-log
