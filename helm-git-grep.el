@@ -389,6 +389,17 @@ With a prefix arg record CANDIDATE in `mark-ring'."
       (helm-git-grep-action candidate))
   (helm-highlight-current-line))
 
+(defun helm-git-grep-get-input-symbol ()
+  "Get input symbol."
+  (if (not mark-active)
+      (thing-at-point 'symbol)
+    (when (use-region-p)
+      (buffer-substring (region-beginning) (region-end)))))
+
+(defun helm-git-grep-get-isearch-input-symbol ()
+  "Get input symbol from `isearch-regexp' or `isearch-string'."
+  (if isearch-regexp isearch-string (regexp-quote isearch-string)))
+
 ;;;###autoload
 (defun helm-git-grep-run-persistent-action ()
   "Run grep persistent action from `helm-git-grep'."
@@ -542,17 +553,6 @@ Optional argument INPUT is initial input."
         :input input
         :keymap helm-git-grep-map
         :candidate-number-limit helm-git-grep-candidate-number-limit))
-
-(defun helm-git-grep-get-input-symbol ()
-  "Get input symbol."
-  (if (not mark-active)
-      (thing-at-point 'symbol)
-    (when (use-region-p)
-      (buffer-substring (region-beginning) (region-end)))))
-
-(defun helm-git-grep-get-isearch-input-symbol ()
-  "Get input symbol from `isearch-regexp' or `isearch-string'."
-  (if isearch-regexp isearch-string (regexp-quote isearch-string)))
 
 ;;;###autoload
 (defun helm-git-grep ()

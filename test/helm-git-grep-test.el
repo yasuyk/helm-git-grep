@@ -78,6 +78,16 @@
     (cl-loop for x from 40 to (length "-end 1)")
              do (should-equal (get-text-property x 'face result) 'helm-git-grep-match))))
 
+(ert-deftest ert--helm-git-grep-get-isearch-input-symbol ()
+  ;; return isearch-string
+  (let* ((expected "defun")
+         (isearch-regexp expected)
+         (isearch-string expected))
+    (should-equal (helm-git-grep-get-isearch-input-symbol) expected))
+  (let* ((expected "\\^defun")
+         (isearch-regexp nil)
+         (isearch-string "^defun"))
+    (should-equal (helm-git-grep-get-isearch-input-symbol) expected)))
 
 (ert-deftest ert--helm-git-grep ()
   (mocker-let ((helm-git-grep-1 () ((:output t))))
