@@ -27,6 +27,11 @@
 ;;; Code:
 
 
+(eval-when-compile (require 'cl))
+
+(require 'helm-git-grep)
+(require 'ert)
+(require 'mocker)
 
 (defun should-equal (a b)
     (should (equal a b)))
@@ -73,6 +78,66 @@
     (cl-loop for x from 40 to (length "-end 1)")
              do (should-equal (get-text-property x 'face result) 'helm-git-grep-match))))
 
+(ert-deftest ert--helm-git-grep-persistent-action ()
+  (let ((expected "helm"))
+    (let ((current-prefix-arg t))
+      (mocker-let ((helm-git-grep-action (candidate where mark) ((:input `(,expected nil mark))))
+                   (helm-highlight-current-line () ((:output t))))
+        (should (helm-git-grep-persistent-action expected))))
+    (let ((current-prefix-arg nil))
+      (mocker-let ((helm-git-grep-action (candidate) ((:input `(,expected))))
+                   (helm-highlight-current-line () ((:output t))))
+        (should (helm-git-grep-persistent-action expected))))))
+
+(ert-deftest ert--helm-git-grep-get-input-symbol ()
+  (let ((expected " helm"))
+    (with-temp-buffer
+      (insert expected)
+      (goto-char (1+ (point-min)))
+      (should-equal (helm-git-grep-get-input-symbol) "helm"))
+    (let ((mark-active t))
+      (mocker-let ((use-region-p () ((:output t)))
+                   (helm-git-grep-get-regin-substring () ((:output expected))))
+        (should-equal (helm-git-grep-get-input-symbol) expected)))))
+
+(ert-deftest ert--helm-git-grep-get-isearch-input-symbol ()
+  ;; return isearch-string
+  (let* ((expected "defun")
+         (isearch-regexp expected)
+         (isearch-string expected))
+    (should-equal (helm-git-grep-get-isearch-input-symbol) expected))
+  (let* ((expected "\\^defun")
+         (isearch-regexp nil)
+         (isearch-string "^defun"))
+    (should-equal (helm-git-grep-get-isearch-input-symbol) expected)))
+
+(ert-deftest ert--helm-git-grep ()
+  (mocker-let ((helm-git-grep-1 () ((:output t))))
+    (should (helm-git-grep))))
+
+(ert-deftest ert--helm-git-grep-at-point-symbol-is-nil ()
+  (mocker-let ((helm-git-grep-get-input-symbol () ((:output nil)))
+               (helm-git-grep-1 (input) ((:input '("") :output t))))
+    (should (helm-git-grep-at-point))))
+
+(ert-deftest ert--helm-git-grep-at-point-do-deactivate-mark ()
+  (let ((helm-git-grep-at-point-deactivate-mark t)
+        (mark-active t))
+    (mocker-let ((helm-git-grep-get-input-symbol () ((:output "helm")))
+                 (helm-git-grep-1 (input) ((:input '("helm ") :output t)))
+                 (deactivate-mark () ((:max-occur 1))))
+      (should (helm-git-grep-at-point)))))
+
+(ert-deftest ert--helm-git-grep-from-isearch ()
+    (mocker-let ((helm-git-grep-get-isearch-input-symbol () ((:output "helm")))
+                 (helm-git-grep-1 (input) ((:input '("helm") :output t)))
+                 (isearch-exit () ((:max-occur 1))))
+      (should (helm-git-grep-from-isearch))))
+
+(ert-deftest ert--helm-git-grep-from-helm ()
+  (let ((helm-input "helm"))
+    (mocker-let ((helm-exit-and-execute-action (action) ((:input-matcher 'functionp :output t))))
+      (should (helm-git-grep-from-helm)))))
 
 (provide 'helm-git-grep-test)
 

@@ -389,6 +389,21 @@ With a prefix arg record CANDIDATE in `mark-ring'."
       (helm-git-grep-action candidate))
   (helm-highlight-current-line))
 
+(defun helm-git-grep-get-regin-substring ()
+  "Return the contents of region as a string."
+  (buffer-substring (region-beginning) (region-end)))
+
+(defun helm-git-grep-get-input-symbol ()
+  "Get input symbol."
+  (if (not mark-active)
+      (thing-at-point 'symbol)
+    (when (use-region-p)
+      (helm-git-grep-get-regin-substring))))
+
+(defun helm-git-grep-get-isearch-input-symbol ()
+  "Get input symbol from `isearch-regexp' or `isearch-string'."
+  (if isearch-regexp isearch-string (regexp-quote isearch-string)))
+
 ;;;###autoload
 (defun helm-git-grep-run-persistent-action ()
   "Run grep persistent action from `helm-git-grep'."
@@ -560,8 +575,7 @@ if region exists.
 
 if submodules exists, grep submodules too."
   (interactive)
-  (let* ((symbol (if (not mark-active) (thing-at-point 'symbol)
-                   (when (use-region-p) (buffer-substring (region-beginning) (region-end)))))
+  (let* ((symbol (helm-git-grep-get-input-symbol))
          (input (if symbol (concat symbol " ") "")))
     (when (and helm-git-grep-at-point-deactivate-mark mark-active)
       (deactivate-mark)) ;; remove any active regions
@@ -585,9 +599,7 @@ if submodules exists, don't grep submodules."
 (defun helm-git-grep-from-isearch ()
   "Invoke `helm-git-grep' from isearch."
   (interactive)
-  (let ((input (if isearch-regexp
-                   isearch-string
-                   (regexp-quote isearch-string))))
+  (let ((input (helm-git-grep-get-isearch-input-symbol)))
     (isearch-exit)
     (helm-git-grep-1 input)))
 
