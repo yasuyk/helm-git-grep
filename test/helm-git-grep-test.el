@@ -90,17 +90,15 @@
         (should (helm-git-grep-persistent-action expected))))))
 
 (ert-deftest ert--helm-git-grep-get-input-symbol ()
-  (let ((expected "helm"))
+  (let ((expected " helm"))
     (with-temp-buffer
       (insert expected)
-      (goto-char (point-min))
-      (should-equal (helm-git-grep-get-input-symbol) expected))
-    (with-temp-buffer
-      (insert expected)
-      (goto-char (point-min))
-      (activate-mark)
-      (goto-char (point-max))
-      (should-equal (helm-git-grep-get-input-symbol) expected))))
+      (goto-char (1+ (point-min)))
+      (should-equal (helm-git-grep-get-input-symbol) "helm"))
+    (let ((mark-active t))
+      (mocker-let ((use-region-p () ((:output t)))
+                   (helm-git-grep-get-regin-substring () ((:output expected))))
+        (should-equal (helm-git-grep-get-input-symbol) expected)))))
 
 (ert-deftest ert--helm-git-grep-get-isearch-input-symbol ()
   ;; return isearch-string
