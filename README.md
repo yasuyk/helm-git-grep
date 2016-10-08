@@ -136,8 +136,8 @@ I'm poor at English. Please point out or correct errors in this document, if any
 [git-grep]:http://git-scm.com/docs/git-grep
 [travis-badge]: https://travis-ci.org/yasuyk/helm-git-grep.svg
 [travis-link]: https://travis-ci.org/yasuyk/helm-git-grep
-[coveralls-badge]: https://coveralls.io/repos/github/yasuyk/helm-git-grep/badge.svg
-[coveralls-link]:https://coveralls.io/github/yasuyk/helm-git-grep
+[coveralls-badge]: https://coveralls.io/repos/github/yasuyk/helm-git-grep/badge.svg?branch=master
+[coveralls-link]:https://coveralls.io/github/yasuyk/helm-git-grep?branch=master
 [melpa-link]: http://melpa.org/#/helm-git-grep
 [melpa-stable-link]: http://stable.melpa.org/#/helm-git-grep
 [melpa-badge]: http://melpa.org/packages/helm-git-grep-badge.svg
