@@ -48,10 +48,10 @@
   (should-equal (helm-git-grep-showing-leading-and-trailing-lines-option t) ""))
 
 (ert-deftest ert--helm-git-grep-args ()
-  (should-equal (helm-git-grep-args nil)
+  (should-equal (helm-git-grep-args)
                 '("--no-pager" "grep" "-n" "--no-color" "-i"))
   (let ((helm-git-grep-ignore-case nil))
-     (should-equal (helm-git-grep-args nil)
+     (should-equal (helm-git-grep-args)
                    '("--no-pager" "grep" "-n" "--no-color"))))
 
 (ert-deftest ert--helm-git-grep-highlight-match ()
