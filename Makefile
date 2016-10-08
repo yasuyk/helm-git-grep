@@ -1,20 +1,23 @@
+.PHONY : test
+
 EMACS ?= emacs
 CASK ?= cask
+SRC ?= helm-git-grep.el
+
+LOADPATH = -L .
+
+ELPA_DIR = $(shell EMACS=$(EMACS) $(CASK) package-directory)
 
 test: test-compile unit-tests
 
 unit-tests: elpa
 	${CASK} exec ert-runner
 
-elpa:
-	mkdir -p elpa
-	${CASK} install 2> elpa/install.log
-
 clean-elpa:
-	rm -rf elpa
+	rm -rf .cask
 
 clean-elc:
-	rm -f *.elc test/*.elc
+	cask clean-elc
 
 clean: clean-elpa clean-elc
 
@@ -23,7 +26,13 @@ print-deps:
 	@echo CASK=${CASK}
 
 test-compile: elpa
-	$(CASK) exec $(EMACS) -batch -Q -L . -eval "(progn (setq byte-compile-error-on-warn t) (batch-byte-compile))" helm-git-grep.el
+	$(CASK) exec $(EMACS) -batch -Q $(LOADPATH) -eval "(progn (setq byte-compile-error-on-warn t) (batch-byte-compile))" $(SRC)
 
 travis-ci: print-deps test
+
+elpa: $(ELPA_DIR)
+
+$(ELPA_DIR): Cask
+	$(CASK) install
+	touch $@
 
