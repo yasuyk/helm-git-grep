@@ -83,8 +83,19 @@
   (mocker-let ((helm-git-grep-1 () ((:output t))))
     (should (helm-git-grep))))
 
-(ert-deftest ert--helm-git-grep-at-point ()
-(defun
+(ert-deftest ert--helm-git-grep-at-point-symbol-is-nil ()
+  (mocker-let ((helm-git-grep-get-input-symbol () ((:output nil)))
+               (helm-git-grep-1 (input) ((:input '("") :output t))))
+    (should (helm-git-grep-at-point))))
+
+(ert-deftest ert--helm-git-grep-at-point-do-deactivate-mark ()
+  (let ((helm-git-grep-at-point-deactivate-mark t)
+        (mark-active t))
+    (mocker-let ((helm-git-grep-get-input-symbol () ((:output "helm")))
+                 (helm-git-grep-1 (input) ((:input '("helm ") :output t)))
+                 (deactivate-mark () ((:max-occur 1))))
+      (should (helm-git-grep-at-point)))))
+
 (provide 'helm-git-grep-test)
 
 ;; Local Variables:
