@@ -27,6 +27,11 @@
 ;;; Code:
 
 
+(eval-when-compile (require 'cl))
+
+(require 'helm-git-grep)
+(require 'ert)
+(require 'mocker)
 
 (defun should-equal (a b)
     (should (equal a b)))
@@ -74,6 +79,12 @@
              do (should-equal (get-text-property x 'face result) 'helm-git-grep-match))))
 
 
+(ert-deftest ert--helm-git-grep ()
+  (mocker-let ((helm-git-grep-1 () ((:output t))))
+    (should (helm-git-grep))))
+
+(ert-deftest ert--helm-git-grep-at-point ()
+(defun
 (provide 'helm-git-grep-test)
 
 ;; Local Variables:
