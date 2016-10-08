@@ -10,7 +10,8 @@ ELPA_DIR = $(shell EMACS=$(EMACS) $(CASK) package-directory)
 
 test: test-compile unit-tests
 
-unit-tests: elpa
+# `clean-elc` task needs to remove byte-compiled files to use undercover.
+unit-tests: clean-elc elpa
 	${CASK} exec ert-runner
 
 clean-elpa:
