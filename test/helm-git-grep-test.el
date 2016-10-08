@@ -78,6 +78,17 @@
     (cl-loop for x from 40 to (length "-end 1)")
              do (should-equal (get-text-property x 'face result) 'helm-git-grep-match))))
 
+(ert-deftest ert--helm-git-grep-persistent-action ()
+  (let ((expected "helm"))
+    (let ((current-prefix-arg t))
+      (mocker-let ((helm-git-grep-action (candidate where mark) ((:input `(,expected nil mark))))
+                   (helm-highlight-current-line () ((:output t))))
+        (should (helm-git-grep-persistent-action expected))))
+    (let ((current-prefix-arg nil))
+      (mocker-let ((helm-git-grep-action (candidate) ((:input `(,expected))))
+                   (helm-highlight-current-line () ((:output t))))
+        (should (helm-git-grep-persistent-action expected))))))
+
 (ert-deftest ert--helm-git-grep-get-input-symbol ()
   (let ((expected "helm"))
     (with-temp-buffer
