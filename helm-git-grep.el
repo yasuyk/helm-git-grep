@@ -543,6 +543,13 @@ Optional argument INPUT is initial input."
         :keymap helm-git-grep-map
         :candidate-number-limit helm-git-grep-candidate-number-limit))
 
+(defun helm-git-grep-get-input-symbol ()
+  "Get input symbol."
+  (if (not mark-active)
+      (thing-at-point 'symbol)
+    (when (use-region-p)
+      (buffer-substring (region-beginning) (region-end)))))
+
 ;;;###autoload
 (defun helm-git-grep ()
   "Helm git grep.
@@ -560,8 +567,7 @@ if region exists.
 
 if submodules exists, grep submodules too."
   (interactive)
-  (let* ((symbol (if (not mark-active) (thing-at-point 'symbol)
-                   (when (use-region-p) (buffer-substring (region-beginning) (region-end)))))
+  (let* ((symbol (helm-git-grep-get-input-symbol))
          (input (if symbol (concat symbol " ") "")))
     (when (and helm-git-grep-at-point-deactivate-mark mark-active)
       (deactivate-mark)) ;; remove any active regions
