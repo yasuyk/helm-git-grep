@@ -96,6 +96,17 @@
                  (deactivate-mark () ((:max-occur 1))))
       (should (helm-git-grep-at-point)))))
 
+(ert-deftest ert--helm-git-grep-from-isearch ()
+    (mocker-let ((helm-git-grep-get-isearch-input-symbol () ((:output "helm")))
+                 (helm-git-grep-1 (input) ((:input '("helm") :output t)))
+                 (isearch-exit () ((:max-occur 1))))
+      (should (helm-git-grep-from-isearch))))
+
+(ert-deftest ert--helm-git-grep-from-helm ()
+  (let ((helm-input "helm"))
+    (mocker-let ((helm-exit-and-execute-action (action) ((:input-matcher 'functionp :output t))))
+      (should (helm-git-grep-from-helm)))))
+
 (provide 'helm-git-grep-test)
 
 ;; Local Variables:

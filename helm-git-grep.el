@@ -550,6 +550,10 @@ Optional argument INPUT is initial input."
     (when (use-region-p)
       (buffer-substring (region-beginning) (region-end)))))
 
+(defun helm-git-grep-get-isearch-input-symbol ()
+  "Get input symbol from `isearch-regexp' or `isearch-string'."
+  (if isearch-regexp isearch-string (regexp-quote isearch-string)))
+
 ;;;###autoload
 (defun helm-git-grep ()
   "Helm git grep.
@@ -591,9 +595,7 @@ if submodules exists, don't grep submodules."
 (defun helm-git-grep-from-isearch ()
   "Invoke `helm-git-grep' from isearch."
   (interactive)
-  (let ((input (if isearch-regexp
-                   isearch-string
-                   (regexp-quote isearch-string))))
+  (let ((input (helm-git-grep-get-isearch-input-symbol)))
     (isearch-exit)
     (helm-git-grep-1 input)))
 
