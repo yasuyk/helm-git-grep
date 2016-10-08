@@ -7,4 +7,5 @@
 (development
  (depends-on "ert")                    ; Unit test library
  (depends-on "ert-runner")             ; Unit test runner
- (depends-on "mocker"))                ; Mocking framework
+ (depends-on "mocker")                 ; Mocking framework
+ (depends-on "undercover"))            ; Test coverage library
