@@ -9,18 +9,13 @@ LOADPATH = -L .
 ELPA_DIR = $(shell EMACS=$(EMACS) $(CASK) package-directory)
 
 .PHONY : test
-test: test-compile unit-tests integration-tests
+test: test-compile unit-tests
 
 .PHONY : unit-tests
 # `clean-elc` task needs to remove byte-compiled files to collect coverage by undercover.el.
 unit-tests: clean-elc elpa
 	@echo "-- Running unit-tests --"
 	${CASK} exec ert-runner
-
-.PHONY : integration-tests
-integration-tests: fixture
-	@echo "-- Running integration tests --"
-	${CASK} exec ecukes
 
 .PHONY : clean-elpa
 clean-elpa:
@@ -58,7 +53,7 @@ fixture: $(FIXTURE_GIT_WORK_DIR)
 
 $(FIXTURE_GIT_WORK_DIR):
 	@echo "--  clone git repository for test fixture --"
-	git clone --depth 1 -b $(FIXTURE_GIT_VERSION) https://github.com/git/git.git $(FIXTURE_GIT_WORK_DIR)
+	git clone --depth 1 -b $(FIXTURE_GIT_VERSION) https://github.com/git/git.git $@
 
 .PHONY : clean-fixture
 clean-fixture:
