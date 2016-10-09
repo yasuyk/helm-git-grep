@@ -562,8 +562,7 @@ You can save your results in a helm-git-grep-mode buffer, see below.
          ((header-name :initform helm-git-grep-header-name)
           (default-directory
             :initform nil)
-          (requires-pattern
-           :initform 3)
+          (requires-pattern :initform 2)
           (volatile
            :initform t)
           (filtered-candidate-transformer
