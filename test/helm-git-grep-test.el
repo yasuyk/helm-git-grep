@@ -121,11 +121,11 @@
   (let ((helm-git-grep-ignore-case t)
         (helm-git-grep-base-directory 'root))
     (should-equal (helm-git-grep-header-name "Git Grep")
-                  "Git Grep (C-c b: Toggle base dir[root]) (C-c i: Toggle ignore case)"))
+                  "Git Grep (C-c b: base dir[root]) (C-c i: ignore case)"))
   (let ((helm-git-grep-ignore-case nil)
         (helm-git-grep-base-directory 'current))
     (should-equal (helm-git-grep-header-name "Git Grep")
-                  "Git Grep (C-c b: Toggle base dir[current]) (C-c i: Toggle ignore case[i])")))
+                  "Git Grep (C-c b: base dir[current]) (C-c i: ignore case[i])")))
 
 (ert-deftest ert--helm-git-grep-rerun-with-input ()
   (mocker-let ((helm-run-after-exit (f) ((:input-matcher 'functionp :output t))))

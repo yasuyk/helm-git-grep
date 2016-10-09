@@ -138,8 +138,8 @@ Possible value are:
 
 (defvar helm-git-grep-doc-header-format
   " \
-(\\\<helm-git-grep-map>\\[helm-git-grep-toggle-base-directory]: Toggle base dir[%s]) \
-(\\<helm-git-grep-map>\\[helm-git-grep-toggle-ignore-case]: Toggle ignore case%s)"
+(\\\<helm-git-grep-map>\\[helm-git-grep-toggle-base-directory]: base dir[%s]) \
+(\\<helm-git-grep-map>\\[helm-git-grep-toggle-ignore-case]: ignore case%s)"
   "*The doc that is inserted in the Name header of a git-grep.")
 
 
