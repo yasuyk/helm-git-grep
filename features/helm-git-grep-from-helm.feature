@@ -8,6 +8,8 @@ Feature: Search a keyword from other helm
     And I press "M-x"
     And I type "helm-for-files"
     And I press "RET"
+    And I execute the action chain
+    Given I start an action chain
     When I press "C-c g"
     And I type "upload_pack"
     When I press "RET"

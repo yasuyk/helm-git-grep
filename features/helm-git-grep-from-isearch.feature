@@ -13,7 +13,10 @@ Feature: Search a keyword from isearch
     And I press "C-s"
     When I press "C-w"
     When I press "C-w"
+    And I execute the action chain
+    Given I start an action chain
     When I press "C-c g"
+    When I press "RET"
     When I press "RET"
     And I execute the action chain
     Then I should be in buffer matching regexp "diff-files.c"

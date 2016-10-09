@@ -13,6 +13,8 @@ Feature: Search a keyword at point
     And I press "M-x"
     And I type "helm-git-grep-at-point"
     When I press "RET"
+    And I execute the action chain
+    Given I start an action chain
     When I press "RET"
     And I execute the action chain
     Then I should be in buffer matching regexp "cache.h"
