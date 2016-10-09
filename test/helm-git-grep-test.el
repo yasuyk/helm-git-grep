@@ -29,14 +29,41 @@
 
 (eval-when-compile (require 'cl))
 
-(require 'helm-git-grep)
 (require 'ert)
 (require 'mocker)
+(require 'f)
+
+(defvar helm-git-grep-test-path
+  (if load-file-name
+      (f-dirname load-file-name)
+    (f-expand default-directory)))
+
+(defvar helm-git-grep-root-path
+  (f-parent helm-git-grep-test-path))
+
+(defvar helm-git-grep-fixture-path
+  (f-join helm-git-grep-test-path "fixture/git"))
 
 (defun should-equal (a b)
     (should (equal a b)))
 (defun should-not-equal (a b)
     (should-not (equal a b)))
+
+(ert-deftest ert--helm-git-grep-base-directory ()
+  (let ((expected "/tmp/git"))
+    (let ((helm-git-grep-base-directory 'root))
+      (mocker-let ((helm-git-grep-get-top-dir () ((:output expected))))
+        (should-equal (helm-git-grep-base-directory) expected)))
+    (let ((helm-git-grep-base-directory 'current)
+          (default-directory expected))
+      (should-equal (helm-git-grep-base-directory) expected))))
+
+(ert-deftest ert--helm-git-grep-get-top-dir ()
+  (let ((default-directory (concat helm-git-grep-fixture-path "/Documentation/howto")))
+    (f-equal? (helm-git-grep-get-top-dir) (concat helm-git-grep-fixture-path)))
+  (mocker-let ((helm-git-grep-git-string
+                (a b) ((:input '("rev-parse" "--show-cdup") :output nil))))
+    (should-equal (helm-git-grep-get-top-dir) nil)))
 
 (ert-deftest ert--helm-git-grep-showing-leading-and-trailing-lines-option ()
   (let ((helm-git-grep-showing-leading-and-trailing-lines t))
