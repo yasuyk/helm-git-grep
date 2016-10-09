@@ -409,7 +409,7 @@ With a prefix arg record CANDIDATE in `mark-ring'."
       (helm-git-grep-action candidate))
   (helm-highlight-current-line))
 
-(defun helm-git-grep-get-regin-substring ()
+(defun helm-git-grep-get-region-substring ()
   "Return the contents of region as a string."
   (buffer-substring (region-beginning) (region-end)))
 
@@ -418,7 +418,7 @@ With a prefix arg record CANDIDATE in `mark-ring'."
   (if (not mark-active)
       (thing-at-point 'symbol)
     (when (use-region-p)
-      (helm-git-grep-get-regin-substring))))
+      (helm-git-grep-get-region-substring))))
 
 (defun helm-git-grep-get-isearch-input-symbol ()
   "Get input symbol from `isearch-regexp' or `isearch-string'."

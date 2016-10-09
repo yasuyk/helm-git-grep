@@ -103,7 +103,7 @@
       (should-equal (helm-git-grep-get-input-symbol) "helm"))
     (let ((mark-active t))
       (mocker-let ((use-region-p () ((:output t)))
-                   (helm-git-grep-get-regin-substring () ((:output expected))))
+                   (helm-git-grep-get-region-substring () ((:output expected))))
         (should-equal (helm-git-grep-get-input-symbol) expected)))))
 
 (ert-deftest ert--helm-git-grep-get-isearch-input-symbol ()
