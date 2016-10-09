@@ -120,11 +120,17 @@ Set it to nil if you don't want this limit."
   "Face used to highlight git-grep(1) number lines."
   :group 'helm-git-grep-faces)
 
+;; Internal.
 (defvar helm-git-grep-history nil "The history list for `helm-git-grep'.")
 
 (defvar helm-git-grep-exclude-file-p nil)
 (defvar helm-git-grep-exclude-file-history nil)
 
+(defvar helm-git-grep-doc-header-format
+  " (\\<helm-git-grep-map>\\[helm-git-grep-toggle-ignore-case]: Toggle ignore case%s)"
+  "*The doc that is inserted in the Name header of a git-grep.")
+
+
 (defun helm-git-grep-git-string (&rest args)
   "Execute Git with ARGS, returning the first line of its output.
 If there is no output return nil.  If the output begins with a
@@ -404,6 +410,11 @@ With a prefix arg record CANDIDATE in `mark-ring'."
   "Get input symbol from `isearch-regexp' or `isearch-string'."
   (if isearch-regexp isearch-string (regexp-quote isearch-string)))
 
+(defun helm-git-grep-header-name (name)
+  "Create header NAME for `helm-git-grep'."
+  (concat name (substitute-command-keys (format helm-git-grep-doc-header-format
+                                                (if helm-git-grep-ignore-case "" "[i]")))))
+
 ;;;###autoload
 (defun helm-git-grep-run-persistent-action ()
   "Run grep persistent action from `helm-git-grep'."
@@ -517,7 +528,8 @@ You can save your results in a helm-git-grep-mode buffer, see below.
   "Keymap used in Git Grep sources.")
 
 (eval `(defclass helm-git-grep-source (helm-source-async)
-         ((default-directory
+         ((header-name :initform helm-git-grep-header-name)
+          (default-directory
             :initform nil)
           (requires-pattern
            :initform 3)
@@ -553,7 +565,7 @@ You can save your results in a helm-git-grep-mode buffer, see below.
 Optional argument INPUT is initial input."
   (helm :sources '(helm-source-git-grep
                    helm-source-git-submodule-grep)
-        :buffer (if helm-git-grep-ignore-case "*helm git grep [i]*" "*helm git grep*")
+        :buffer "*helm git grep*"
         :input input
         :keymap helm-git-grep-map
         :candidate-number-limit helm-git-grep-candidate-number-limit))
@@ -591,7 +603,7 @@ if submodules exists, don't grep submodules."
   (interactive)
   (let ((helm-git-grep-exclude-file-p t))
     (helm :sources helm-source-git-grep
-          :buffer (if helm-git-grep-ignore-case "*helm git grep [i]*" "*helm git grep*")
+          :buffer "*helm git grep*"
           :keymap helm-git-grep-map
           :candidate-number-limit helm-git-grep-candidate-number-limit)))
 

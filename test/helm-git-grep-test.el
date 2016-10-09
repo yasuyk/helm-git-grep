@@ -111,6 +111,11 @@
          (isearch-string "^defun"))
     (should-equal (helm-git-grep-get-isearch-input-symbol) expected)))
 
+(ert-deftest ert--helm-git-grep-header-name ()
+  (should-equal (helm-git-grep-header-name "Git Grep") "Git Grep (C-c i: Toggle ignore case)")
+  (let ((helm-git-grep-ignore-case nil))
+    (should-equal (helm-git-grep-header-name "Git Grep") "Git Grep (C-c i: Toggle ignore case[i])")))
+
 (ert-deftest ert--helm-git-grep ()
   (mocker-let ((helm-git-grep-1 () ((:output t))))
     (should (helm-git-grep))))
