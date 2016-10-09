@@ -119,8 +119,7 @@ availability of `helm-git-grep-pathspecs' and key of enable/disable command.
     basedir: value of `helm-git-grep-base-directory' \
 and key of toggle command.
     ignorecase: if `helm-git-grep-ignore-case' is t, show [i] \
-and key of toggle command.
-"
+and key of toggle command."
   :group 'helm-git-grep
   :type '(repeat (choice (const :tag "PathSpecs" pathspecs)
                          (const :tag "BaseDirectory" basedir)
@@ -220,7 +219,7 @@ newline return an empty string."
           (file-name-as-directory (expand-file-name cdup cwd)))))))
 
 (defun helm-git-grep-showing-leading-and-trailing-lines-option (&optional strp)
-  "Get <num> option."
+  "Get num option or empty string if STRP is t."
   (if helm-git-grep-showing-leading-and-trailing-lines
       (format "-%d" helm-git-grep-showing-leading-and-trailing-lines-number)
     (when strp "")))
@@ -373,7 +372,8 @@ Argument SOURCE is not used."
                     candidates)))
 
 (defun helm-git-grep-filtered-candidate-transformer-display
-  (filename separator lineno content)
+    (filename separator lineno content)
+  "Propertize FILENAME SEPARATOR LINENO CONTENT and concatenate them."
   (let ((colonp (string= separator ":")))
     (format "%s%s%s%s%s"
             (if colonp

@@ -4,12 +4,13 @@ CASK ?= cask
 SRC ?= helm-git-grep.el
 FIXTURE_GIT_VERSION ?= v1.0.0
 FIXTURE_GIT_WORK_DIR ?= test/fixture/git
+TEST_CHECKDOC_EL ?=  test/test-checkdoc.el
 LOADPATH = -L .
-
 ELPA_DIR = $(shell EMACS=$(EMACS) $(CASK) package-directory)
 
+
 .PHONY : test
-test: test-compile unit-tests
+test: test-checkdoc unit-tests
 
 .PHONY : unit-tests
 # `clean-elc` task needs to remove byte-compiled files to collect coverage by undercover.el.
@@ -33,10 +34,10 @@ print-deps:
 	${EMACS} --version
 	@echo CASK=${CASK}
 
-.PHONY : test-compile
-test-compile: elpa
-	@echo "-- test compile --"
-	$(CASK) exec $(EMACS) -batch -Q $(LOADPATH) -eval "(progn (setq byte-compile-error-on-warn t) (batch-byte-compile))" $(SRC)
+.PHONY : test-checkdoc
+test-checkdoc: elpa
+	@echo "-- test ckeckdoc --"
+	$(CASK) exec $(EMACS) -batch -Q $(LOADPATH) -l $(TEST_CHECKDOC_EL)
 
 .PHONY : travis-ci
 travis-ci: print-deps test
