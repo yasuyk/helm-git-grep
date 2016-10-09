@@ -96,6 +96,15 @@ Set it to nil if you don't want this limit."
   :group 'helm-git-grep
   :type  'boolean)
 
+(defcustom helm-git-grep-base-directory 'root
+  "Base directory for search by git-grep(1).
+Possible value are:
+    root: git root directory
+    current: current directory (default directory of current buffer)."
+  :group 'helm-git-grep
+  :type '(choice (const :tag "RootDirectory" root)
+                 (const :tag "CurrentDirectory" current)))
+
 
 ;;; Faces
 ;;
@@ -119,6 +128,7 @@ Set it to nil if you don't want this limit."
   '((default (:inherit compilation-line-number)))
   "Face used to highlight git-grep(1) number lines."
   :group 'helm-git-grep-faces)
+
 
 ;; Internal.
 (defvar helm-git-grep-history nil "The history list for `helm-git-grep'.")
@@ -127,10 +137,12 @@ Set it to nil if you don't want this limit."
 (defvar helm-git-grep-exclude-file-history nil)
 
 (defvar helm-git-grep-doc-header-format
-  " (\\<helm-git-grep-map>\\[helm-git-grep-toggle-ignore-case]: Toggle ignore case%s)"
+  " \
+(\\\<helm-git-grep-map>\\[helm-git-grep-toggle-base-directory]: Toggle base dir[%s]) \
+(\\<helm-git-grep-map>\\[helm-git-grep-toggle-ignore-case]: Toggle ignore case%s)"
   "*The doc that is inserted in the Name header of a git-grep.")
-
 
+
 (defun helm-git-grep-git-string (&rest args)
   "Execute Git with ARGS, returning the first line of its output.
 If there is no output return nil.  If the output begins with a
@@ -143,6 +155,11 @@ newline return an empty string."
       (buffer-substring-no-properties
        (line-beginning-position)
        (line-end-position)))))
+
+(defun helm-git-grep-base-directory ()
+  "Get the base directory where on execute git grep."
+  (cond ((eq helm-git-grep-base-directory 'root) (helm-git-grep-get-top-dir))
+        ((eq helm-git-grep-base-directory 'current) default-directory)))
 
 (defun helm-git-grep-get-top-dir ()
   "Get the git root directory."
@@ -186,7 +203,7 @@ newline return an empty string."
 
 (defun helm-git-grep-process ()
   "Retrieve candidates from result of git grep."
-  (helm-aif (helm-attr 'default-directory)
+  (helm-aif (helm-attr 'base-directory)
       (let ((default-directory it))
         (apply 'start-process "git-grep-process" nil "git"
                (helm-git-grep-args (helm-attr 'exclude-file-pattern))))
@@ -194,7 +211,7 @@ newline return an empty string."
 
 (defun helm-git-submodule-grep-process ()
   "Retrieve candidates from result of git grep submodules."
-  (helm-aif (helm-attr 'default-directory)
+  (helm-aif (helm-attr 'base-directory)
       (let ((default-directory it))
         (apply 'start-process "git-submodule-grep-process" nil
                (helm-git-submodule-grep-command)))
@@ -226,7 +243,7 @@ newline return an empty string."
       (setq buf new-buf))
     (with-current-buffer (get-buffer-create buf)
       (setq buffer-read-only t)
-      (let ((default-dir (helm-attr 'default-directory))
+      (let ((default-dir (helm-attr 'base-directory))
             (inhibit-read-only t))
         (erase-buffer)
         (insert (format "-*- mode: grep; default-directory: \"%s\" -*-\n\n"
@@ -345,7 +362,7 @@ Argument SOURCE is not used."
             (list (string-to-number lineno) content
                   (expand-file-name
                    filename
-                   (or (helm-interpret-value (helm-attr 'default-directory))
+                   (or (helm-interpret-value (helm-attr 'base-directory))
                        (and (helm-candidate-buffer)
                             (buffer-local-value
                              'default-directory (helm-candidate-buffer))))))))))
@@ -382,9 +399,9 @@ Signal an error if the program returns with a non-zero exit status."
                       (helm-git-grep-exclude-files pattern))))))
 
 (defun helm-git-grep-init ()
-  "Init `default-directory' attribute for `helm-git-grep' sources."
-  (let ((default-directory (helm-git-grep-get-top-dir)))
-    (helm-attrset 'default-directory default-directory)
+  "Initialize base-directory attribute for `helm-git-grep' sources."
+  (let ((base-directory (helm-git-grep-base-directory)))
+    (helm-attrset 'base-directory base-directory)
     (helm-git-grep-read-exclude-file-pattern)))
 
 (defun helm-git-grep-persistent-action (candidate)
@@ -412,8 +429,14 @@ With a prefix arg record CANDIDATE in `mark-ring'."
 
 (defun helm-git-grep-header-name (name)
   "Create header NAME for `helm-git-grep'."
-  (concat name (substitute-command-keys (format helm-git-grep-doc-header-format
-                                                (if helm-git-grep-ignore-case "" "[i]")))))
+  (concat name (substitute-command-keys
+                (format helm-git-grep-doc-header-format
+                        (symbol-name helm-git-grep-base-directory)
+                        (if helm-git-grep-ignore-case "" "[i]")))))
+
+(defun helm-git-grep-rerun-with-input ()
+  "Rerun `helm-git-grep'  with current input for setting some option."
+  (helm-run-after-exit (lambda () (helm-git-grep-1 helm-input))))
 
 ;;;###autoload
 (defun helm-git-grep-run-persistent-action ()
@@ -457,7 +480,7 @@ With a prefix arg record CANDIDATE in `mark-ring'."
   "Toggle ignore case option for git grep command from `helm-git-grep'."
   (interactive)
   (setq helm-git-grep-ignore-case (not helm-git-grep-ignore-case))
-  (helm-run-after-exit (lambda () (helm-git-grep-1 helm-input))))
+  (helm-git-grep-rerun-with-input))
 
 ;;;###autoload
 (defun helm-git-grep-toggle-showing-trailing-leading-line ()
@@ -465,7 +488,16 @@ With a prefix arg record CANDIDATE in `mark-ring'."
   (interactive)
   (setq helm-git-grep-showing-leading-and-trailing-lines
         (not helm-git-grep-showing-leading-and-trailing-lines))
-  (helm-run-after-exit (lambda () (helm-git-grep-1 helm-input))))
+  (helm-git-grep-rerun-with-input))
+
+;;;###autoload
+(defun helm-git-grep-toggle-base-directory ()
+  "Toggle a value of `helm-git-grep-base-directory'\
+for git grep command from `helm-git-grep'."
+  (interactive)
+  (setq helm-git-grep-base-directory
+        (if (eq helm-git-grep-base-directory 'root) 'current 'root))
+  (helm-git-grep-rerun-with-input))
 
 (defvar helm-git-grep-help-message
   "== Helm Git Grep Map ==\
@@ -480,6 +512,7 @@ You can save your results in a helm-git-grep-mode buffer, see below.
 \\[helm-goto-precedent-file]\t\t->Precedent File.
 \\[helm-yank-text-at-point]\t\t->Yank Text at point in minibuffer.
 \\[helm-git-grep-toggle-ignore-case]\t\t->Toggle ignore case option.
+\\[helm-git-grep-toggle-base-directory]\t\t->Toggle base directory for search.
 \\[helm-git-grep-run-other-window-action]\t\t->Jump other window.
 \\[helm-git-grep-run-other-frame-action]\t\t->Jump other frame.
 \\[helm-git-grep-run-persistent-action]\t\t->Run persistent action (Same as `C-z').
@@ -513,6 +546,7 @@ You can save your results in a helm-git-grep-mode buffer, see below.
     (set-keymap-parent map helm-map)
     (define-key map (kbd "M-<down>") 'helm-goto-next-file)
     (define-key map (kbd "M-<up>")   'helm-goto-precedent-file)
+    (define-key map (kbd "C-c b")    'helm-git-grep-toggle-base-directory)
     (define-key map (kbd "C-c i")    'helm-git-grep-toggle-ignore-case)
     (define-key map (kbd "C-c n")    'helm-git-grep-toggle-showing-trailing-leading-line)
     (define-key map (kbd "C-c e")    'helm-git-grep-run-elscreen-action)
