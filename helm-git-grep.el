@@ -3,7 +3,7 @@
 ;; Copyright (C) 2013 mechairoi
 ;;               2013-2016 Yasuyuki Oka
 
-;; This is a fork of anything-git-grep.el wrote by mechairoi.
+;; This is a fork of anything-git-grep.el written by mechairoi.
 
 ;; Author: mechairoi
 ;; Maintainer: Yasuyuki Oka <yasuyk@gmail.com>
