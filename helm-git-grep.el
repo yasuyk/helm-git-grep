@@ -180,7 +180,7 @@ newline return an empty string."
   "Create arguments of `helm-git-grep-process' in `helm-git-grep'."
   (delq nil
         (append
-         (list "--no-pager" "grep" "--full-name" "-n" "--no-color"
+         (list "--no-pager" "grep" "-n" "--no-color"
                (if helm-git-grep-ignore-case "-i" nil)
                (helm-git-grep-showing-leading-and-trailing-lines-option))
          (nbutlast
