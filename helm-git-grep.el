@@ -560,27 +560,19 @@ You can save your results in a helm-git-grep-mode buffer, see below.
 
 (eval `(defclass helm-git-grep-source (helm-source-async)
          ((header-name :initform helm-git-grep-header-name)
-          (default-directory
-            :initform nil)
+          (default-directory :initform nil)
           (requires-pattern :initform 2)
-          (volatile
-           :initform t)
+          (volatile :initform t)
           (filtered-candidate-transformer
            :initform helm-git-grep-filtered-candidate-transformer-file-line)
-          (action
-           :initform ,helm-git-grep-actions)
-          (history
-           :initform ,'helm-git-grep-history)
-          (persistent-action
-           :initform helm-git-grep-persistent-action)
+          (action :initform ,helm-git-grep-actions)
+          (history :initform ,'helm-git-grep-history)
+          (persistent-action :initform helm-git-grep-persistent-action)
           (persistent-help
            :initform "Jump to line (`C-u' Record in mark ring)")
-          (keymap
-           :initform ,helm-git-grep-map)
-          (mode-line
-           :initform helm-git-grep-mode-line-string)
-          (init
-           :initform helm-git-grep-init))))
+          (keymap :initform ,helm-git-grep-map)
+          (mode-line :initform helm-git-grep-mode-line-string)
+          (init :initform helm-git-grep-init))))
 
 (defvar helm-source-git-grep
   (helm-make-source "Git Grep" 'helm-git-grep-source
