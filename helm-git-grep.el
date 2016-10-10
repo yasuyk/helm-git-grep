@@ -59,6 +59,17 @@
   :prefix "helm-git-grep-"
   :group 'helm)
 
+(defcustom helm-git-grep-sources
+  '(helm-source-git-grep helm-source-git-submodule-grep)
+  "Default helm sources for `helm-git-grep'.
+
+If you don't want to search in submodules, Set only `helm-source-git-grep' like this:
+
+    (setq helm-git-grep-sources '(helm-source-git-grep))
+"
+  :group 'helm-gi-grep
+  :type '(repeat (choice symbol)))
+
 (defcustom helm-git-grep-candidate-number-limit 300
   "Limit candidate number of `helm-git-grep'.
 
@@ -551,8 +562,7 @@ You can save your results in a helm-git-grep-mode buffer, see below.
 (defun helm-git-grep-1 (&optional input)
   "Execute helm git grep.
 Optional argument INPUT is initial input."
-  (helm :sources '(helm-source-git-grep
-                   helm-source-git-submodule-grep)
+  (helm :sources helm-git-grep-sources
         :buffer (if helm-git-grep-ignore-case "*helm git grep [i]*" "*helm git grep*")
         :input input
         :keymap helm-git-grep-map
