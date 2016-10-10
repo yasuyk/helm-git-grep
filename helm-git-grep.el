@@ -286,7 +286,7 @@ newline return an empty string."
       (setq buf new-buf))
     (with-current-buffer (get-buffer-create buf)
       (setq buffer-read-only t)
-      (let ((default-dir (helm-attr 'base-directory))
+      (let ((default-dir (helm-git-grep-base-directory))
             (inhibit-read-only t))
         (erase-buffer)
         (insert (format "-*- mode: grep; default-directory: \"%s\" -*-\n\n"
