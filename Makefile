@@ -14,7 +14,7 @@ test: test-checkdoc unit-tests
 
 .PHONY : unit-tests
 # `clean-elc` task needs to remove byte-compiled files to collect coverage by undercover.el.
-unit-tests: clean-elc elpa
+unit-tests: clean-elc elpa fixture
 	@echo "-- Running unit-tests --"
 	${CASK} exec ert-runner
 
