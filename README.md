@@ -190,10 +190,6 @@ Face used to highlight git-grep(1) results filenames.
 
 Face used to highlight git-grep(1) number lines.
 
-## Note
-
-I'm poor at English. Please point out or correct errors in this document, if any.
-
 [helm]:https://github.com/emacs-helm/helm
 [git]:http://git-scm.com/
 [git-grep]:http://git-scm.com/docs/git-grep
