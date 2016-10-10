@@ -9,7 +9,7 @@
 ;; Maintainer: Yasuyuki Oka <yasuyk@gmail.com>
 ;; Version: 0.8.0
 ;; URL: https://github.com/yasuyk/helm-git-grep
-;; Package-Requires: ((helm "1.9.3"))
+;; Package-Requires: ((helm-core "2.2.0"))
 ;; Keywords: helm, git
 
 ;; This program is free software; you can redistribute it and/or modify
