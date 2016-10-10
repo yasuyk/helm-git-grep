@@ -67,10 +67,15 @@ Created by [gh-md-toc](https://github.com/ekalinin/github-markdown-toc.go)
 ## Optional requirements
 
 - [wgrep]
+
     wgrep enable a grep buffer editable and apply those changes to the file buffer.
+
 - [elscreen]
+
     You can open a file in elscleen.
+
 - [git] >= 1.9.0
+
     You must have the git version 1.9.0 or above to use [pathspec] feature.
 
 ## Installation
