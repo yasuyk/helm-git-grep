@@ -117,7 +117,9 @@ Possible value are:
                  (const :tag "CurrentDirectory" current)))
 
 (defcustom helm-git-grep-pathspecs nil
-  "Pattern used to limit paths in git-grep(1) commands."
+  "Pattern used to limit paths in git-grep(1) commands.
+
+You can check limit paths using `helm-git-grep-ls-files-limited-by-pathspec'."
   :group 'helm-git-grep
   :type '(repeat string  :tag "Pathspec"))
 
@@ -552,6 +554,19 @@ if `helm-git-grep-pathspecs' is not nil."
         (setq helm-git-grep-pathspec-temporary-disabled
               (not helm-git-grep-pathspec-temporary-disabled))
         (helm-git-grep-rerun-with-input))
+    (message helm-git-grep-pathspec-temporary-disabled-message)))
+
+;;;###autoload
+(defun helm-git-grep-ls-files-limited-by-pathspec ()
+  "Run `git ls-files' to check files limited by pathspec \
+which is defined by `helm-git-grep-pathspecs'."
+  (interactive)
+  (if helm-git-grep-pathspecs
+      (let ((buf (get-buffer-create "*helm-git-grep ls-files*")))
+        (with-current-buffer buf (erase-buffer))
+        (setq ret (apply 'call-process "git" nil buf nil
+                         (append '("ls-files") (helm-git-grep-pathspec-args))))
+          (display-buffer buf))
     (message helm-git-grep-pathspec-temporary-disabled-message)))
 
 (defvar helm-git-grep-help-message
