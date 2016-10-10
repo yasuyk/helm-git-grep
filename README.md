@@ -176,6 +176,33 @@ Max number of elements to save in `helm-git-grep-history`.
 
 Use Arrow keys to jump to occurrences.
 
+#### `helm-git-grep-ignore-case`(Default: `t`)
+
+Ignore case when matching.
+
+#### `helm-git-grep-at-point-deactivate-mark`(Default: `nil`)
+
+Deactivate the mark when `helm-git-grep-at-point` is invoked.
+
+#### `helm-git-grep-base-directory`(Default: `'root`)
+
+Base directory for search by git-grep(1).
+
+Possible value are:
+
+- root: git root directory
+- current: current directory (default directory of current buffer)
+
+#### `helm-git-grep-pathspecs`(Default: `nil`)
+
+Pattern used to limit paths in git-grep(1) commands.
+
+Each pathspec have not to be quoted by singe quotation like executing git command in inferior shell.  Because `helm-git-grep` run git command by `start-process`, and `start-process` is not executed in inferior shell. So, if pathspec is quoted by singe quotation, pathspec can't work in git-grep(1) by `helm-git-grep`.
+
+For more information about pathspec, See [pathspec] in Git gitglossary Documentation.
+
+If there is something wrong about pathspec configuration, you can check limit paths by pathspec using `helm-git-grep-ls-files-limited-by-pathspec`.
+
 ### Faces
 
 #### `helm-git-grep-match`
