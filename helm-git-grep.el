@@ -7,7 +7,7 @@
 
 ;; Author: mechairoi
 ;; Maintainer: Yasuyuki Oka <yasuyk@gmail.com>
-;; Version: 0.8.0
+;; Version: 0.9.0
 ;; URL: https://github.com/yasuyk/helm-git-grep
 ;; Package-Requires: ((helm-core "2.2.0"))
 ;; Keywords: helm, git

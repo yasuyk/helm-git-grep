@@ -1,3 +1,8 @@
+# 0.9.0 (Oct 10, 2016)
+
+- New features:
+    - [\#25](https://github.com/yasuyk/helm-git-grep/issues/25 "#25") Make helm sources customizable
+
 # 0.8.0 (Jul 13, 2016)
 
 - New features:
