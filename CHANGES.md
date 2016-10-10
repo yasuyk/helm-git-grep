@@ -1,3 +1,17 @@
+# 0.10.0 (Oct 10, 2016)
+
+- TODO for release 0.10.0
+    - Update gif
+    - Update README.md
+        pathspec feature need git verstion 1.9.0 or above
+
+- New features:
+    - [\#11](https://github.com/yasuyk/helm-git-grep/issues/11 "#11") [\#23](https://github.com/yasuyk/helm-git-grep/issues/11 "#23") [\#26](https://github.com/yasuyk/helm-git-grep/issues/11 "#26") Can change base directory where on git-grep(1) is executed
+    - Can limit paths in git-grep(1) by [pathspec]
+
+- Bug fixes:
+    - Fix that helm-git-grep-save-results can't work([d49001e])
+
 # 0.9.0 (Oct 10, 2016)
 
 - New features:
@@ -21,4 +35,7 @@
 
     - Add customizable faces
 
+
+[pathspec]:https://git-scm.com/docs/gitglossary#def_pathspec
 [1e0357f]:https://github.com/yasuyk/helm-git-grep/commit/1e0357f
+[d49001e]:https://github.com/yasuyk/helm-git-grep/commit/d49001e

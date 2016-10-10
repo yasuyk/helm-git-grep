@@ -2,4 +2,3 @@
 .elc*
 elpa
 test/fixture/*
-ecukes.err
