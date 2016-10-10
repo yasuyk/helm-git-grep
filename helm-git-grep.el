@@ -111,7 +111,7 @@ Set it to nil if you don't want this limit."
   "Base directory for search by git-grep(1).
 Possible value are:
     root: git root directory
-    current: current directory (default directory of current buffer)."
+    current: current directory (default directory of current buffer)"
   :group 'helm-git-grep
   :type '(choice (const :tag "RootDirectory" root)
                  (const :tag "CurrentDirectory" current)))
