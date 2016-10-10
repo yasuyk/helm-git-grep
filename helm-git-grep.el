@@ -704,7 +704,7 @@ if submodules exists, grep submodules too."
 ;;;###autoload
 (make-obsolete
  'helm-git-grep-with-exclude-file-pattern
- helm-git-grep-with-exclude-file-pattern-obsolete-message "0.9.0")
+ helm-git-grep-with-exclude-file-pattern-obsolete-message "0.10.0")
 
 
 (provide 'helm-git-grep)
