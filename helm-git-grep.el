@@ -291,7 +291,8 @@ newline return an empty string."
         (erase-buffer)
         (insert (format "-*- mode: grep; default-directory: \"%s\" -*-\n\n"
                         default-dir)
-                (format "Git Grep Results for `%s':\n\n" helm-input))
+                (format "Git Grep Results by: git %s\n\n"
+                        (mapconcat 'identity (helm-git-grep-args) " ")))
         (save-excursion
           (insert (with-current-buffer helm-buffer
                     (goto-char (point-min)) (forward-line 1)
