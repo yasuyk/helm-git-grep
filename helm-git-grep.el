@@ -252,7 +252,7 @@ newline return an empty string."
 (defun helm-git-submodule-grep-command ()
   "Create command of `helm-git-submodule-grep-process' in `helm-git-grep'."
   (list "git" "--no-pager" "submodule" "--quiet" "foreach"
-        (format "git grep --full-name -n --no-color %s %s %s | sed s!^!$path/!"
+       (format "git grep -n --no-color %s %s %s | sed s!^!$path/!"
                (if helm-git-grep-ignore-case "-i" "")
                (helm-git-grep-showing-leading-and-trailing-lines-option t)
                 (mapconcat (lambda (x)
