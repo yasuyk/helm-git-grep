@@ -569,13 +569,13 @@ if `helm-git-grep-pathspecs' is not nil."
 
 ;;;###autoload
 (defun helm-git-grep-ls-files-limited-by-pathspec ()
-  "Run `git ls-files' to check files limited by pathspec \
+  "Show result of `git ls-files' to check files limited by pathspec \
 which is defined by `helm-git-grep-pathspecs'."
   (interactive)
   (if helm-git-grep-pathspecs
       (let ((buf (get-buffer-create "*helm-git-grep ls-files*")))
         (with-current-buffer buf (erase-buffer))
-        (setq ret (apply 'call-process "git" nil buf nil
+        (when (apply 'call-process "git" nil buf nil
                          (append '("ls-files") (helm-git-grep-pathspec-args))))
           (display-buffer buf))
     (message helm-git-grep-pathspec-temporary-disabled-message)))
