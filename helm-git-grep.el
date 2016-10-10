@@ -122,7 +122,7 @@ Possible value are:
   :type '(repeat string  :tag "Pathspec"))
 
 (defcustom helm-git-grep-doc-order-in-name-header
-  '(pathspecs basedir ignorecase)
+  '(pathspec basedir ignorecase)
   "List of doc in name header for git-grep(1).
 list of following possible values:
     pathspec: if `helm-git-grep-pathspecs' is not nil, \
@@ -132,7 +132,7 @@ and key of toggle command.
     ignorecase: if `helm-git-grep-ignore-case' is t, show [i] \
 and key of toggle command."
   :group 'helm-git-grep
-  :type '(repeat (choice (const :tag "PathSpecs" pathspecs)
+  :type '(repeat (choice (const :tag "PathSpecs" pathspec)
                          (const :tag "BaseDirectory" basedir)
                          (const :tag "IgnoreCase" ignorecase))))
 
@@ -164,24 +164,24 @@ and key of toggle command."
 ;; Internal.
 ;;
 ;;
-(defconst helm-git-grep-pathspecs-temporary-disabled-message
+(defconst helm-git-grep-pathspec-temporary-disabled-message
   (format "%s is nil, namely not activated."
           (symbol-name 'helm-git-grep-pathspecs)))
 
 (defvar helm-git-grep-history nil "The history list for `helm-git-grep'.")
 
-(defvar helm-git-grep-pathspecs-temporary-disabled nil
-  "Temporary Disabled or not of `helm-git-grep-pathspecs'.")
+(defvar helm-git-grep-pathspec-temporary-disabled nil
+  "Temporary Disabled or not of `helm-git-grep-pathspec'.")
 
 (defvar helm-git-grep-doc-order-in-name-header-plist
-  '(pathspecs
+  '(pathspec
     (:doc
-     "[helm-git-grep-temporarily-disable-pathspecs]: pathspecs%s"
+     "[helm-git-grep-temporarily-disable-pathspec]: pathspec%s"
      :function
      (lambda (doc)
        (when helm-git-grep-pathspecs
          (format doc
-                 (if helm-git-grep-pathspecs-temporary-disabled
+                 (if helm-git-grep-pathspec-temporary-disabled
                      "[disabled]" "")))))
     basedir
     (:doc
@@ -214,10 +214,10 @@ newline return an empty string."
   (cond ((eq helm-git-grep-base-directory 'root) (helm-git-grep-get-top-dir))
         ((eq helm-git-grep-base-directory 'current) default-directory)))
 
-(defun helm-git-grep-pathspecs-args ()
-  "Create arguments about pathspecs."
+(defun helm-git-grep-pathspec-args ()
+  "Create arguments about pathspec."
   (when (and helm-git-grep-pathspecs
-             (not helm-git-grep-pathspecs-temporary-disabled))
+             (not helm-git-grep-pathspec-temporary-disabled))
     (append '("--") helm-git-grep-pathspecs)))
 
 (defun helm-git-grep-get-top-dir ()
@@ -247,7 +247,7 @@ newline return an empty string."
                  (mapcar
                   (lambda (x) (list "-e" x "--and"))
                   (split-string helm-pattern " +" t))))
-         (helm-git-grep-pathspecs-args))))
+         (helm-git-grep-pathspec-args))))
 
 (defun helm-git-submodule-grep-command ()
   "Create command of `helm-git-submodule-grep-process' in `helm-git-grep'."
@@ -539,16 +539,16 @@ for git grep command from `helm-git-grep'."
   (helm-git-grep-rerun-with-input))
 
 ;;;###autoload
-(defun helm-git-grep-temporarily-disable-pathspecs ()
+(defun helm-git-grep-temporarily-disable-pathspec ()
   "Temporarily Disable `helm-git-grep-pathspecs',\
 if `helm-git-grep-pathspecs' is not nil."
   (interactive)
   (if helm-git-grep-pathspecs
       (progn
-        (setq helm-git-grep-pathspecs-temporary-disabled
-              (not helm-git-grep-pathspecs-temporary-disabled))
+        (setq helm-git-grep-pathspec-temporary-disabled
+              (not helm-git-grep-pathspec-temporary-disabled))
         (helm-git-grep-rerun-with-input))
-    (message helm-git-grep-pathspecs-temporary-disabled-message)))
+    (message helm-git-grep-pathspec-temporary-disabled-message)))
 
 (defvar helm-git-grep-help-message
   "== Helm Git Grep Map ==\
@@ -562,7 +562,7 @@ You can save your results in a helm-git-grep-mode buffer, see below.
 \\[helm-goto-next-file]\t->Next File.
 \\[helm-goto-precedent-file]\t\t->Precedent File.
 \\[helm-yank-text-at-point]\t\t->Yank Text at point in minibuffer.
-\\[helm-git-grep-temporarily-disable-pathspecs]\t\t->Temporarily Disable pathspecs.
+\\[helm-git-grep-temporarily-disable-pathspec]\t\t->Temporarily Disable pathspec.
 \\[helm-git-grep-toggle-base-directory]\t\t->Toggle base directory for search.
 \\[helm-git-grep-toggle-ignore-case]\t\t->Toggle ignore case option.
 \\[helm-git-grep-run-other-window-action]\t\t->Jump other window.
@@ -598,7 +598,7 @@ You can save your results in a helm-git-grep-mode buffer, see below.
     (set-keymap-parent map helm-map)
     (define-key map (kbd "M-<down>") 'helm-goto-next-file)
     (define-key map (kbd "M-<up>")   'helm-goto-precedent-file)
-    (define-key map (kbd "C-c p")    'helm-git-grep-temporarily-disable-pathspecs)
+    (define-key map (kbd "C-c p")    'helm-git-grep-temporarily-disable-pathspec)
     (define-key map (kbd "C-c b")    'helm-git-grep-toggle-base-directory)
     (define-key map (kbd "C-c i")    'helm-git-grep-toggle-ignore-case)
     (define-key map (kbd "C-c n")    'helm-git-grep-toggle-showing-trailing-leading-line)
