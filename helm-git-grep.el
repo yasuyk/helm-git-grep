@@ -63,10 +63,10 @@
   '(helm-source-git-grep helm-source-git-submodule-grep)
   "Default helm sources for `helm-git-grep'.
 
-If you don't want to search in submodules, Set only `helm-source-git-grep' like this:
+If you don't want to search in submodules, \
+Set only `helm-source-git-grep' like this:
 
-    (setq helm-git-grep-sources '(helm-source-git-grep))
-"
+    (setq helm-git-grep-sources '(helm-source-git-grep))"
   :group 'helm-gi-grep
   :type '(repeat (choice symbol)))
 
