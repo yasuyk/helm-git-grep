@@ -119,7 +119,18 @@ Possible value are:
 (defcustom helm-git-grep-pathspecs nil
   "Pattern used to limit paths in git-grep(1) commands.
 
-You can check limit paths using `helm-git-grep-ls-files-limited-by-pathspec'."
+Each pathspec have not to be quoted by singe quotation like executing git
+command in inferior shell.  Because `helm-git-grep' run git command by
+`start-process', and `start-process' is not executed in inferior shell.
+So, if pathspec is quoted by singe quotation, pathspec can't work in
+git-grep(1) by `helm-git-grep'.
+
+For more information about pathspec,
+see https://git-scm.com/docs/gitglossary#def_pathspec.
+
+If there is something wrong about pathspec configuration,
+you can check limit paths by pathspec using
+`helm-git-grep-ls-files-limited-by-pathspec'."
   :group 'helm-git-grep
   :type '(repeat string  :tag "Pathspec"))
 
