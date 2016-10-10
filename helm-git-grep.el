@@ -303,7 +303,8 @@ newline return an empty string."
         (insert (format "-*- mode: grep; default-directory: \"%s\" -*-\n\n"
                         default-dir)
                 (format "Git Grep Results by: git %s\n\n"
-                        (mapconcat 'identity (helm-git-grep-args) " ")))
+                        (helm-git-grep-concat-string-list
+                         (helm-git-grep-args))))
         (save-excursion
           (insert (with-current-buffer helm-buffer
                     (goto-char (point-min)) (forward-line 1)
@@ -470,12 +471,15 @@ With a prefix arg record CANDIDATE in `mark-ring'."
             (format "(\\<helm-git-grep-map>\\%s)" ret))))))
    helm-git-grep-doc-order-in-name-header))
 
+(defun helm-git-grep-concat-string-list (list)
+  "Concatenate string LIST separeted by a space."
+   (mapconcat 'identity(delq nil list) " "))
+
 (defun helm-git-grep-header-name (name)
   "Create header NAME for `helm-git-grep'."
   (concat
    name " "
-   (mapconcat 'identity
-              (delq nil (helm-git-grep-doc-list-in-name-header)) " ")))
+   (helm-git-grep-concat-string-list (helm-git-grep-doc-list-in-name-header))))
 
 ;;;###autoload
 (defun helm-git-grep-run-persistent-action ()
