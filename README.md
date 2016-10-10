@@ -21,6 +21,33 @@
 
 ![helm-git-grep](https://cloud.githubusercontent.com/assets/833383/10489416/0d7e15d6-726b-11e5-9d3e-3f7fc7ee1221.gif)
 
+# Table of Contents
+
+  * [helm\-git\-grep\.el](#helm-git-grepel)
+    * [Features](#features)
+    * [Requirements](#requirements)
+    * [Installation](#installation)
+    * [Configuration](#configuration)
+    * [Basic usage](#basic-usage)
+        * [<kbd>M\-x</kbd> helm\-git\-grep](#m-x-helm-git-grep)
+        * [<kbd>M\-x</kbd> helm\-git\-grep\-at\-point](#m-x-helm-git-grep-at-point)
+        * [Actions](#actions)
+    * [Advanced usage](#advanced-usage)
+        * [Keymap helm\-git\-grep\-map](#keymap-helm-git-grep-map)
+        * [<kbd>C\-c i</kbd> helm\-git\-grep\-toggle\-ignore\-case](#c-c-i-helm-git-grep-toggle-ignore-case)
+    * [Customization](#customization)
+      * [Variables](#variables)
+        * [helm\-git\-grep\-sources(Default: '(helm\-source\-git\-grep helm\-source\-git\-submodule\-grep))](#helm-git-grep-sourcesdefault-helm-source-git-grep-helm-source-git-submodule-grep)
+        * [helm\-git\-grep\-candidate\-number\-limit(Default: 300)](#helm-git-grep-candidate-number-limitdefault-300)
+        * [helm\-git\-grep\-max\-length\-history(Default: 100)](#helm-git-grep-max-length-historydefault-100)
+        * [helm\-git\-grep\-use\-ioccur\-style\-keys(Default: t)](#helm-git-grep-use-ioccur-style-keysdefault-t)
+      * [Faces](#faces)
+        * [helm\-git\-grep\-match](#helm-git-grep-match)
+        * [helm\-git\-grep\-file](#helm-git-grep-file)
+        * [helm\-git\-grep\-line](#helm-git-grep-line)
+    * [Note](#note)
+
+Created by [gh-md-toc](https://github.com/ekalinin/github-markdown-toc.go)
 
 ## Features
 
