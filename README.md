@@ -24,8 +24,10 @@
 # Table of Contents
 
   * [helm\-git\-grep\.el](#helm-git-grepel)
+  * [Table of Contents](#table-of-contents)
     * [Features](#features)
-    * [Requirements](#requirements)
+    * [Minimum requirements](#minimum-requirements)
+    * [Optional requirements](#optional-requirements)
     * [Installation](#installation)
     * [Configuration](#configuration)
     * [Basic usage](#basic-usage)
@@ -49,17 +51,27 @@
 
 Created by [gh-md-toc](https://github.com/ekalinin/github-markdown-toc.go)
 
+
 ## Features
 
 - Grep submodules too, if submodules exists.
-- Open in other window, other frame, or [`elscreen`](https://github.com/shosti/elscreen).
+- Open in other window, other frame, or [`elscreen`].
 - Toggle ignore case option when incremental greping.
-- Save grep result in grep buffer which is writable with [`wgrep`](https://github.com/mhayashi1120/Emacs-wgrep).
+- Save grep result in grep buffer which is writable with [`wgrep`].
 
-## Requirements
+## Minimum requirements
 
 - [helm]
 - [git]
+
+## Optional requirements
+
+- [wgrep]
+    wgrep enable a grep buffer editable and apply those changes to the file buffer.
+- [elscreen]
+    You can open a file in elscleen.
+- [git] >= 1.9.0
+    You must have the git version 1.9.0 or above to use [pathspec] feature.
 
 ## Installation
 
@@ -180,3 +192,6 @@ I'm poor at English. Please point out or correct errors in this document, if any
 [helm]:https://github.com/emacs-helm/helm
 [git]:http://git-scm.com/
 [git-grep]:http://git-scm.com/docs/git-grep
+[elscreen]:https://github.com/shosti/elscreen
+[wgrep]:https://github.com/mhayashi1120/Emacs-wgrep
+[pathspec]:https://git-scm.com/docs/gitglossary#def_pathspec
