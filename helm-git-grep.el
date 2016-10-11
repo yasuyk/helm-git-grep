@@ -183,8 +183,8 @@ and key of toggle command."
 
 (defvar helm-git-grep-history nil "The history list for `helm-git-grep'.")
 
-(defvar helm-git-grep-pathspec-temporary-disabled nil
-  "Temporary Disabled or not of `helm-git-grep-pathspec'.")
+(defvar helm-git-grep-pathspec-available t
+  "Return t if `helm-git-grep-pathspec' is available in git-grep(1).")
 
 (defvar helm-git-grep-doc-order-in-name-header-plist
   '(pathspec
@@ -194,8 +194,7 @@ and key of toggle command."
      (lambda (doc)
        (when helm-git-grep-pathspecs
          (format doc
-                 (if helm-git-grep-pathspec-temporary-disabled
-                     "[disabled]" "")))))
+                 (if helm-git-grep-pathspec-available "" "[disabled]")))))
     basedir
     (:doc
      "[helm-git-grep-toggle-base-directory]: base dir[%s]"
@@ -229,8 +228,7 @@ newline return an empty string."
 
 (defun helm-git-grep-pathspec-args ()
   "Create arguments about pathspec."
-  (when (and helm-git-grep-pathspecs
-             (not helm-git-grep-pathspec-temporary-disabled))
+  (when (and helm-git-grep-pathspecs helm-git-grep-pathspec-available)
     (append '("--") helm-git-grep-pathspecs)))
 
 (defun helm-git-grep-get-top-dir ()
@@ -562,8 +560,8 @@ if `helm-git-grep-pathspecs' is not nil."
   (interactive)
   (if helm-git-grep-pathspecs
       (progn
-        (setq helm-git-grep-pathspec-temporary-disabled
-              (not helm-git-grep-pathspec-temporary-disabled))
+        (setq helm-git-grep-pathspec-available
+              (not helm-git-grep-pathspec-available))
         (helm-git-grep-rerun-with-input))
     (message helm-git-grep-pathspec-disabled-message)))
 

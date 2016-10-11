@@ -95,7 +95,7 @@
   (let ((helm-git-grep-ignore-case nil)
         (helm-pattern "helm")
         (helm-git-grep-pathspecs '("./*" ":!test/**"))
-        (helm-git-grep-pathspec-temporary-disabled t))
+        (helm-git-grep-pathspec-available nil))
      (should-equal? (helm-git-grep-args)
                    '("--no-pager" "grep" "-n" "--no-color" "-e" "helm"))))
 
@@ -218,14 +218,14 @@
     (mocker-let ((message (m) ((:input `(,helm-git-grep-pathspec-disabled-message)))))
       (helm-git-grep-temporarily-disable-pathspec)))
   (let ((helm-git-grep-pathspecs '("./*" ":!test/**")))
-    (let ((helm-git-grep-pathspec-temporary-disabled nil))
+    (let ((helm-git-grep-pathspec-available nil))
       (mocker-let ((helm-git-grep-rerun-with-input () ((:max-occur 1))))
         (helm-git-grep-temporarily-disable-pathspec)
-        (should-equal? helm-git-grep-pathspec-temporary-disabled t)))
-    (let ((helm-git-grep-pathspec-temporary-disabled t))
+        (should-equal? helm-git-grep-pathspec-available t)))
+    (let ((helm-git-grep-pathspec-available t))
       (mocker-let ((helm-git-grep-rerun-with-input () ((:max-occur 1))))
         (helm-git-grep-temporarily-disable-pathspec)
-        (should-equal? helm-git-grep-pathspec-temporary-disabled nil)))))
+        (should-equal? helm-git-grep-pathspec-available nil)))))
 
 (ert-deftest test/helm-git-grep ()
   (mocker-let ((helm-git-grep-1 () ((:output t))))
