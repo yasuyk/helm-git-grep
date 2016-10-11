@@ -189,7 +189,7 @@ and key of toggle command."
 (defvar helm-git-grep-doc-order-in-name-header-plist
   '(pathspec
     (:doc
-     "[helm-git-grep-temporarily-disable-pathspec]: pathspec%s"
+     "[helm-git-grep-pathspec-toggle-availability]: pathspec%s"
      :function
      (lambda (doc)
        (when helm-git-grep-pathspecs
@@ -554,8 +554,8 @@ for git grep command from `helm-git-grep'."
   (helm-git-grep-rerun-with-input))
 
 ;;;###autoload
-(defun helm-git-grep-temporarily-disable-pathspec ()
-  "Temporarily Disable `helm-git-grep-pathspecs',\
+(defun helm-git-grep-pathspec-toggle-availability ()
+  "Toggle availability of `helm-git-grep-pathspecs',\
 if `helm-git-grep-pathspecs' is not nil."
   (interactive)
   (if helm-git-grep-pathspecs
@@ -590,7 +590,7 @@ You can save your results in a helm-git-grep-mode buffer, see below.
 \\[helm-goto-next-file]\t->Next File.
 \\[helm-goto-precedent-file]\t\t->Precedent File.
 \\[helm-yank-text-at-point]\t\t->Yank Text at point in minibuffer.
-\\[helm-git-grep-temporarily-disable-pathspec]\t\t->Temporarily Disable pathspec.
+\\[helm-git-grep-pathspec-toggle-availability]\t\t->Toggle pathspec availability.
 \\[helm-git-grep-toggle-base-directory]\t\t->Toggle base directory for search.
 \\[helm-git-grep-toggle-ignore-case]\t\t->Toggle ignore case option.
 \\[helm-git-grep-run-other-window-action]\t\t->Jump other window.
@@ -626,7 +626,7 @@ You can save your results in a helm-git-grep-mode buffer, see below.
     (set-keymap-parent map helm-map)
     (define-key map (kbd "M-<down>") 'helm-goto-next-file)
     (define-key map (kbd "M-<up>")   'helm-goto-precedent-file)
-    (define-key map (kbd "C-c p")    'helm-git-grep-temporarily-disable-pathspec)
+    (define-key map (kbd "C-c p")    'helm-git-grep-pathspec-toggle-availability)
     (define-key map (kbd "C-c b")    'helm-git-grep-toggle-base-directory)
     (define-key map (kbd "C-c i")    'helm-git-grep-toggle-ignore-case)
     (define-key map (kbd "C-c n")    'helm-git-grep-toggle-showing-trailing-leading-line)

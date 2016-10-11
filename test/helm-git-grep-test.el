@@ -213,18 +213,18 @@
         (should (helm-git-grep-toggle-base-directory))
         (should-equal? helm-git-grep-base-directory 'root))))
 
-(ert-deftest test/helm-git-grep-temporarily-disable-pathspec ()
+(ert-deftest test/helm-git-grep-pathspec-toggle-availability ()
   (let ((helm-git-grep-pathspecs nil))
     (mocker-let ((message (m) ((:input `(,helm-git-grep-pathspec-disabled-message)))))
-      (helm-git-grep-temporarily-disable-pathspec)))
+      (helm-git-grep-pathspec-toggle-availability)))
   (let ((helm-git-grep-pathspecs '("./*" ":!test/**")))
     (let ((helm-git-grep-pathspec-available nil))
       (mocker-let ((helm-git-grep-rerun-with-input () ((:max-occur 1))))
-        (helm-git-grep-temporarily-disable-pathspec)
+        (helm-git-grep-pathspec-toggle-availability)
         (should-equal? helm-git-grep-pathspec-available t)))
     (let ((helm-git-grep-pathspec-available t))
       (mocker-let ((helm-git-grep-rerun-with-input () ((:max-occur 1))))
-        (helm-git-grep-temporarily-disable-pathspec)
+        (helm-git-grep-pathspec-toggle-availability)
         (should-equal? helm-git-grep-pathspec-available nil)))))
 
 (ert-deftest test/helm-git-grep ()
