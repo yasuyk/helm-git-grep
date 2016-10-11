@@ -1,9 +1,8 @@
-# 0.10.0 (Oct 10, 2016)
+# 0.10.0-snapshot (in development)
 
 - TODO for release 0.10.0
     - Update gif
     - Update README.md
-        pathspec feature need git verstion 1.9.0 or above
 
 - New features:
     - [\#11](https://github.com/yasuyk/helm-git-grep/issues/11 "#11") [\#23](https://github.com/yasuyk/helm-git-grep/issues/11 "#23") [\#26](https://github.com/yasuyk/helm-git-grep/issues/11 "#26") Can change base directory where on git-grep(1) is executed
