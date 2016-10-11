@@ -39,14 +39,14 @@
         * [<kbd>C\-c i</kbd> helm\-git\-grep\-toggle\-ignore\-case](#c-c-i-helm-git-grep-toggle-ignore-case)
     * [Customization](#customization)
       * [Variables](#variables)
-        * [helm\-git\-grep\-sources(Default: '(helm\-source\-git\-grep helm\-source\-git\-submodule\-grep))](#helm-git-grep-sourcesdefault-helm-source-git-grep-helm-source-git-submodule-grep)
-        * [helm\-git\-grep\-candidate\-number\-limit(Default: 300)](#helm-git-grep-candidate-number-limitdefault-300)
-        * [helm\-git\-grep\-max\-length\-history(Default: 100)](#helm-git-grep-max-length-historydefault-100)
-        * [helm\-git\-grep\-use\-ioccur\-style\-keys(Default: t)](#helm-git-grep-use-ioccur-style-keysdefault-t)
-        * [helm\-git\-grep\-ignore\-case(Default: t)](#helm-git-grep-ignore-casedefault-t)
-        * [helm\-git\-grep\-at\-point\-deactivate\-mark(Default: nil)](#helm-git-grep-at-point-deactivate-markdefault-nil)
-        * [helm\-git\-grep\-base\-directory(Default: 'root)](#helm-git-grep-base-directorydefault-root)
-        * [helm\-git\-grep\-pathspecs(Default: nil)](#helm-git-grep-pathspecsdefault-nil)
+        * [helm\-git\-grep\-sources](#helm-git-grep-sources)
+        * [helm\-git\-grep\-candidate\-number\-limit](#helm-git-grep-candidate-number-limit)
+        * [helm\-git\-grep\-max\-length\-history](#helm-git-grep-max-length-history)
+        * [helm\-git\-grep\-use\-ioccur\-style\-keys](#helm-git-grep-use-ioccur-style-keys)
+        * [helm\-git\-grep\-ignore\-case](#helm-git-grep-ignore-case)
+        * [helm\-git\-grep\-at\-point\-deactivate\-mark](#helm-git-grep-at-point-deactivate-mark)
+        * [helm\-git\-grep\-base\-directory](#helm-git-grep-base-directory)
+        * [helm\-git\-grep\-pathspecs](#helm-git-grep-pathspecs)
       * [Faces](#faces)
         * [helm\-git\-grep\-match](#helm-git-grep-match)
         * [helm\-git\-grep\-file](#helm-git-grep-file)
@@ -159,7 +159,9 @@ A buffer name is `*helm git grep*` without ignore case option.
 
 ### Variables
 
-#### `helm-git-grep-sources`(Default: `'(helm-source-git-grep helm-source-git-submodule-grep)`)
+#### `helm-git-grep-sources`
+
+**(Default: `'(helm-source-git-grep helm-source-git-submodule-grep)`)**
 
 Default helm sources for `helm-git-grep`.
 
@@ -167,27 +169,39 @@ If you don't want to search in submodules, Set only `helm-source-git-grep` like 
 
     (setq helm-git-grep-sources '(helm-source-git-grep))
 
-#### `helm-git-grep-candidate-number-limit`(Default: `300`)
+#### `helm-git-grep-candidate-number-limit`
+
+**(Default: `300`)**
 
 Limit candidate number `helm-git-grep`.
 
-#### `helm-git-grep-max-length-history`(Default: `100`)
+#### `helm-git-grep-max-length-history`
+
+**(Default: `100`)**
 
 Max number of elements to save in `helm-git-grep-history`.
 
-#### `helm-git-grep-use-ioccur-style-keys`(Default: `t`)
+#### `helm-git-grep-use-ioccur-style-keys`
+
+**(Default: `t`)**
 
 Use Arrow keys to jump to occurrences.
 
-#### `helm-git-grep-ignore-case`(Default: `t`)
+#### `helm-git-grep-ignore-case`
+
+**(Default: `t`)**
 
 Ignore case when matching.
 
-#### `helm-git-grep-at-point-deactivate-mark`(Default: `nil`)
+#### `helm-git-grep-at-point-deactivate-mark`
+
+**(Default: `nil`)**
 
 Deactivate the mark when `helm-git-grep-at-point` is invoked.
 
-#### `helm-git-grep-base-directory`(Default: `'root`)
+#### `helm-git-grep-base-directory`
+
+**(Default: `'root`)**
 
 Base directory for search by git-grep(1).
 
@@ -196,7 +210,9 @@ Possible value are:
 - root: git root directory
 - current: current directory (default directory of current buffer)
 
-#### `helm-git-grep-pathspecs`(Default: `nil`)
+#### `helm-git-grep-pathspecs`
+
+**(Default: `nil`)**
 
 Pattern used to limit paths in git-grep(1) commands.
 
