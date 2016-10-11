@@ -139,7 +139,7 @@ you can check limit paths by pathspec using
   "List of doc in name header for git-grep(1).
 list of following possible values:
     pathspec: if `helm-git-grep-pathspecs' is not nil, \
-availability of `helm-git-grep-pathspecs' and key of enable/disable command.
+availability of `helm-git-grep-pathspecs' and key of toggle command.
     basedir: value of `helm-git-grep-base-directory' \
 and key of toggle command.
     ignorecase: if `helm-git-grep-ignore-case' is t, show [i] \
@@ -679,7 +679,7 @@ Optional argument INPUT is initial input."
 (defun helm-git-grep ()
   "Helm git grep.
 
-if submodules exists, grep submodules too."
+`helm-git-grep-sources' is used as helm sources."
   (interactive)
   (helm-git-grep-1))
 
@@ -690,7 +690,7 @@ if submodules exists, grep submodules too."
 Use region as input instead of the thing at point
 if region exists.
 
-if submodules exists, grep submodules too."
+`helm-git-grep-sources' is used as helm sources."
   (interactive)
   (let* ((symbol (helm-git-grep-get-input-symbol))
          (input (if symbol (concat symbol " ") "")))
