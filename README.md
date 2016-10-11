@@ -43,11 +43,14 @@
         * [helm\-git\-grep\-candidate\-number\-limit(Default: 300)](#helm-git-grep-candidate-number-limitdefault-300)
         * [helm\-git\-grep\-max\-length\-history(Default: 100)](#helm-git-grep-max-length-historydefault-100)
         * [helm\-git\-grep\-use\-ioccur\-style\-keys(Default: t)](#helm-git-grep-use-ioccur-style-keysdefault-t)
+        * [helm\-git\-grep\-ignore\-case(Default: t)](#helm-git-grep-ignore-casedefault-t)
+        * [helm\-git\-grep\-at\-point\-deactivate\-mark(Default: nil)](#helm-git-grep-at-point-deactivate-markdefault-nil)
+        * [helm\-git\-grep\-base\-directory(Default: 'root)](#helm-git-grep-base-directorydefault-root)
+        * [helm\-git\-grep\-pathspecs(Default: nil)](#helm-git-grep-pathspecsdefault-nil)
       * [Faces](#faces)
         * [helm\-git\-grep\-match](#helm-git-grep-match)
         * [helm\-git\-grep\-file](#helm-git-grep-file)
         * [helm\-git\-grep\-line](#helm-git-grep-line)
-    * [Note](#note)
 
 Created by [gh-md-toc](https://github.com/ekalinin/github-markdown-toc.go)
 
