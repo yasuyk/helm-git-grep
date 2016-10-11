@@ -215,7 +215,7 @@
 
 (ert-deftest test/helm-git-grep-temporarily-disable-pathspec ()
   (let ((helm-git-grep-pathspecs nil))
-    (mocker-let ((message (m) ((:input `(,helm-git-grep-pathspec-temporary-disabled-message)))))
+    (mocker-let ((message (m) ((:input `(,helm-git-grep-pathspec-disabled-message)))))
       (helm-git-grep-temporarily-disable-pathspec)))
   (let ((helm-git-grep-pathspecs '("./*" ":!test/**")))
     (let ((helm-git-grep-pathspec-temporary-disabled nil))

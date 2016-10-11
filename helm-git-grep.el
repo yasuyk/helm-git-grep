@@ -177,7 +177,7 @@ and key of toggle command."
 ;; Internal.
 ;;
 ;;
-(defconst helm-git-grep-pathspec-temporary-disabled-message
+(defconst helm-git-grep-pathspec-disabled-message
   (format "%s is nil, namely not activated."
           (symbol-name 'helm-git-grep-pathspecs)))
 
@@ -565,7 +565,7 @@ if `helm-git-grep-pathspecs' is not nil."
         (setq helm-git-grep-pathspec-temporary-disabled
               (not helm-git-grep-pathspec-temporary-disabled))
         (helm-git-grep-rerun-with-input))
-    (message helm-git-grep-pathspec-temporary-disabled-message)))
+    (message helm-git-grep-pathspec-disabled-message)))
 
 ;;;###autoload
 (defun helm-git-grep-ls-files-limited-by-pathspec ()
@@ -578,7 +578,7 @@ which is defined by `helm-git-grep-pathspecs'."
         (when (apply 'call-process "git" nil buf nil
                          (append '("ls-files") (helm-git-grep-pathspec-args))))
           (display-buffer buf))
-    (message helm-git-grep-pathspec-temporary-disabled-message)))
+    (message helm-git-grep-pathspec-disabled-message)))
 
 (defvar helm-git-grep-help-message
   "== Helm Git Grep Map ==\
