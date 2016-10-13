@@ -181,11 +181,6 @@ and key of toggle command."
   (format "%s is nil, namely not activated."
           (symbol-name 'helm-git-grep-pathspecs)))
 
-(defvar helm-git-grep-history nil "The history list for `helm-git-grep'.")
-
-(defvar helm-git-grep-pathspec-available t
-  "Return t if `helm-git-grep-pathspec' is available in git-grep(1).")
-
 (defconst helm-git-grep-doc-order-in-name-header-plist
   '(pathspec
     (:doc
@@ -206,6 +201,14 @@ and key of toggle command."
      "[helm-git-grep-toggle-ignore-case]: ignore case%s"
      :function
      (lambda (doc) (format doc (if helm-git-grep-ignore-case "[i]" ""))))))
+
+(defvar helm-git-grep-history nil "The history list for `helm-git-grep'.")
+
+(defvar helm-git-grep-pathspec-available t
+  "Return t if `helm-git-grep-pathspec' is available in git-grep(1).")
+
+(defvar helm-git-grep-pathspecs-set nil)
+
 
 
 (defun helm-git-grep-git-string (&rest args)
@@ -558,7 +561,7 @@ for git grep command from `helm-git-grep'."
   "Toggle availability of `helm-git-grep-pathspecs',\
 if `helm-git-grep-pathspecs' is not nil."
   (interactive)
-  (if helm-git-grep-pathspecs
+  (if helm-git-grep-pathspecs-set
       (progn
         (setq helm-git-grep-pathspec-available
               (not helm-git-grep-pathspec-available))
@@ -669,6 +672,9 @@ You can save your results in a helm-git-grep-mode buffer, see below.
 (defun helm-git-grep-1 (&optional input)
   "Execute helm git grep.
 Optional argument INPUT is initial input."
+  ;; directory local variables can't work in minibuffer
+  (setq helm-git-grep-pathspecs-set (not (not helm-git-grep-pathspecs)))
+  (helm-set-local-variable 'helm-git-grep-pathspecs helm-git-grep-pathspecs)
   (helm :sources helm-git-grep-sources
         :buffer "*helm git grep*"
         :input input
