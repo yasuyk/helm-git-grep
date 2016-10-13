@@ -495,51 +495,43 @@ With a prefix arg record CANDIDATE in `mark-ring'."
    name " "
    (helm-git-grep-concat-string-list (helm-git-grep-doc-list-in-name-header))))
 
-;;;###autoload
 (defun helm-git-grep-run-persistent-action ()
   "Run grep persistent action from `helm-git-grep'."
   (interactive)
   (helm-attrset 'jump-persistent 'helm-git-grep-persistent-action)
   (helm-execute-persistent-action 'jump-persistent))
 
-;;;###autoload
 (defun helm-git-grep-run-default-action ()
   "Run grep default action from `helm-git-grep'."
   (interactive)
   (helm-exit-and-execute-action 'helm-git-grep-action))
 
-;;;###autoload
 (defun helm-git-grep-run-other-window-action ()
   "Run grep goto other window action from `helm-git-grep'."
   (interactive)
   (helm-exit-and-execute-action 'helm-git-grep-other-window))
 
-;;;###autoload
 (defun helm-git-grep-run-other-frame-action ()
   "Run grep goto other frame action from `helm-git-grep'."
   (interactive)
   (helm-exit-and-execute-action 'helm-git-grep-other-frame))
 
-;;;###autoload
 (defun helm-git-grep-run-elscreen-action ()
   "Run grep goto elscreen action from `helm-git-grep'."
   (interactive)
   (helm-exit-and-execute-action 'helm-git-grep-jump-elscreen))
 
-;;;###autoload
 (defun helm-git-grep-run-save-buffer ()
   "Run grep save results action from `helm-git-grep'."
   (interactive)
   (helm-exit-and-execute-action 'helm-git-grep-save-results))
 
-;;;###autoload
 (defun helm-git-grep-toggle-ignore-case ()
   "Toggle ignore case option for git grep command from `helm-git-grep'."
   (interactive)
   (setq helm-git-grep-ignore-case (not helm-git-grep-ignore-case))
   (helm-git-grep-rerun-with-input))
 
-;;;###autoload
 (defun helm-git-grep-toggle-showing-trailing-leading-line ()
   "Toggle show leading and trailing lines option for git grep."
   (interactive)
@@ -547,7 +539,6 @@ With a prefix arg record CANDIDATE in `mark-ring'."
         (not helm-git-grep-showing-leading-and-trailing-lines))
   (helm-git-grep-rerun-with-input))
 
-;;;###autoload
 (defun helm-git-grep-toggle-base-directory ()
   "Toggle a value of `helm-git-grep-base-directory'\
 for git grep command from `helm-git-grep'."
@@ -556,7 +547,6 @@ for git grep command from `helm-git-grep'."
         (if (eq helm-git-grep-base-directory 'root) 'current 'root))
   (helm-git-grep-rerun-with-input))
 
-;;;###autoload
 (defun helm-git-grep-pathspec-toggle-availability ()
   "Toggle availability of `helm-git-grep-pathspecs',\
 if `helm-git-grep-pathspecs' is not nil."
@@ -605,14 +595,12 @@ You can save your results in a helm-git-grep-mode buffer, see below.
 \n== Helm Map ==
 \\{helm-map}")
 
-;;;###autoload
 (defun helm-git-grep-help ()
   "Help command for `helm-git-grep'."
   (interactive)
   (let ((helm-help-message helm-git-grep-help-message))
     (helm-help)))
 
-;;;###autoload
 (defvar helm-git-grep-mode-line-string"\
 \\<helm-git-grep-map>\
 \\[helm-git-grep-help]:Help \
