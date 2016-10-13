@@ -186,7 +186,7 @@ and key of toggle command."
 (defvar helm-git-grep-pathspec-available t
   "Return t if `helm-git-grep-pathspec' is available in git-grep(1).")
 
-(defvar helm-git-grep-doc-order-in-name-header-plist
+(defconst helm-git-grep-doc-order-in-name-header-plist
   '(pathspec
     (:doc
      "[helm-git-grep-pathspec-toggle-availability]: pathspec%s"
