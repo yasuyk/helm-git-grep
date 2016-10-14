@@ -207,8 +207,6 @@ and key of toggle command."
 (defvar helm-git-grep-pathspec-available t
   "Return t if `helm-git-grep-pathspec' is available in git-grep(1).")
 
-(defvar helm-git-grep-pathspecs-set nil)
-
 
 
 (defun helm-git-grep-git-string (&rest args)
@@ -562,7 +560,8 @@ for git grep command from `helm-git-grep'."
   "Toggle availability of `helm-git-grep-pathspecs',\
 if `helm-git-grep-pathspecs' is not nil."
   (interactive)
-  (if helm-git-grep-pathspecs-set
+  (hack-dir-local-variables-non-file-buffer)
+  (if helm-git-grep-pathspecs
       (progn
         (setq helm-git-grep-pathspec-available
               (not helm-git-grep-pathspec-available))
@@ -674,7 +673,6 @@ You can save your results in a helm-git-grep-mode buffer, see below.
   "Execute helm git grep.
 Optional argument INPUT is initial input."
   ;; directory local variables can't work in minibuffer
-  (setq helm-git-grep-pathspecs-set (not (not helm-git-grep-pathspecs)))
   (helm-set-local-variable 'helm-git-grep-pathspecs helm-git-grep-pathspecs)
   (helm :sources helm-git-grep-sources
         :buffer "*helm git grep*"
