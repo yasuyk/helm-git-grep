@@ -576,10 +576,14 @@ which is defined by `helm-git-grep-pathspecs'."
   (interactive)
   (hack-dir-local-variables-non-file-buffer)
   (if helm-git-grep-pathspecs
-      (let ((buf (get-buffer-create "*helm-git-grep ls-files*")))
-        (with-current-buffer buf (erase-buffer))
+      (let ((buf (get-buffer-create "*helm-git-grep ls-files*"))
+            (args (helm-git-grep-pathspec-args)))
+        (with-current-buffer buf
+          (erase-buffer)
+          (insert (format "git ls-files %s\n\n"
+                          (helm-git-grep-concat-string-list args))))
         (when (apply 'call-process "git" nil buf nil
-                         (append '("ls-files") (helm-git-grep-pathspec-args))))
+                         (append '("ls-files") args)))
           (display-buffer buf))
     (message helm-git-grep-pathspec-disabled-message)))
 
