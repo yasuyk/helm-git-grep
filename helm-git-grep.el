@@ -574,6 +574,7 @@ if `helm-git-grep-pathspecs' is not nil."
   "Show result of `git ls-files' to check files limited by pathspec \
 which is defined by `helm-git-grep-pathspecs'."
   (interactive)
+  (hack-dir-local-variables-non-file-buffer)
   (if helm-git-grep-pathspecs
       (let ((buf (get-buffer-create "*helm-git-grep ls-files*")))
         (with-current-buffer buf (erase-buffer))
@@ -594,6 +595,8 @@ You can save your results in a helm-git-grep-mode buffer, see below.
 \\[helm-goto-next-file]\t->Next File.
 \\[helm-goto-precedent-file]\t\t->Precedent File.
 \\[helm-yank-text-at-point]\t\t->Yank Text at point in minibuffer.
+\\[helm-git-grep-ls-files-limited-by-pathspec]\t\t->Show result of `git ls-files'\
+ to check files limited by pathspec.
 \\[helm-git-grep-pathspec-toggle-availability]\t\t->Toggle pathspec availability.
 \\[helm-git-grep-toggle-base-directory]\t\t->Toggle base directory for search.
 \\[helm-git-grep-toggle-ignore-case]\t\t->Toggle ignore case option.
@@ -629,6 +632,7 @@ You can save your results in a helm-git-grep-mode buffer, see below.
     (set-keymap-parent map helm-map)
     (define-key map (kbd "M-<down>") 'helm-goto-next-file)
     (define-key map (kbd "M-<up>")   'helm-goto-precedent-file)
+    (define-key map (kbd "C-c l")    'helm-git-grep-ls-files-limited-by-pathspec)
     (define-key map (kbd "C-c p")    'helm-git-grep-pathspec-toggle-availability)
     (define-key map (kbd "C-c b")    'helm-git-grep-toggle-base-directory)
     (define-key map (kbd "C-c i")    'helm-git-grep-toggle-ignore-case)
