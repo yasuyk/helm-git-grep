@@ -294,6 +294,8 @@ newline return an empty string."
   (set (make-local-variable 'compilation-error-regexp-alist) grep-regexp-alist)
   (when (require 'wgrep nil t)
     (wgrep-setup-internal)))
+(put 'helm-git-grep-mode 'mode-class 'special)
+(put 'helm-git-grep-mode 'helm-only t)
 
 (defun helm-git-grep-save-results-1 ()
   "Save helm git grep result in a `helm-git-grep-mode' buffer."
@@ -500,37 +502,44 @@ With a prefix arg record CANDIDATE in `mark-ring'."
   (interactive)
   (helm-attrset 'jump-persistent 'helm-git-grep-persistent-action)
   (helm-execute-persistent-action 'jump-persistent))
+(put 'helm-git-grep-run-persistent-action 'helm-only t)
 
 (defun helm-git-grep-run-default-action ()
   "Run grep default action from `helm-git-grep'."
   (interactive)
   (helm-exit-and-execute-action 'helm-git-grep-action))
+(put 'helm-git-grep-run-default-action 'helm-only t)
 
 (defun helm-git-grep-run-other-window-action ()
   "Run grep goto other window action from `helm-git-grep'."
   (interactive)
   (helm-exit-and-execute-action 'helm-git-grep-other-window))
+(put 'helm-git-grep-run-other-window-action 'helm-only t)
 
 (defun helm-git-grep-run-other-frame-action ()
   "Run grep goto other frame action from `helm-git-grep'."
   (interactive)
   (helm-exit-and-execute-action 'helm-git-grep-other-frame))
+(put 'helm-git-grep-run-other-frame-action 'helm-only t)
 
 (defun helm-git-grep-run-elscreen-action ()
   "Run grep goto elscreen action from `helm-git-grep'."
   (interactive)
   (helm-exit-and-execute-action 'helm-git-grep-jump-elscreen))
+(put 'helm-git-grep-run-elscreen-action 'helm-only t)
 
 (defun helm-git-grep-run-save-buffer ()
   "Run grep save results action from `helm-git-grep'."
   (interactive)
   (helm-exit-and-execute-action 'helm-git-grep-save-results))
+(put 'helm-git-grep-run-save-buffer 'helm-only t)
 
 (defun helm-git-grep-toggle-ignore-case ()
   "Toggle ignore case option for git grep command from `helm-git-grep'."
   (interactive)
   (setq helm-git-grep-ignore-case (not helm-git-grep-ignore-case))
   (helm-git-grep-rerun-with-input))
+(put 'helm-git-grep-toggle-ignore-case 'helm-only t)
 
 (defun helm-git-grep-toggle-showing-trailing-leading-line ()
   "Toggle show leading and trailing lines option for git grep."
@@ -538,6 +547,7 @@ With a prefix arg record CANDIDATE in `mark-ring'."
   (setq helm-git-grep-showing-leading-and-trailing-lines
         (not helm-git-grep-showing-leading-and-trailing-lines))
   (helm-git-grep-rerun-with-input))
+(put 'helm-git-grep-toggle-showing-trailing-leading-line 'helm-only t)
 
 (defun helm-git-grep-toggle-base-directory ()
   "Toggle a value of `helm-git-grep-base-directory'\
@@ -546,6 +556,7 @@ for git grep command from `helm-git-grep'."
   (setq helm-git-grep-base-directory
         (if (eq helm-git-grep-base-directory 'root) 'current 'root))
   (helm-git-grep-rerun-with-input))
+(put 'helm-git-grep-toggle-base-directory 'helm-only t)
 
 (defun helm-git-grep-pathspec-toggle-availability ()
   "Toggle availability of `helm-git-grep-pathspecs',\
@@ -557,6 +568,7 @@ if `helm-git-grep-pathspecs' is not nil."
               (not helm-git-grep-pathspec-available))
         (helm-git-grep-rerun-with-input))
     (message helm-git-grep-pathspec-disabled-message)))
+(put 'helm-git-grep-pathspec-toggle-availability 'helm-only t)
 
 ;;;###autoload
 (defun helm-git-grep-ls-files-limited-by-pathspec ()
@@ -600,6 +612,7 @@ You can save your results in a helm-git-grep-mode buffer, see below.
   (interactive)
   (let ((helm-help-message helm-git-grep-help-message))
     (helm-help)))
+(put 'helm-git-grep-help 'helm-only t)
 
 (defvar helm-git-grep-mode-line-string"\
 \\<helm-git-grep-map>\
