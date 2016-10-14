@@ -214,10 +214,10 @@
         (should-equal? helm-git-grep-base-directory 'root))))
 
 (ert-deftest test/helm-git-grep-pathspec-toggle-availability ()
-  (let ((helm-git-grep-pathspecs-set nil))
+  (let ((helm-git-grep-pathspecs nil))
     (mocker-let ((message (m) ((:input `(,helm-git-grep-pathspec-disabled-message)))))
       (helm-git-grep-pathspec-toggle-availability)))
-  (let ((helm-git-grep-pathspecs-set t))
+  (let ((helm-git-grep-pathspecs '(":/")))
     (let ((helm-git-grep-pathspec-available nil))
       (mocker-let ((helm-git-grep-rerun-with-input () ((:max-occur 1))))
         (helm-git-grep-pathspec-toggle-availability)
