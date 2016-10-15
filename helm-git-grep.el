@@ -184,7 +184,7 @@ and key of toggle command."
 (defconst helm-git-grep-doc-order-in-name-header-plist
   '(pathspec
     (:doc
-     "[helm-git-grep-pathspec-toggle-availability]: pathspec%s"
+     "[helm-git-grep-pathspec-toggle-availability]:Pathspec%s"
      :function
      (lambda (doc)
        (when helm-git-grep-pathspecs
@@ -192,13 +192,13 @@ and key of toggle command."
                  (if helm-git-grep-pathspec-available "" "[disabled]")))))
     basedir
     (:doc
-     "[helm-git-grep-toggle-base-directory]: base dir[%s]"
+     "[helm-git-grep-toggle-base-directory]:BaseDir[%s]"
      :function
      (lambda (doc)
        (format doc (symbol-name helm-git-grep-base-directory))))
     ignorecase
     (:doc
-     "[helm-git-grep-toggle-ignore-case]: ignore case%s"
+     "[helm-git-grep-toggle-ignore-case]:IgnoreCase%s"
      :function
      (lambda (doc) (format doc (if helm-git-grep-ignore-case "[i]" ""))))))
 
@@ -482,7 +482,7 @@ With a prefix arg record CANDIDATE in `mark-ring'."
               (ret (funcall func doc)))
          (when ret
            (substitute-command-keys
-            (format "(\\<helm-git-grep-map>\\%s)" ret))))))
+            (format "\\<helm-git-grep-map>\\%s" ret))))))
    helm-git-grep-doc-order-in-name-header))
 
 (defun helm-git-grep-concat-string-list (list)
@@ -492,7 +492,7 @@ With a prefix arg record CANDIDATE in `mark-ring'."
 (defun helm-git-grep-header-name (name)
   "Create header NAME for `helm-git-grep'."
   (concat
-   name " "
+   name "  |  "
    (helm-git-grep-concat-string-list (helm-git-grep-doc-list-in-name-header))))
 
 (defun helm-git-grep-run-persistent-action ()

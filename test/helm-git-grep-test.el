@@ -173,13 +173,13 @@
         (helm-git-grep-ignore-case nil)
         (helm-git-grep-base-directory 'root))
     (should-equal? (helm-git-grep-header-name "Git Grep")
-                  "Git Grep (C-c p: pathspec) (C-c b: base dir[root]) (C-c i: ignore case)"))
+                  "Git Grep  |  C-c p:Pathspec C-c b:BaseDir[root] C-c i:IgnoreCase"))
   (let ((helm-git-grep-doc-order-in-name-header
          '(ignorecase pathspec basedir))
         (helm-git-grep-ignore-case t)
         (helm-git-grep-base-directory 'current))
     (should-equal? (helm-git-grep-header-name "Git Grep")
-                  "Git Grep (C-c i: ignore case[i]) (C-c b: base dir[current])")))
+                  "Git Grep  |  C-c i:IgnoreCase[i] C-c b:BaseDir[current]")))
 
 
 
