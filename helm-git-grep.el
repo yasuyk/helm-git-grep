@@ -184,7 +184,7 @@ and key of toggle command."
 (defconst helm-git-grep-doc-order-in-name-header-plist
   '(pathspec
     (:doc
-     "[helm-git-grep-pathspec-toggle-availability]:Pathspec%s"
+     "[helm-git-grep-pathspec-toggle-availability]:Tog.pathspec%s"
      :function
      (lambda (doc)
        (when helm-git-grep-pathspecs
@@ -192,13 +192,13 @@ and key of toggle command."
                  (if helm-git-grep-pathspec-available "" "[disabled]")))))
     basedir
     (:doc
-     "[helm-git-grep-toggle-base-directory]:BaseDir[%s]"
+     "[helm-git-grep-toggle-base-directory]:Tog.basedir[%s]"
      :function
      (lambda (doc)
        (format doc (symbol-name helm-git-grep-base-directory))))
     ignorecase
     (:doc
-     "[helm-git-grep-toggle-ignore-case]:IgnoreCase%s"
+     "[helm-git-grep-toggle-ignore-case]:Tog.ignorecase%s"
      :function
      (lambda (doc) (format doc (if helm-git-grep-ignore-case "[i]" ""))))))
 
