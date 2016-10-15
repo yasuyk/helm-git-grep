@@ -668,7 +668,6 @@ You can save your results in a helm-git-grep-mode buffer, see below.
 (defun helm-git-grep-1 (&optional input)
   "Execute helm git grep.
 Optional argument INPUT is initial input."
-  ;; directory local variables can't work in minibuffer
   (helm-set-local-variable 'helm-git-grep-pathspecs helm-git-grep-pathspecs)
   (helm :sources helm-git-grep-sources
         :buffer "*helm git grep*"
