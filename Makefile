@@ -37,7 +37,7 @@ print-deps:
 .PHONY : test-checkdoc
 test-checkdoc: elpa
 	@echo "-- test ckeckdoc --"
-	$(CASK) exec $(EMACS) -batch -Q $(LOADPATH) -l $(TEST_CHECKDOC_EL)
+	@$(CASK) exec $(EMACS) -batch -Q $(LOADPATH) -l $(TEST_CHECKDOC_EL) 2>&1 | [ $$(wc -l) -gt 0 ] && exit 1 || exit 0
 
 .PHONY : travis-ci
 travis-ci: print-deps test
