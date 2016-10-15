@@ -60,3 +60,18 @@ $(FIXTURE_GIT_WORK_DIR):
 clean-fixture:
 	rm -rf $(FIXTURE_GIT_WORK_DIR)
 
+.PHONY : check-coveralls-token
+check-coveralls-token:
+    ifdef COVERALLS_REPO_TOKEN
+		@true
+    else
+		@echo COVERALLS_REPO_TOKEN is undefined
+		@false
+    endif
+
+.PHONY : clean-coveralls-report
+clean-coveralls-report: check-coveralls-token
+	@( [ -f /tmp/undercover_coveralls_report ] && rm /tmp/undercover_coveralls_report ) || :
+
+.PHONY : coveralls
+coveralls: clean-coveralls-report unit-tests
