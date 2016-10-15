@@ -486,7 +486,7 @@ With a prefix arg record CANDIDATE in `mark-ring'."
    helm-git-grep-doc-order-in-name-header))
 
 (defun helm-git-grep-concat-string-list (list)
-  "Concatenate string LIST separeted by a space."
+  "Concatenate string LIST separated by a space."
    (mapconcat 'identity(delq nil list) " "))
 
 (defun helm-git-grep-header-name (name)
