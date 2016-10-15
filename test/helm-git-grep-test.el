@@ -45,9 +45,9 @@
   (f-join test/test-path "fixture/git"))
 
 (defun should-equal? (a b)
-    (should (equal a b)))
+  (should (equal a b)))
 (defun should-not-equal? (a b)
-    (should-not (equal a b)))
+  (should-not (equal a b)))
 
 (ert-deftest test/helm-git-grep-base-directory ()
   (let ((expected "/tmp/git"))
@@ -79,24 +79,24 @@
         (helm-pattern "defun helm git")
         (helm-git-grep-pathspecs nil))
     (should-equal? (helm-git-grep-args)
-                  '("--no-pager" "grep" "-n" "--no-color" "-i"
-                    "-e" "defun" "--and" "-e" "helm" "--and" "-e" "git")))
+                   '("--no-pager" "grep" "-n" "--no-color" "-i"
+                     "-e" "defun" "--and" "-e" "helm" "--and" "-e" "git")))
   (let ((helm-git-grep-ignore-case nil)
         (helm-pattern "helm")
         (helm-git-grep-pathspecs nil))
-     (should-equal? (helm-git-grep-args)
+    (should-equal? (helm-git-grep-args)
                    '("--no-pager" "grep" "-n" "--no-color" "-e" "helm")))
   (let ((helm-git-grep-ignore-case nil)
         (helm-pattern "helm")
         (helm-git-grep-pathspecs '("./*" ":!test/**")))
-     (should-equal? (helm-git-grep-args)
+    (should-equal? (helm-git-grep-args)
                    '("--no-pager" "grep" "-n" "--no-color" "-e" "helm"
                      "--" "./*" ":!test/**")))
   (let ((helm-git-grep-ignore-case nil)
         (helm-pattern "helm")
         (helm-git-grep-pathspecs '("./*" ":!test/**"))
         (helm-git-grep-pathspec-available nil))
-     (should-equal? (helm-git-grep-args)
+    (should-equal? (helm-git-grep-args)
                    '("--no-pager" "grep" "-n" "--no-color" "-e" "helm"))))
 
 (ert-deftest test/helm-git-grep-highlight-match ()
@@ -122,6 +122,30 @@
              do (should-equal? (get-text-property x 'face result) 'helm-git-grep-match))
     (cl-loop for x from 40 to (length "-end 1)")
              do (should-equal? (get-text-property x 'face result) 'helm-git-grep-match))))
+
+(ert-deftest test/helm-git-grep-other-window ()
+  (let ((candidates '("a")))
+    (mocker-let ((helm-git-grep-action (a b) ((:input `(,candidates other-window)))))
+      (helm-git-grep-other-window candidates))))
+
+(ert-deftest test/helm-git-grep-other-frame ()
+  (let ((candidates '("a")))
+    (mocker-let ((helm-git-grep-action (a b) ((:input `(,candidates other-frame)))))
+      (helm-git-grep-other-frame candidates))))
+
+(ert-deftest test/helm-git-grep-jump-elscreen ()
+  (let ((candidates '("a")))
+    (mocker-let ((elscreen-get-conf-list (a) ((:input `(screen-history) :output t)))
+                 (helm-git-grep-action (a b) ((:input `(,candidates elscreen)))))
+      (helm-git-grep-jump-elscreen candidates))
+    (mocker-let ((elscreen-get-conf-list (a) ((:input `(screen-history) :output nil)))
+                 (error (m) ((:input '("Elscreen is not running")))))
+      (helm-git-grep-jump-elscreen candidates))))
+
+(ert-deftest test/helm-git-grep-save-results ()
+  (let ((candidates '("a")))
+    (mocker-let ((helm-git-grep-action (a b) ((:input `(,candidates grep)))))
+      (helm-git-grep-save-results candidates))))
 
 (ert-deftest test/helm-helm-git-grep-init()
   (let ((expected "/tmp/git"))
@@ -151,6 +175,7 @@
                    (helm-git-grep-get-region-substring () ((:output expected))))
         (should-equal? (helm-git-grep-get-input-symbol) expected)))))
 
+
 (ert-deftest test/helm-git-grep-get-isearch-input-symbol ()
   ;; return isearch-string
   (let* ((expected "defun")
@@ -173,45 +198,54 @@
         (helm-git-grep-ignore-case nil)
         (helm-git-grep-base-directory 'root))
     (should-equal? (helm-git-grep-header-name "Git Grep")
-                  "Git Grep  |  C-c p:Tog.pathspec C-c b:Tog.basedir[root] C-c i:Tog.ignorecase"))
+                   "Git Grep  |  C-c p:Tog.pathspec C-c b:Tog.basedir[root] C-c i:Tog.ignorecase"))
   (let ((helm-git-grep-doc-order-in-name-header
          '(ignorecase pathspec basedir))
         (helm-git-grep-ignore-case t)
         (helm-git-grep-base-directory 'current))
     (should-equal? (helm-git-grep-header-name "Git Grep")
-                  "Git Grep  |  C-c i:Tog.ignorecase[i] C-c b:Tog.basedir[current]")))
+                   "Git Grep  |  C-c i:Tog.ignorecase[i] C-c b:Tog.basedir[current]")))
+
+(ert-deftest test/helm-git-grep-run-persistent-action ()
+  (mocker-let ((helm-attrset
+                (n v)
+                ((:input '(jump-persistent helm-git-grep-persistent-action))))
+               (helm-execute-persistent-action
+                (n)
+                ((:input '(jump-persistent)))))
+    (helm-git-grep-run-persistent-action)))
 
 
 
 (ert-deftest test/helm-git-grep-toggle-ignore-case ()
   (let ((helm-git-grep-ignore-case t))
-      (mocker-let ((helm-git-grep-rerun-with-input () ((:output t))))
-        (should (helm-git-grep-toggle-ignore-case))
-        (should-equal? helm-git-grep-ignore-case nil)))
+    (mocker-let ((helm-git-grep-rerun-with-input () ((:output t))))
+      (should (helm-git-grep-toggle-ignore-case))
+      (should-equal? helm-git-grep-ignore-case nil)))
   (let ((helm-git-grep-ignore-case nil))
-      (mocker-let ((helm-git-grep-rerun-with-input () ((:output t))))
-        (should (helm-git-grep-toggle-ignore-case))
-        (should-equal? helm-git-grep-ignore-case t))))
+    (mocker-let ((helm-git-grep-rerun-with-input () ((:output t))))
+      (should (helm-git-grep-toggle-ignore-case))
+      (should-equal? helm-git-grep-ignore-case t))))
 
 (ert-deftest test/helm-git-grep-toggle-showing-trailing-leading-line ()
   (let ((helm-git-grep-showing-leading-and-trailing-lines t))
-      (mocker-let ((helm-git-grep-rerun-with-input () ((:output t))))
-        (should (helm-git-grep-toggle-showing-trailing-leading-line))
-        (should-equal? helm-git-grep-showing-leading-and-trailing-lines nil)))
+    (mocker-let ((helm-git-grep-rerun-with-input () ((:output t))))
+      (should (helm-git-grep-toggle-showing-trailing-leading-line))
+      (should-equal? helm-git-grep-showing-leading-and-trailing-lines nil)))
   (let ((helm-git-grep-showing-leading-and-trailing-lines nil))
-      (mocker-let ((helm-git-grep-rerun-with-input () ((:output t))))
-        (should (helm-git-grep-toggle-showing-trailing-leading-line))
-        (should-equal? helm-git-grep-showing-leading-and-trailing-lines t))))
+    (mocker-let ((helm-git-grep-rerun-with-input () ((:output t))))
+      (should (helm-git-grep-toggle-showing-trailing-leading-line))
+      (should-equal? helm-git-grep-showing-leading-and-trailing-lines t))))
 
 (ert-deftest test/helm-git-grep-toggle-base-directory ()
   (let ((helm-git-grep-base-directory 'root))
-      (mocker-let ((helm-git-grep-rerun-with-input () ((:output t))))
-        (should (helm-git-grep-toggle-base-directory))
-        (should-equal? helm-git-grep-base-directory 'current)))
+    (mocker-let ((helm-git-grep-rerun-with-input () ((:output t))))
+      (should (helm-git-grep-toggle-base-directory))
+      (should-equal? helm-git-grep-base-directory 'current)))
   (let ((helm-git-grep-base-directory 'current))
-      (mocker-let ((helm-git-grep-rerun-with-input () ((:output t))))
-        (should (helm-git-grep-toggle-base-directory))
-        (should-equal? helm-git-grep-base-directory 'root))))
+    (mocker-let ((helm-git-grep-rerun-with-input () ((:output t))))
+      (should (helm-git-grep-toggle-base-directory))
+      (should-equal? helm-git-grep-base-directory 'root))))
 
 (ert-deftest test/helm-git-grep-pathspec-toggle-availability ()
   (let ((helm-git-grep-pathspecs nil))
@@ -245,16 +279,22 @@
       (should (helm-git-grep-at-point)))))
 
 (ert-deftest test/helm-git-grep-from-isearch ()
-    (mocker-let ((helm-git-grep-get-isearch-input-symbol () ((:output "helm")))
-                 (helm-git-grep-1 (input) ((:input '("helm") :output t)))
-                 (isearch-exit () ((:max-occur 1))))
-      (should (helm-git-grep-from-isearch))))
+  (mocker-let ((helm-git-grep-get-isearch-input-symbol () ((:output "helm")))
+               (helm-git-grep-1 (input) ((:input '("helm") :output t)))
+               (isearch-exit () ((:max-occur 1))))
+    (should (helm-git-grep-from-isearch))))
 
 (ert-deftest test/helm-git-grep-from-helm ()
   (let ((helm-input "helm"))
     (mocker-let ((helm-exit-and-execute-action (action) ((:input-matcher 'functionp :output t))))
       (should (helm-git-grep-from-helm)))))
 
+
+(ert-deftest test/helm-git-grep-with-exclude-file-pattern ()
+  (mocker-let ((message (m) ((:input `(,helm-git-grep-with-exclude-file-pattern-obsolete-message)))))
+      (helm-git-grep-with-exclude-file-pattern)))
+
+
 (provide 'helm-git-grep-test)
 
 ;; Local Variables:
