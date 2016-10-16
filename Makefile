@@ -10,7 +10,6 @@ TEST_PACKAGE_INSTALL_EL ?=  test/test-package-install.el
 TEST_PACKAGE_INSTALL_LOG ?=  test/test-package-install.log
 LOADPATH = -L .
 ELPA_DIR = $(shell EMACS=$(EMACS) $(CASK) package-directory)
-TMP = .tmp
 
 .PHONY : test
 test: test-checkdoc test-package-install unit-tests
