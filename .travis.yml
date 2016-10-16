@@ -30,4 +30,4 @@ install:
 script:
   # Run your tests
   - emacs --version
-  - make test
+  - make travis-ci
