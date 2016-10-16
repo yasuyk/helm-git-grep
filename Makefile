@@ -5,12 +5,14 @@ SRC ?= helm-git-grep.el
 FIXTURE_GIT_VERSION ?= v1.0.0
 FIXTURE_GIT_WORK_DIR ?= test/fixture/git
 TEST_CHECKDOC_EL ?=  test/test-checkdoc.el
+TEST_PACKAGE_INSTALL_EL ?=  test/test-package-install.el
+TEST_PACKAGE_INSTALL_LOG ?=  test/test-package-install.log
 LOADPATH = -L .
 ELPA_DIR = $(shell EMACS=$(EMACS) $(CASK) package-directory)
-
+TMP = .tmp
 
 .PHONY : test
-test: test-checkdoc unit-tests
+test: test-checkdoc test-package-install unit-tests
 
 .PHONY : unit-tests
 # `clean-elc` task needs to remove byte-compiled files to collect coverage by undercover.el.
@@ -38,6 +40,17 @@ print-deps:
 test-checkdoc: elpa
 	@echo "-- test ckeckdoc --"
 	@$(CASK) exec $(EMACS) -batch -Q $(LOADPATH) -l $(TEST_CHECKDOC_EL) 2>&1 | [ $$(wc -l) -gt 0 ] && exit 1 || exit 0
+
+.PHONY : test-package-install
+test-package-install: elpa clean-package-install
+	@echo "-- test install package --"
+	$(CASK) exec $(EMACS) -batch -Q $(LOADPATH) -l $(TEST_PACKAGE_INSTALL_EL) 2>&1  | tee $(TEST_PACKAGE_INSTALL_LOG)
+	@grep Error $(TEST_PACKAGE_INSTALL_LOG) && exit 1 || exit 0
+
+.PHONY : clean-package-install
+clean-package-install:
+	rm -rf $(ELPA_DIR)/helm-git-grep*
+	rm -rf $(TEST_PACKAGE_INSTALL_LOG)
 
 .PHONY : travis-ci
 travis-ci: print-deps test

@@ -2,3 +2,4 @@
 .elc*
 elpa
 test/fixture/*
+/test/test-package-install.log
