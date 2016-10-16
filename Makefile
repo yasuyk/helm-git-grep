@@ -5,6 +5,7 @@ SRC ?= helm-git-grep.el
 FIXTURE_GIT_VERSION ?= v1.0.0
 FIXTURE_GIT_WORK_DIR ?= test/fixture/git
 TEST_CHECKDOC_EL ?=  test/test-checkdoc.el
+TEST_CHECKDOC_LOG ?=  test/test-checkdoc.log
 TEST_PACKAGE_INSTALL_EL ?=  test/test-package-install.el
 TEST_PACKAGE_INSTALL_LOG ?=  test/test-package-install.log
 LOADPATH = -L .
@@ -39,7 +40,8 @@ print-deps:
 .PHONY : test-checkdoc
 test-checkdoc: elpa
 	@echo "-- test ckeckdoc --"
-	@$(CASK) exec $(EMACS) -batch -Q $(LOADPATH) -l $(TEST_CHECKDOC_EL) 2>&1 | [ $$(wc -l) -gt 0 ] && exit 1 || exit 0
+	$(CASK) exec $(EMACS) -batch -Q $(LOADPATH) -l $(TEST_CHECKDOC_EL) 2>&1 | tee $(TEST_CHECKDOC_LOG)
+	@cat $(TEST_CHECKDOC_LOG) | [ $$(wc -l) -gt 0 ] && exit 1 || exit 0
 
 .PHONY : test-package-install
 test-package-install: elpa clean-package-install
