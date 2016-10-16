@@ -370,7 +370,7 @@ if MARK is t, Set mark."
 
 (defun helm-git-grep-jump-elscreen (candidates)
   "Jump to result in elscreen from helm git grep with CANDIDATES."
-  (require 'elscreen)
+  (require 'elscreen nil t)
   (if (elscreen-get-conf-list 'screen-history)
       (helm-git-grep-action candidates 'elscreen)
     (error "Elscreen is not running")))
@@ -718,6 +718,7 @@ if region exists.
 ;;; Obsolete
 ;;
 ;;
+;;;###autoload
 (defconst helm-git-grep-with-exclude-file-pattern-obsolete-message
   "use `helm-git-grep-pathspecs' to exclude files form search result.")
 

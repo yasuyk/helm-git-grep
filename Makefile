@@ -37,7 +37,7 @@ print-deps:
 .PHONY : test-checkdoc
 test-checkdoc: elpa
 	@echo "-- test ckeckdoc --"
-	$(CASK) exec $(EMACS) -batch -Q $(LOADPATH) -l $(TEST_CHECKDOC_EL)
+	@$(CASK) exec $(EMACS) -batch -Q $(LOADPATH) -l $(TEST_CHECKDOC_EL) 2>&1 | [ $$(wc -l) -gt 0 ] && exit 1 || exit 0
 
 .PHONY : travis-ci
 travis-ci: print-deps test
@@ -60,3 +60,18 @@ $(FIXTURE_GIT_WORK_DIR):
 clean-fixture:
 	rm -rf $(FIXTURE_GIT_WORK_DIR)
 
+.PHONY : check-coveralls-token
+check-coveralls-token:
+    ifdef COVERALLS_REPO_TOKEN
+		@true
+    else
+		@echo COVERALLS_REPO_TOKEN is undefined
+		@false
+    endif
+
+.PHONY : clean-coveralls-report
+clean-coveralls-report: check-coveralls-token
+	@( [ -f /tmp/undercover_coveralls_report ] && rm /tmp/undercover_coveralls_report ) || :
+
+.PHONY : coveralls
+coveralls: clean-coveralls-report unit-tests
