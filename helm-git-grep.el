@@ -718,6 +718,7 @@ if region exists.
 ;;; Obsolete
 ;;
 ;;
+;;;###autoload
 (defconst helm-git-grep-with-exclude-file-pattern-obsolete-message
   "use `helm-git-grep-pathspecs' to exclude files form search result.")
 
