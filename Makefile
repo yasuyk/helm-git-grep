@@ -55,7 +55,7 @@ clean-package-install:
 	rm -rf $(TEST_PACKAGE_INSTALL_LOG)
 
 .PHONY : travis-ci
-travis-ci: print-deps test
+travis-ci: print-deps test-package-install unit-tests
 
 .PHONY : elpa
 elpa: $(ELPA_DIR)
