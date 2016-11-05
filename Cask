@@ -6,6 +6,7 @@
 
 (development
  (depends-on "cask")
+ (depends-on "package-lint")
  (depends-on "f")
  (depends-on "ert")                    ; Unit test library
  (depends-on "ert-runner")             ; Unit test runner

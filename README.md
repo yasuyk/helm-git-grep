@@ -159,13 +159,13 @@ A buffer name is `*helm git grep*` without ignore case option.
 
 #### `helm-git-grep-sources`
 
-**(Default: `'(helm-source-git-grep helm-source-git-submodule-grep)`)**
+**(Default: `'(helm-git-grep-source helm-git-grep-submodule-source)`)**
 
 Default helm sources for `helm-git-grep`.
 
-If you don't want to search in submodules, Set only `helm-source-git-grep` like this:
+If you don't want to search in submodules, Set only `helm-git-grep-source` like this:
 
-    (setq helm-git-grep-sources '(helm-source-git-grep))
+    (setq helm-git-grep-sources '(helm-git-grep-sources))
 
 #### `helm-git-grep-candidate-number-limit`
 
