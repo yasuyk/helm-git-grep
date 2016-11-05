@@ -3,3 +3,15 @@
 (setq byte-compile-error-on-warn t)
 (require 'package)
 (package-install-file "helm-git-grep.el")
+
+(defun should-autoload (c)
+  (let ((s (symbol-function c)))
+    (unless (autoloadp s)
+      (message "Error: %s is not autoload" c)
+      (kill-emacs 1))))
+
+(should-autoload 'helm-git-grep-ls-files-limited-by-pathspec)
+(should-autoload 'helm-git-grep)
+(should-autoload 'helm-git-grep-from-isearch)
+(should-autoload 'helm-git-grep-with-exclude-file-pattern)
+(should-autoload 'helm-git-grep-from-helm)
