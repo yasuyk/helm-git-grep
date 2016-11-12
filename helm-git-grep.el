@@ -66,7 +66,7 @@ If you don't want to search in submodules, \
 Set only `helm-git-grep-source' like this:
 
     (setq helm-git-grep-sources '(helm-git-grep-source))"
-  :group 'helm-gi-grep
+  :group 'helm-git-grep
   :type '(repeat (choice symbol)))
 
 (defcustom helm-git-grep-candidate-number-limit 300
