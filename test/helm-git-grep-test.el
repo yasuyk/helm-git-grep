@@ -79,25 +79,25 @@
         (helm-pattern "defun helm git")
         (helm-git-grep-pathspecs nil))
     (should-equal? (helm-git-grep-args)
-                   '("--no-pager" "grep" "-n" "--no-color" "-i"
+                   '("--no-pager" "grep" "--null" "-n" "--no-color" "-i"
                      "-e" "defun" "--and" "-e" "helm" "--and" "-e" "git")))
   (let ((helm-git-grep-ignore-case nil)
         (helm-pattern "helm")
         (helm-git-grep-pathspecs nil))
     (should-equal? (helm-git-grep-args)
-                   '("--no-pager" "grep" "-n" "--no-color" "-e" "helm")))
+                   '("--no-pager" "grep" "--null" "-n" "--no-color" "-e" "helm")))
   (let ((helm-git-grep-ignore-case nil)
         (helm-pattern "helm")
         (helm-git-grep-pathspecs '("./*" ":!test/**")))
     (should-equal? (helm-git-grep-args)
-                   '("--no-pager" "grep" "-n" "--no-color" "-e" "helm"
+                   '("--no-pager" "grep" "--null" "-n" "--no-color" "-e" "helm"
                      "--" "./*" ":!test/**")))
   (let ((helm-git-grep-ignore-case nil)
         (helm-pattern "helm")
         (helm-git-grep-pathspecs '("./*" ":!test/**"))
         (helm-git-grep-pathspec-available nil))
     (should-equal? (helm-git-grep-args)
-                   '("--no-pager" "grep" "-n" "--no-color" "-e" "helm"))))
+                   '("--no-pager" "grep" "--null" "-n" "--no-color" "-e" "helm"))))
 
 (ert-deftest test/helm-git-grep-highlight-match ()
   (let* ((helm-input "defun")
