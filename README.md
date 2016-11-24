@@ -165,7 +165,7 @@ Default helm sources for `helm-git-grep`.
 
 If you don't want to search in submodules, Set only `helm-git-grep-source` like this:
 
-    (setq helm-git-grep-sources '(helm-git-grep-sources))
+    (setq helm-git-grep-sources '(helm-git-grep-source))
 
 #### `helm-git-grep-candidate-number-limit`
 
