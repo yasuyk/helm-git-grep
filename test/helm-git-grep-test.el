@@ -131,21 +131,12 @@
 (ert-deftest test/helm-git-grep-other-frame ()
   (let ((candidates '("a")))
     (mocker-let ((helm-git-grep-action (a b) ((:input `(,candidates other-frame)))))
-      (helm-git-grep-other-frame candidates))))
-
-(ert-deftest test/helm-git-grep-jump-elscreen ()
-  (let ((candidates '("a")))
-    (mocker-let ((elscreen-get-conf-list (a) ((:input `(screen-history) :output t)))
-                 (helm-git-grep-action (a b) ((:input `(,candidates elscreen)))))
-      (helm-git-grep-jump-elscreen candidates))
-    (mocker-let ((elscreen-get-conf-list (a) ((:input `(screen-history) :output nil)))
-                 (error (m) ((:input '("Elscreen is not running")))))
-      (helm-git-grep-jump-elscreen candidates))))
+                (helm-git-grep-other-frame candidates))))
 
 (ert-deftest test/helm-git-grep-save-results ()
   (let ((candidates '("a")))
     (mocker-let ((helm-git-grep-action (a b) ((:input `(,candidates grep)))))
-      (helm-git-grep-save-results candidates))))
+                (helm-git-grep-save-results candidates))))
 
 (ert-deftest test/helm-helm-git-grep-init()
   (let ((expected "/tmp/git"))

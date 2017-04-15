@@ -47,9 +47,7 @@
 (eval-when-compile (require 'cl))
 (require 'helm)
 (require 'helm-files)
-(require 'helm-elscreen) ;; helm-elscreen-find-file
 
-(declare-function elscreen-get-conf-list "ext:elscreen.el" (type))
 (declare-function wgrep-setup-internal "ext:wgrep")
 
 
@@ -330,18 +328,17 @@ newline return an empty string."
 
 (defun helm-git-grep-action (candidate &optional where mark)
   "Define a default action for `helm-git-grep' on CANDIDATE.
-WHERE can be one of `other-window', elscreen, `other-frame'.
+WHERE can be one of `other-window', `other-frame'.
 if MARK is t, Set mark."
   (let* ((lineno (nth 0 candidate))
          (fname (or (with-current-buffer helm-buffer
                       (get-text-property (point-at-bol) 'help-echo))
                     (nth 2 candidate))))
     (case where
-      (other-window (find-file-other-window fname))
-      (elscreen     (helm-elscreen-find-file fname))
-      (other-frame  (find-file-other-frame fname))
-      (grep         (helm-git-grep-save-results-1))
-      (t            (find-file fname)))
+          (other-window (find-file-other-window fname))
+          (other-frame  (find-file-other-frame fname))
+          (grep         (helm-git-grep-save-results-1))
+          (t            (find-file fname)))
     (unless (or (eq where 'grep))
       (helm-goto-line lineno))
     (when mark
@@ -367,13 +364,6 @@ if MARK is t, Set mark."
   "Jump to result in other frame from helm git grep with CANDIDATES."
   (helm-git-grep-action candidates 'other-frame))
 
-(defun helm-git-grep-jump-elscreen (candidates)
-  "Jump to result in elscreen from helm git grep with CANDIDATES."
-  (require 'elscreen nil t)
-  (if (elscreen-get-conf-list 'screen-history)
-      (helm-git-grep-action candidates 'elscreen)
-    (error "Elscreen is not running")))
-
 (defun helm-git-grep-save-results (candidates)
   "Save helm git grep result in a `helm-git-grep-mode' buffer with CANDIDATES."
   (helm-git-grep-action candidates 'grep))
@@ -381,11 +371,8 @@ if MARK is t, Set mark."
 (defvar helm-git-grep-actions
   (delq
    nil
-   `(("Find File" . helm-git-grep-action)
+   '(("Find File" . helm-git-grep-action)
      ("Find file other frame" . helm-git-grep-other-frame)
-     ,(and (locate-library "elscreen")
-           '("Find file in Elscreen"
-             . helm-git-grep-jump-elscreen))
      ("Save results in grep buffer" . helm-git-grep-save-results)
      ("Find file other window" . helm-git-grep-other-window)))
   "Actions for `helm-git-grep'.")
@@ -511,12 +498,6 @@ With a prefix arg record CANDIDATE in `mark-ring'."
   (helm-exit-and-execute-action 'helm-git-grep-other-frame))
 (put 'helm-git-grep-run-other-frame-action 'helm-only t)
 
-(defun helm-git-grep-run-elscreen-action ()
-  "Run grep goto elscreen action from `helm-git-grep'."
-  (interactive)
-  (helm-exit-and-execute-action 'helm-git-grep-jump-elscreen))
-(put 'helm-git-grep-run-elscreen-action 'helm-only t)
-
 (defun helm-git-grep-run-save-buffer ()
   "Run grep save results action from `helm-git-grep'."
   (interactive)
@@ -621,7 +602,6 @@ You can save your results in a helm-git-grep-mode buffer, see below.
     (define-key map (kbd "C-c b")    'helm-git-grep-toggle-base-directory)
     (define-key map (kbd "C-c i")    'helm-git-grep-toggle-ignore-case)
     (define-key map (kbd "C-c n")    'helm-git-grep-toggle-showing-trailing-leading-line)
-    (define-key map (kbd "C-c e")    'helm-git-grep-run-elscreen-action)
     (define-key map (kbd "C-c o")    'helm-git-grep-run-other-window-action)
     (define-key map (kbd "C-c C-o")  'helm-git-grep-run-other-frame-action)
     (define-key map (kbd "C-w")      'helm-yank-text-at-point)
