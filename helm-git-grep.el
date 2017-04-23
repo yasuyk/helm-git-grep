@@ -677,6 +677,7 @@ Optional argument INPUT is initial input."
         :buffer "*helm git grep*"
         :input input
         :keymap helm-git-grep-map
+        :default (helm-git-grep-get-input-symbol)
         :candidate-number-limit helm-git-grep-candidate-number-limit))
 
 ;;;###autoload
