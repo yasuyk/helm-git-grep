@@ -119,19 +119,28 @@ Possible value are:
                  (const :tag "CurrentDirectory" current)))
 
 (defcustom helm-git-grep-pathspecs nil
-  "Pattern used to limit paths in git-grep(1) commands.
+  "List of strings: patterns used to limit paths in git-grep(1) commands.
 
-Each pathspec have not to be quoted by singe quotation like executing git
-command in inferior shell.  Because `helm-git-grep' run git command by
-`start-process', and `start-process' is not executed in inferior shell.
-So, if pathspec is quoted by singe quotation, pathspec can't work in
-git-grep(1) by `helm-git-grep'.
+The pathspecs are interpreted by Git in the order given; a
+pathspec starting with \":!:\" is treated as an exclusion.
+Exclusions must be preceded by at least one inclusion.
+
+Examples:
+
+   (setq helm-git-grep-pathspecs '(\"*.txt\" \"*.rst\")
+   ;; search only files matching *.txt or *.rst
+
+   (setq helm-git-grep-pathspecs '(\"*\"  \":!:*.dvi\")
+   ;; search all files except those matching *.dvi
+   
+Each pathspec need not be quoted by single quotes, because
+`helm-git-grep' runs git with `start-process', which does not use
+an inferior shell.
 
 For more information about pathspec,
 see https://git-scm.com/docs/gitglossary#def_pathspec.
 
-If there is something wrong about pathspec configuration,
-you can check limit paths by pathspec using
+You can see the files matched by your pathspec with:
 `helm-git-grep-ls-files-limited-by-pathspec'."
   :group 'helm-git-grep
   :type '(repeat string  :tag "Pathspec"))
