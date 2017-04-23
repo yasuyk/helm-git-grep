@@ -700,7 +700,7 @@ if region exists.
          (input (if symbol (concat symbol " ") "")))
     (when (and helm-git-grep-at-point-deactivate-mark mark-active)
       (deactivate-mark)) ;; remove any active regions
-    (helm-git-grep-1 input)))
+    (helm-git-grep-1 (regexp-quote input))))
 
 ;;;###autoload
 (defun helm-git-grep-from-isearch ()
