@@ -89,7 +89,7 @@ Set it to nil if you don't want this limit."
   :group 'helm-git-grep
   :type  'boolean)
 
-(defcustom helm-git-grep-wordgrep t
+(defcustom helm-git-grep-wordgrep nil
   "Wordgrep when matching."
   :group 'helm-git-grep
   :type  'boolean)
