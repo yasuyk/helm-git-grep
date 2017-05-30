@@ -7,7 +7,7 @@
 
 ;; Author: mechairoi
 ;; Maintainer: Yasuyuki Oka <yasuyk@gmail.com>
-;; Version: 0.10.0-snapshot
+;; Version: 0.10.0
 ;; URL: https://github.com/yasuyk/helm-git-grep
 ;; Package-Requires: ((helm-core "2.2.0"))
 
@@ -132,7 +132,7 @@ Examples:
 
    (setq helm-git-grep-pathspecs '(\"*\"  \":!:*.dvi\")
    ;; search all files except those matching *.dvi
-   
+
 Each pathspec need not be quoted by single quotes, because
 `helm-git-grep' runs git with `start-process', which does not use
 an inferior shell.
@@ -412,9 +412,9 @@ Argument SOURCE is not used."
     (filename lineno content)
   "Propertize FILENAME LINENO CONTENT and concatenate them."
   (format "%s:%s:%s"
-	  (propertize filename 'face 'helm-git-grep-file)
-	  (propertize lineno 'face 'helm-git-grep-line)
-	  (helm-git-grep-highlight-match content)))
+      (propertize filename 'face 'helm-git-grep-file)
+      (propertize lineno 'face 'helm-git-grep-line)
+      (helm-git-grep-highlight-match content)))
 
 (defun helm-git-grep-highlight-match (content)
   "Highlight matched text with `helm-git-grep-match' face in CONTENT."
