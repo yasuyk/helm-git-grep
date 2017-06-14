@@ -4,6 +4,11 @@
     - Update gif
     - Update README.md
 
+# 0.10.1
+
+- Bug fixes:
+    - [\#36](https://github.com/yasuyk/helm-git-grep/issues/36 "#36") Fix regexp stack overflow([fd35b90b30])
+
 # 0.10.0
 
 - New features:
@@ -44,3 +49,4 @@
 [d49001e]:https://github.com/yasuyk/helm-git-grep/commit/d49001e
 [6b5abd4]:https://github.com/yasuyk/helm-git-grep/commit/6b5abd45030d0c505bd4db7cc2a949ab5fa6d3ca
 [e0990c6]:https://github.com/yasuyk/helm-git-grep/commit/e0990c68b6
+[fd35b90b30]:https://github.com/yasuyk/helm-git-grep/commit/fd35b90b30
