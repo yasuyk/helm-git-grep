@@ -47,6 +47,7 @@
 (eval-when-compile (require 'cl))
 (require 'helm)
 (require 'helm-files)
+(require 'compile)                      ; for define-compilation-mode
 
 (declare-function wgrep-setup-internal "ext:wgrep")
 
