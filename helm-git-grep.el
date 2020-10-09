@@ -318,7 +318,8 @@ newline return an empty string."
 
 (defun helm-git-grep-save-results-1 ()
   "Save helm git grep result in a `helm-git-grep-mode' buffer."
-  (let ((prompt "GrepBufferName: ")
+  (let ((default-dir (helm-git-grep-base-directory))
+        (prompt "GrepBufferName: ")
         (buf "*hggrep*")
         new-buf)
     (when (get-buffer buf)
@@ -332,8 +333,7 @@ newline return an empty string."
       (setq buf new-buf))
     (with-current-buffer (get-buffer-create buf)
       (setq buffer-read-only t)
-      (let ((default-dir (helm-git-grep-base-directory))
-            (inhibit-read-only t))
+      (let ((inhibit-read-only t))
         (erase-buffer)
         (insert (format "-*- mode: grep; default-directory: \"%s\" -*-\n\n"
                         default-dir)
