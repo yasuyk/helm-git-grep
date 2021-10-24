@@ -44,7 +44,7 @@
 
 ;;; Code:
 
-(eval-when-compile (require 'cl))
+(eval-when-compile (require 'cl-lib))
 (require 'helm)
 (require 'helm-files)
 
@@ -323,7 +323,7 @@ newline return an empty string."
         new-buf)
     (when (get-buffer buf)
       (setq new-buf (read-string prompt buf))
-      (loop for b in (helm-buffer-list)
+      (cl-loop for b in (helm-buffer-list)
             when (and (string= new-buf b)
                       (not (y-or-n-p
                             (format "Buffer `%s' already exists overwrite? "
@@ -358,7 +358,7 @@ if MARK is t, Set mark."
          (fname (or (with-current-buffer helm-buffer
                       (get-text-property (point-at-bol) 'help-echo))
                     (nth 2 candidate))))
-    (case where
+    (cl-case where
           (other-window (find-file-other-window fname))
           (other-frame  (find-file-other-frame fname))
           (grep         (helm-git-grep-save-results-1))
