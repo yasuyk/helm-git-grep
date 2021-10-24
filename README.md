@@ -40,6 +40,7 @@
     * [Customization](#customization)
       * [Variables](#variables)
         * [helm\-git\-grep\-sources](#helm-git-grep-sources)
+        * [helm\-follow\-mode\-persistent](#helm-follow-mode-persistent)
         * [helm\-git\-grep\-candidate\-number\-limit](#helm-git-grep-candidate-number-limit)
         * [helm\-git\-grep\-max\-length\-history](#helm-git-grep-max-length-history)
         * [helm\-git\-grep\-use\-ioccur\-style\-keys](#helm-git-grep-use-ioccur-style-keys)
@@ -166,6 +167,17 @@ Default helm sources for `helm-git-grep`.
 If you don't want to search in submodules, Set only `helm-git-grep-source` like this:
 
     (setq helm-git-grep-sources '(helm-git-grep-source))
+
+#### `helm-follow-mode-persistent`
+
+Please set `helm-follow-mode-persistent` to non-nil if you want to use `helm-follow-mode` by default.
+
+You must set it before loading `helm-git-grep.el`.
+
+``` lisp
+(custom-set-variables
+ '(helm-follow-mode-persistent t))
+```
 
 #### `helm-git-grep-candidate-number-limit`
 

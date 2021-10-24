@@ -667,11 +667,14 @@ You can save your results in a helm-git-grep-mode buffer, see below.
 
 (defvar helm-git-grep-source
   (helm-make-source "Git Grep" 'helm-git-grep-class
-    :candidates-process 'helm-git-grep-process))
+    :candidates-process 'helm-git-grep-process
+    :follow (and helm-follow-mode-persistent 1)))
 
 (defvar helm-git-grep-submodule-source
   (helm-make-source "Git Submodule Grep" 'helm-git-grep-class
-    :candidates-process 'helm-git-grep-submodule-grep-process))
+    :candidates-process 'helm-git-grep-submodule-grep-process
+    :follow (and helm-follow-mode-persistent 1)))
+
 
 (defun helm-git-grep-1 (&optional input)
   "Execute helm git grep.
