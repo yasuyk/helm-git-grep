@@ -335,6 +335,8 @@ newline return an empty string."
                     (buffer-substring (point) (point-max)))))
         (setq default-directory default-dir)
         (helm-git-grep-mode)
+        (if (fboundp 'wgrep-change-to-wgrep-mode)
+            (wgrep-change-to-wgrep-mode))
         (pop-to-buffer buf)))
     (message "Helm Git Grep Results saved in `%s' buffer" buf)))
 
