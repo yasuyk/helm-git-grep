@@ -44,7 +44,7 @@
 
 ;;; Code:
 
-(eval-when-compile (require 'cl))
+(eval-when-compile (require 'cl-lib))
 (require 'helm)
 (require 'helm-files)
 
@@ -318,22 +318,11 @@ newline return an empty string."
 
 (defun helm-git-grep-save-results-1 ()
   "Save helm git grep result in a `helm-git-grep-mode' buffer."
-  (let ((prompt "GrepBufferName: ")
-        (buf "*hggrep*")
-        new-buf)
-    (when (get-buffer buf)
-      (setq new-buf (read-string prompt buf))
-      (loop for b in (helm-buffer-list)
-            when (and (string= new-buf b)
-                      (not (y-or-n-p
-                            (format "Buffer `%s' already exists overwrite? "
-                                    new-buf))))
-            do (setq new-buf (read-string prompt "*hggrep ")))
-      (setq buf new-buf))
+  (let ((buf "*helm-git-grep*")
+        (default-dir (helm-git-grep-base-directory)))
     (with-current-buffer (get-buffer-create buf)
       (setq buffer-read-only t)
-      (let ((default-dir (helm-git-grep-base-directory))
-            (inhibit-read-only t))
+      (let ((inhibit-read-only t))
         (erase-buffer)
         (insert (format "-*- mode: grep; default-directory: \"%s\" -*-\n\n"
                         default-dir)
@@ -346,6 +335,8 @@ newline return an empty string."
                     (buffer-substring (point) (point-max)))))
         (setq default-directory default-dir)
         (helm-git-grep-mode)
+        (if (fboundp 'wgrep-change-to-wgrep-mode)
+            (wgrep-change-to-wgrep-mode))
         (pop-to-buffer buf)))
     (message "Helm Git Grep Results saved in `%s' buffer" buf)))
 
@@ -358,7 +349,7 @@ if MARK is t, Set mark."
          (fname (or (with-current-buffer helm-buffer
                       (get-text-property (point-at-bol) 'help-echo))
                     (nth 2 candidate))))
-    (case where
+    (cl-case where
           (other-window (find-file-other-window fname))
           (other-frame  (find-file-other-frame fname))
           (grep         (helm-git-grep-save-results-1))
@@ -667,11 +658,14 @@ You can save your results in a helm-git-grep-mode buffer, see below.
 
 (defvar helm-git-grep-source
   (helm-make-source "Git Grep" 'helm-git-grep-class
-    :candidates-process 'helm-git-grep-process))
+    :candidates-process 'helm-git-grep-process
+    :follow (and helm-follow-mode-persistent 1)))
 
 (defvar helm-git-grep-submodule-source
   (helm-make-source "Git Submodule Grep" 'helm-git-grep-class
-    :candidates-process 'helm-git-grep-submodule-grep-process))
+    :candidates-process 'helm-git-grep-submodule-grep-process
+    :follow (and helm-follow-mode-persistent 1)))
+
 
 (defun helm-git-grep-1 (&optional input)
   "Execute helm git grep.
