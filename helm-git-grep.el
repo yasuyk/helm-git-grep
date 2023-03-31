@@ -270,7 +270,7 @@ newline return an empty string."
   "Create arguments of `helm-git-grep-process' in `helm-git-grep'."
   (delq nil
         (append
-         (list "--no-pager" "grep" "--null" "-n" "--no-color"
+         (list "--no-pager" "grep" "--null" "-n" "--no-color" "--no-column"
                (if helm-git-grep-ignore-case "-i" nil)
                (if helm-git-grep-wordgrep "-w" nil)
                (helm-git-grep-showing-leading-and-trailing-lines-option))
@@ -284,7 +284,7 @@ newline return an empty string."
 (defun helm-git-grep-submodule-grep-command ()
   "Create command of `helm-git-submodule-grep-process' in `helm-git-grep'."
   (list "git" "--no-pager" "submodule" "--quiet" "foreach"
-       (format "git grep -n --no-color %s %s %s %s | sed s!^!$path/!"
+       (format "git grep -n --no-color --no-column %s %s %s %s | sed s!^!$path/!"
                (if helm-git-grep-ignore-case "-i" "")
                (if helm-git-grep-wordgrep "-w" "")
                (helm-git-grep-showing-leading-and-trailing-lines-option t)
