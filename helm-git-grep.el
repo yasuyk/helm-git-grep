@@ -346,6 +346,10 @@ newline return an empty string."
                     (buffer-substring (point) (point-max)))))
         (setq default-directory default-dir)
         (helm-git-grep-mode)
+        (setq-local compilation-directory default-dir)
+        (setq-local compile-command (combine-and-quote-strings
+                                     (cons "git" (remove "--null" (helm-git-grep-args)))))
+        (setq-local compilation-arguments (list compile-command 'helm-git-grep-mode))
         (pop-to-buffer buf)))
     (message "Helm Git Grep Results saved in `%s' buffer" buf)))
 
