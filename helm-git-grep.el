@@ -355,9 +355,9 @@ newline return an empty string."
 WHERE can be one of `other-window', `other-frame'.
 if MARK is t, Set mark."
   (let* ((lineno (nth 0 candidate))
-         (fname (or (with-current-buffer helm-buffer
-                      (get-text-property (point-at-bol) 'help-echo))
-                    (nth 2 candidate))))
+         (fname (or (nth 2 candidate)
+                    (with-current-buffer helm-buffer
+                      (get-text-property (point-at-bol) 'help-echo)))))
     (case where
           (other-window (find-file-other-window fname))
           (other-frame  (find-file-other-frame fname))
